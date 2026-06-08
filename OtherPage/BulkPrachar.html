@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Bulk Prachar — BJP WINGS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --gold:#b8860b;
+      --gold-dark:#8b6914;
+      --saffron:#e67e22;
+      --green:#1e7a3a;
+      --bg:#f4f6f9;
+      --surface:#ffffff;
+      --text:#1a1f2e;
+      --muted:#5c6370;
+      --border:#d8dde6;
+      --shadow:0 4px 14px rgba(26,31,46,.08);
+    }
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      max-width:430px;
+      margin:0 auto;
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Source Sans 3',system-ui,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+    .wrap{padding:16px 14px 28px}
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:6px 2px 4px;
+    }
+    .brand img{width:48px;height:auto}
+    .brand-title{
+      font-family:'Source Sans 3',sans-serif;
+      font-weight:700;
+      font-size:22px;
+      line-height:1.1;
+      letter-spacing:-0.02em;
+      color:var(--text);
+    }
+    .brand-sub{
+      margin-top:4px;
+      font-family:'Source Sans 3',sans-serif;
+      font-size:11px;
+      font-weight:600;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    .tricolor{
+      display:flex;
+      height:3px;
+      margin:12px 2px 14px;
+      border:1px solid var(--border);
+    }
+    .tricolor span{flex:1;height:100%}
+    .tricolor .t1{background:#ff9933}
+    .tricolor .t2{background:#ffffff}
+    .tricolor .t3{background:#138808}
+
+    .sec-h{margin:4px 2px 12px}
+    .kicker{
+      font-family:'Source Sans 3',sans-serif;
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--gold-dark);
+    }
+    .sec-title{
+      margin-top:6px;
+      font-family:'Source Sans 3',sans-serif;
+      font-size:20px;
+      font-weight:700;
+      color:var(--text);
+      line-height:1.2;
+    }
+
+    .card{
+      border:1px solid var(--border);
+      background:var(--surface);
+      border-radius:0;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card-pad{padding:14px}
+    .svc-header{
+      padding:12px 12px;
+      border-bottom:1px solid var(--border);
+      background:#eef1f6;
+    }
+    .svc-title-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .svc-icon{
+      flex-shrink:0;
+      width:36px;
+      height:36px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--gold-dark);
+      background:var(--surface);
+      border:1px solid var(--border);
+    }
+    .svc-icon svg{
+      width:20px;
+      height:20px;
+      display:block;
+    }
+    .svc-icon svg path{fill:currentColor}
+    .svc-title{
+      flex:1;
+      min-width:0;
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:15px;
+      font-weight:700;
+      line-height:1.5;
+      color:var(--text);
+    }
+    .svc-body{padding:12px}
+    .svc-desc{
+      margin-top:4px;
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:14px;
+      font-weight:400;
+      line-height:1.55;
+      color:var(--muted);
+    }
+
+    .btn-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-top:12px;
+    }
+    .btn{
+      border:none;
+      border-radius:0;
+      padding:12px 8px;
+      font-family:'Source Sans 3',sans-serif;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .btn-gold{
+      color:#1a1200;
+      background:var(--gold);
+      border:1px solid var(--gold-dark);
+    }
+    .btn-wa{
+      color:#fff;
+      background:var(--green);
+      border:1px solid #16632d;
+    }
+    .btn:active{opacity:.88}
+    .btn svg{width:17px;height:17px;flex-shrink:0}
+    .btn-wa svg path{fill:#fff}
+
+    .video-tile{
+      border:1px solid var(--border);
+      background:#111;
+      border-radius:0;
+      overflow:hidden;
+      position:relative;
+      aspect-ratio:16/9;
+      display:block;
+      margin-top:10px;
+    }
+    .video-tile .thumb{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      opacity:.85;
+    }
+    .video-tile::after{
+      content:'';
+      position:absolute; inset:0;
+      background:rgba(0,0,0,.55);
+      pointer-events:none;
+    }
+    .play{
+      position:absolute;
+      left:50%; top:50%;
+      transform:translate(-50%,-50%);
+      width:56px; height:56px;
+      border-radius:0;
+      background:rgba(0,0,0,.65);
+      border:2px solid var(--gold);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:1;
+    }
+    .play svg{width:22px;height:22px;color:#f5e6b8}
+    .video-cap{
+      position:absolute;
+      left:10px; right:10px; bottom:8px;
+      z-index:2;
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+    }
+    .video-cap .cap-title{
+      font-family:'Source Sans 3',sans-serif;
+      font-size:9px;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.92);
+    }
+    .video-cap .cap-sub{
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:12px;
+      line-height:1.45;
+      color:#fff;
+      font-weight:600;
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(26,31,46,.65);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:999;
+    }
+    .modal.show{display:flex}
+    .modal-card{
+      width:100%;
+      max-width:430px;
+      border-radius:0;
+      overflow:hidden;
+      border:1px solid var(--border);
+      background:var(--surface);
+      box-shadow:0 20px 50px rgba(26,31,46,.2);
+      position:relative;
+    }
+    .modal-top{
+      padding:11px 12px;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:#eef1f6;
+    }
+    .modal-top .t{
+      font-family:'Source Sans 3',sans-serif;
+      font-weight:700;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      font-size:10px;
+      color:var(--text);
+    }
+    .close{
+      border-radius:0;
+      padding:8px 12px;
+      cursor:pointer;
+      background:var(--surface);
+      border:1px solid var(--border);
+      color:var(--text);
+      font-family:'Source Sans 3',sans-serif;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:10px;
+    }
+    .modal-body{padding:12px}
+    .yt{
+      width:100%;
+      aspect-ratio:16/9;
+      border:1px solid var(--border);
+      border-radius:0;
+      overflow:hidden;
+      background:#000;
+    }
+    .yt iframe{width:100%;height:100%;border:0;display:block}
+
+    .rate{
+      border:1px solid var(--border);
+      border-radius:0;
+      overflow:hidden;
+      background:var(--surface);
+    }
+    .rate-card{
+      padding:12px;
+      border:1px solid var(--border);
+      background:var(--surface);
+      box-shadow:none;
+    }
+    .rate-const{
+      font-family:'Source Sans 3',sans-serif;
+      font-weight:700;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      font-size:10px;
+      color:var(--muted);
+    }
+    .rate-name{
+      margin-top:6px;
+      font-family:'Source Sans 3',sans-serif;
+      font-weight:700;
+      font-size:17px;
+      line-height:1.2;
+      color:var(--text);
+    }
+    .rate-grid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+    .rate-pill{
+      border-radius:0;
+      border:1px solid var(--border);
+      background:#f8f9fb;
+      padding:9px 8px;
+    }
+    .rate-pill .k{
+      font-family:'Source Sans 3',sans-serif;
+      font-size:9px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--muted);
+      font-weight:700;
+    }
+    .rate-pill .v{
+      margin-top:4px;
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:13px;
+      font-weight:700;
+      color:var(--text);
+    }
+    .rate-total{
+      margin-top:10px;
+      border-radius:0;
+      border:1px solid var(--gold);
+      background:#faf6e8;
+      padding:11px 10px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .rate-total .k{
+      font-family:'Source Sans 3',sans-serif;
+      font-size:9px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--muted);
+      font-weight:700;
+    }
+    .rate-total .v{
+      font-family:'Source Sans 3',sans-serif;
+      font-size:18px;
+      font-weight:700;
+      color:var(--gold-dark);
+      line-height:1.05;
+    }
+    .rate-cta{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:1fr;
+    }
+    .rate-cta a{width:100%}
+
+    .rate-actions{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+    }
+    .rate .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:11px 12px;
+      border-bottom:1px solid var(--border);
+      font-family:'Source Sans 3',sans-serif;
+      letter-spacing:.04em;
+    }
+    .rate .row:last-child{border-bottom:none}
+    .rate .k{color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase}
+    .rate .v{color:var(--gold-dark); font-size:12px; font-weight:700}
+    .note{
+      margin-top:10px;
+      font-family:'Source Sans 3',sans-serif;
+      font-size:13px;
+      line-height:1.5;
+      color:var(--muted);
+    }
+
+    /* Title-only list cards */
+    .list-card{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 12px;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+    }
+    .list-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .list-title{
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:15px;
+      font-weight:800;
+      line-height:1.4;
+      color:var(--text);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .chev{
+      flex-shrink:0;
+      width:34px;
+      height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid var(--border);
+      background:#f8f9fb;
+      color:var(--gold-dark);
+    }
+    .chev svg{width:18px;height:18px;display:block}
+    .chev svg path{fill:currentColor}
+
+    /* Modal footer (WhatsApp + YouTube) */
+    .modal-footer{
+      padding:12px;
+      border-top:1px solid var(--border);
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      background:#f8f9fb;
+    }
+    .modal-footer .btn{width:100%}
+    .btn-ghost{
+      background:var(--surface);
+      border:1px solid var(--border);
+      color:var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <img src="OtherPage/bjp_only_logo.png" alt="Logo" />
+      <div>
+        <div class="brand-title">BJP WINGS</div>
+        <div class="brand-sub">Bulk Prachar Module</div>
+      </div>
+    </div>
+    <div class="tricolor" aria-hidden="true"><span class="t1"></span><span class="t2"></span><span class="t3"></span></div>
+
+    <div class="sec-h">
+      <div class="kicker">Services</div>
+      <div class="sec-title">Bulk Prachar Types</div>
+    </div>
+
+    <!-- Clean list (title only) -->
+    <div class="card">
+      <div class="list-card" role="button" tabindex="0"
+           data-open-detail
+           data-title="1. બલ્ક સ્લીપ પ્રચાર"
+           data-video="dmqkwyXh8oE"
+           data-rate="sleep">
+        <div class="list-left">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          </span>
+          <div class="list-title">1. બલ્ક સ્લીપ પ્રચાર</div>
+        </div>
+        <span class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="list-card" role="button" tabindex="0"
+           data-open-detail
+           data-title="2. બલ્ક સ્લીપ પ્રિન્ટ"
+           data-video="dmqkwyXh8oE"
+           data-rate="slipprint">
+        <div class="list-left">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+          </span>
+          <div class="list-title">2. બલ્ક સ્લીપ પ્રિન્ટ</div>
+        </div>
+        <span class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="list-card" role="button" tabindex="0"
+           data-open-detail
+           data-title="3. બલ્ક ફોટો પ્રચાર"
+           data-video="dmqkwyXh8oE"
+           data-rate="photo">
+        <div class="list-left">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5zM14.5 11a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+          </span>
+          <div class="list-title">3. બલ્ક ફોટો પ્રચાર</div>
+        </div>
+        <span class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="list-card" role="button" tabindex="0"
+           data-open-detail
+           data-title="4. બલ્ક વિડીયો પ્રચાર"
+           data-video="dmqkwyXh8oE"
+           data-rate="video">
+        <div class="list-left">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+          </span>
+          <div class="list-title">4. બલ્ક વિડીયો પ્રચાર</div>
+        </div>
+        <span class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="list-card" role="button" tabindex="0"
+           data-open-detail
+           data-title="5. બલ્ક કોલ પ્રચાર"
+           data-video="dmqkwyXh8oE"
+           data-rate="call">
+        <div class="list-left">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          </span>
+          <div class="list-title">5. બલ્ક કોલ પ્રચાર</div>
+        </div>
+        <span class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="list-card" role="button" tabindex="0"
+           data-open-detail
+           data-title="6. રોડ હોલ્ડિંગ પ્રચાર"
+           data-video="dmqkwyXh8oE"
+           data-rate="roadholding">
+        <div class="list-left">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h16v2H4V4zm0 4h10v10H4V8zm12 0h4v10h-4V8zM6 10h6v6H6v-6zm8 0h2v6h-2v-6z"/></svg>
+          </span>
+          <div class="list-title">6. રોડ હોલ્ડિંગ પ્રચાર</div>
+        </div>
+        <span class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="list-card" role="button" tabindex="0"
+           data-open-detail
+           data-title="7. સોસિયલ મીડિયા પ્રચાર"
+           data-video="dmqkwyXh8oE"
+           data-rate="socialmedia">
+        <div class="list-left">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+          </span>
+          <div class="list-title">7. સોસિયલ મીડિયા પ્રચાર</div>
+        </div>
+        <span class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="list-card" role="button" tabindex="0"
+           data-open-detail
+           data-title="8. વાહન બેનર પ્રચાર"
+           data-video="dmqkwyXh8oE"
+           data-rate="vehiclebanner">
+        <div class="list-left">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+          </span>
+          <div class="list-title">8. વાહન બેનર પ્રચાર</div>
+        </div>
+        <span class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <div class="list-card" role="button" tabindex="0"
+           data-open-detail
+           data-title="9. પેમ્પલેટ વિતરણ"
+           data-video="dmqkwyXh8oE"
+           data-rate="pamphlet">
+        <div class="list-left">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          </span>
+          <div class="list-title">9. પેમ્પલેટ વિતરણ</div>
+        </div>
+        <span class="chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- Old detailed cards (hidden; kept for reference) -->
+    <div style="display:none">
+    <!-- 1) Bulk Slip Prachar -->
+    <div class="card">
+      <div class="svc-header">
+        <div class="svc-title-row">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          </span>
+          <div class="svc-title">1. બલ્ક સ્લીપ પ્રચાર</div>
+        </div>
+      </div>
+      <div class="svc-body">
+        <div class="svc-desc">તમારી વિધાનસભા માં આવતા દરેક મતદાર સુધી એમની સ્લીપ એક સાથે એમના વોટશેપ માં પહોચાડી શકીએ</div>
+        <a class="video-tile" href="#"
+           data-open-video="dmqkwyXh8oE"
+           data-video-title="બુલ્ક સ્લીપ પ્રચાર — Sample"
+           aria-label="Play bulk slip prachar sample video">
+          <img class="thumb" alt="Bulk slip prachar sample thumbnail" src="https://i.ytimg.com/vi/dmqkwyXh8oE/hqdefault.jpg" loading="lazy" />
+          <div class="play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 5v14l11-7-11-7z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="video-cap">
+            <div class="cap-title">Sample Video</div>
+            <div class="cap-sub">બલ્ક સ્લીપ પ્રચાર ડેમો</div>
+          </div>
+        </a>
+        <div class="btn-row">
+          <button class="btn btn-gold" type="button" data-rate="sleep">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 4h16v14H7l-3 3V4zm3 4h10v2H7V8zm0 4h8v2H7v-2z" fill="currentColor"/></svg>
+            Show Rate Card
+          </button>
+          <a class="btn btn-wa" href="https://wa.me/919998092970?text=Hello%20BJP%20WINGS%2C%20I%20want%20Bulk%20Slip%20Prachar%20details." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20.52 3.48A11.91 11.91 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.6 5.95L0 24l6.31-1.65a11.88 11.88 0 0 0 5.75 1.47h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.16-3.45-8.44zm-8.46 18.3h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.74.98.99-3.65-.23-.38a9.85 9.85 0  1 1 8.39 4.64z" fill="rgba(0,0,0,.9)"/></svg>
+            WhatsApp Now
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2) Bulk Slip Print -->
+    <div class="card" style="margin-top:12px;">
+      <div class="svc-header">
+        <div class="svc-title-row">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+          </span>
+          <div class="svc-title">2. બલ્ક સ્લીપ પ્રિન્ટ</div>
+        </div>
+      </div>
+      <div class="svc-body">
+        <div class="svc-desc">મતદાર સ્લીપની બલ્ક પ્રિન્ટ — તમારા વિસ્તાર મુજબ લિસ્ટ પરથી સ્લીપો પ્રિન્ટ કરી શકાય છે. વિગતો માટે રેટ કાર્ડ અથવા WhatsApp સંપર્ક કરો.</div>
+        <a class="video-tile" href="#"
+           data-open-video="dmqkwyXh8oE"
+           data-video-title="બલ્ક સ્લીપ પ્રિન્ટ — Sample"
+           aria-label="Play bulk slip print sample video">
+          <img class="thumb" alt="Bulk slip print sample thumbnail" src="https://i.ytimg.com/vi/dmqkwyXh8oE/hqdefault.jpg" loading="lazy" />
+          <div class="play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 5v14l11-7-11-7z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="video-cap">
+            <div class="cap-title">Sample Video</div>
+            <div class="cap-sub">બલ્ક સ્લીપ પ્રિન્ટ ડેમો</div>
+          </div>
+        </a>
+        <div class="btn-row">
+          <button class="btn btn-gold" type="button" data-rate="slipprint">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 4h16v14H7l-3 3V4zm3 4h10v2H7V8zm0 4h8v2H7v-2z" fill="currentColor"/></svg>
+            Show Rate Card
+          </button>
+          <a class="btn btn-wa" href="https://wa.me/919998092970?text=Hello%20BJP%20WINGS%2C%20I%20want%20Bulk%20Slip%20Print%20details." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20.52 3.48A11.91 11.91 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.6 5.95L0 24l6.31-1.65a11.88 11.88 0 0 0 5.75 1.47h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.16-3.45-8.44zm-8.46 18.3h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.74.98.99-3.65-.23-.38a9.85 9.85 0  1 1 8.39 4.64z" fill="rgba(0,0,0,.9)"/></svg>
+            WhatsApp Now
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3) Bulk Photo Prachar -->
+    <div class="card" style="margin-top:12px;">
+      <div class="svc-header">
+        <div class="svc-title-row">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5zM14.5 11a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+          </span>
+          <div class="svc-title">3. બલ્ક ફોટો પ્રચાર</div>
+        </div>
+      </div>
+      <div class="svc-body">
+        <div class="svc-desc">તમારી વિધાનસભા માં આવતા દરેક મતદાર સુધી તમારા ફોટા/પોસ્ટર એક સાથે એમના વોટશેપ માં પહોચાડી શકીએ</div>
+        <a class="video-tile" href="#"
+           data-open-video="dmqkwyXh8oE"
+           data-video-title="બલ્ક ફોટો પ્રચાર — Sample"
+           aria-label="Play bulk photo prachar sample video">
+          <img class="thumb" alt="Bulk photo prachar sample thumbnail" src="https://i.ytimg.com/vi/dmqkwyXh8oE/hqdefault.jpg" loading="lazy" />
+          <div class="play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 5v14l11-7-11-7z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="video-cap">
+            <div class="cap-title">Sample Video</div>
+            <div class="cap-sub">બલ્ક ફોટો પ્રચાર ડેમો</div>
+          </div>
+        </a>
+        <div class="btn-row">
+          <button class="btn btn-gold" type="button" data-rate="photo">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 4h16v14H7l-3 3V4zm3 4h10v2H7V8zm0 4h8v2H7v-2z" fill="currentColor"/></svg>
+            Show Rate Card
+          </button>
+          <a class="btn btn-wa" href="https://wa.me/919998092970?text=Hello%20BJP%20WINGS%2C%20I%20want%20Bulk%20Photo%20Prachar%20details." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20.52 3.48A11.91 11.91 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.6 5.95L0 24l6.31-1.65a11.88 11.88 0 0 0 5.75 1.47h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.16-3.45-8.44zm-8.46 18.3h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.74.98.99-3.65-.23-.38a9.85 9.85 0  1 1 8.39 4.64z" fill="rgba(0,0,0,.9)"/></svg>
+            WhatsApp Now
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4) Bulk Video Prachar -->
+    <div class="card" style="margin-top:12px;">
+      <div class="svc-header">
+        <div class="svc-title-row">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+          </span>
+          <div class="svc-title">4. બલ્ક વિડીયો પ્રચાર</div>
+        </div>
+      </div>
+      <div class="svc-body">
+        <div class="svc-desc">તમારી વિધાનસભા માં આવતા દરેક મતદાર સુધી તમારો વિડીયો સંદેશ એક સાથે એમના વોટશેપ માં પહોચાડી શકીએ</div>
+        <a class="video-tile" href="#"
+           data-open-video="dmqkwyXh8oE"
+           data-video-title="બલ્ક વિડીયો પ્રચાર — Sample"
+           aria-label="Play bulk video prachar sample video">
+          <img class="thumb" alt="Bulk video prachar sample thumbnail" src="https://i.ytimg.com/vi/dmqkwyXh8oE/hqdefault.jpg" loading="lazy" />
+          <div class="play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 5v14l11-7-11-7z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="video-cap">
+            <div class="cap-title">Sample Video</div>
+            <div class="cap-sub">બલ્ક વિડીયો પ્રચાર ડેમો</div>
+          </div>
+        </a>
+        <div class="btn-row">
+          <button class="btn btn-gold" type="button" data-rate="video">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 4h16v14H7l-3 3V4zm3 4h10v2H7V8zm0 4h8v2H7v-2z" fill="currentColor"/></svg>
+            Show Rate Card
+          </button>
+          <a class="btn btn-wa" href="https://wa.me/919998092970?text=Hello%20BJP%20WINGS%2C%20I%20want%20Bulk%20Video%20Prachar%20details." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20.52 3.48A11.91 11.91 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.6 5.95L0 24l6.31-1.65a11.88 11.88 0 0 0 5.75 1.47h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.16-3.45-8.44zm-8.46 18.3h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.74.98.99-3.65-.23-.38a9.85 9.85 0  1 1 8.39 4.64z" fill="rgba(0,0,0,.9)"/></svg>
+            WhatsApp Now
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5) Bulk Call Prachar -->
+    <div class="card" style="margin-top:12px;">
+      <div class="svc-header">
+        <div class="svc-title-row">
+          <span class="svc-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          </span>
+          <div class="svc-title">5. બલ્ક કોલ પ્રચાર</div>
+        </div>
+      </div>
+      <div class="svc-body">
+        <div class="svc-desc">તમારી વિધાનસભા માં આવતા દરેક મતદાર સુધી એક સાથે કોલ દ્વારા તમારો સંદેશ પહોંચાડી શકીએ</div>
+        <a class="video-tile" href="#"
+           data-open-video="dmqkwyXh8oE"
+           data-video-title="બલ્ક કોલ પ્રચાર — Sample"
+           aria-label="Play bulk call prachar sample video">
+          <img class="thumb" alt="Bulk call prachar sample thumbnail" src="https://i.ytimg.com/vi/dmqkwyXh8oE/hqdefault.jpg" loading="lazy" />
+          <div class="play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 5v14l11-7-11-7z" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="video-cap">
+            <div class="cap-title">Sample Video</div>
+            <div class="cap-sub">બલ્ક કોલ પ્રચાર ડેમો</div>
+          </div>
+        </a>
+        <div class="btn-row">
+          <button class="btn btn-gold" type="button" data-rate="call">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 4h16v14H7l-3 3V4zm3 4h10v2H7V8zm0 4h8v2H7v-2z" fill="currentColor"/></svg>
+            Show Rate Card
+          </button>
+          <a class="btn btn-wa" href="https://wa.me/919998092970?text=Hello%20BJP%20WINGS%2C%20I%20want%20Bulk%20Call%20Prachar%20details." target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20.52 3.48A11.91 11.91 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.6 5.95L0 24l6.31-1.65a11.88 11.88 0 0 0 5.75 1.47h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.16-3.45-8.44zm-8.46 18.3h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.74.98.99-3.65-.23-.38a9.85 9.85 0  1 1 8.39 4.64z" fill="rgba(0,0,0,.9)"/></svg>
+            WhatsApp Now
+          </a>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- Combined Detail Modal (Video + Rate Card) -->
+  <div class="modal" id="detailModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Bulk Prachar Detail">
+      <div class="modal-top">
+        <div class="t" id="detailTitle">DETAIL</div>
+        <button class="close" type="button" data-close>Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="yt">
+          <iframe id="detailVideoFrame" src="" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="note" id="detailHint">If video does not play, tap "Open in YouTube".</div>
+
+        <div style="margin-top:12px;">
+          <div class="rate" id="detailRateBox"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-wa" id="detailWhatsApp" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20.52 3.48A11.91 11.91 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.6 5.95L0 24l6.31-1.65a11.88 0 0 0 5.75 1.47h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.16-3.45-8.44zm-8.46 18.3h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.74.98.99-3.65-.23-.38a9.85 0  1 1 8.39 4.64z" fill="rgba(0,0,0,.9)"/></svg>
+          WhatsApp Now
+        </a>
+        <a class="btn btn-ghost" id="detailYouTube" href="#" target="_blank" rel="noopener">Open in YouTube</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Modal -->
+  <div class="modal" id="videoModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Video Player">
+      <div class="modal-top">
+        <div class="t" id="videoModalTitle">Video</div>
+        <button class="close" type="button" data-close>Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="yt">
+          <iframe id="videoFrame" src="" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="note" id="videoHint">Tip: Video loads only after tap.</div>
+        <div class="rate-actions" style="margin-top:10px;">
+          <a class="btn btn-gold" id="openOnYouTube" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M10 14.65V9.35L15 12l-5 2.65z" fill="currentColor"/>
+              <path d="M21.58 7.19a2.5 2.5 0 0 0-1.76-1.77C18.25 5 12 5 12 5s-6.25 0-7.82.42A2.5 2.5 0 0 0 2.42 7.2 26.6 26.6 0 0 0 2 12c0 1.62.16 3.24.42 4.81a2.5 2.5 0 0 0 1.76 1.77C5.75 19 12 19 12 19s6.25 0 7.82-.42a2.5 2.5 0 0 0 1.76-1.77c.26-1.57.42-3.19.42-4.81s-.16-3.24-.42-4.81z" fill="currentColor" opacity=".35"/>
+            </svg>
+            Open in YouTube
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rate Card Modal -->
+  <div class="modal" id="rateModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Rate Card">
+      <div class="modal-top">
+        <div class="t" id="rateModalTitle">Rate Card</div>
+        <button class="close" type="button" data-close>Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="rate" id="rateBox">
+          <div class="row"><div class="k">Plan</div><div class="v">Starter</div></div>
+          <div class="row"><div class="k">Quantity</div><div class="v">—</div></div>
+          <div class="row"><div class="k">Price</div><div class="v">—</div></div>
+        </div>
+        <div class="note" id="rateNote">Note: Replace these with your real rates.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const detailModal = document.getElementById('detailModal');
+      const detailTitle = document.getElementById('detailTitle');
+      const detailVideoFrame = document.getElementById('detailVideoFrame');
+      const detailHint = document.getElementById('detailHint');
+      const detailWhatsApp = document.getElementById('detailWhatsApp');
+      const detailYouTube = document.getElementById('detailYouTube');
+      const detailRateBox = document.getElementById('detailRateBox');
+
+      const videoModal = document.getElementById('videoModal');
+      const videoFrame = document.getElementById('videoFrame');
+      const videoTitle = document.getElementById('videoModalTitle');
+      const videoHint = document.getElementById('videoHint');
+      const openOnYouTube = document.getElementById('openOnYouTube');
+
+      const rateModal = document.getElementById('rateModal');
+      const rateTitle = document.getElementById('rateModalTitle');
+      const rateBox = document.getElementById('rateBox');
+      const rateNote = document.getElementById('rateNote');
+
+      function showModal(m) {
+        m.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      }
+      function hideModal(m) {
+        m.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+
+      function closeDetail() {
+        if (!detailModal) return;
+        hideModal(detailModal);
+        if (detailVideoFrame) detailVideoFrame.src = '';
+        if (detailHint) detailHint.textContent = 'If video does not play, tap "Open in YouTube".';
+        if (detailWhatsApp) detailWhatsApp.href = '#';
+        if (detailYouTube) detailYouTube.href = '#';
+        if (detailRateBox) detailRateBox.innerHTML = '';
+      }
+
+      function extractYouTubeId(input) {
+        if (!input) return '';
+        const s = String(input).trim();
+        if (!/[/?=&]/.test(s)) return s;
+        let m = s.match(/youtu\.be\/([a-zA-Z0-9_-]{6,})/);
+        if (m && m[1]) return m[1];
+        m = s.match(/[?&]v=([a-zA-Z0-9_-]{6,})/);
+        if (m && m[1]) return m[1];
+        m = s.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{6,})/);
+        if (m && m[1]) return m[1];
+        m = s.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{6,})/);
+        if (m && m[1]) return m[1];
+        return '';
+      }
+
+      function buildRate(type) {
+        const map = {
+          sleep: {
+            vidhansabhaIdName: '69 - Rajkot East',
+            totalVoters: '3,90,852',
+            totalMobileNos: '2,75,965',
+            unitCostLabel: 'Bulk Sleep Send Cost',
+            unitCostValue: '0.50 / Per Voter',
+            totalCost: '125789',
+            waText: 'Hello BJP WINGS,%0AI want to start Bulk Slip Campaign.%0AVidhansabha: 69 - Rajkot East%0ATotal Voter: 3,90,852%0ATotal Mobile No: 2,75,965'
+          },
+          slipprint: {
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Bulk Slip Print Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Bulk Slip Print details.'
+          },
+          photo: {
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Bulk Photo Send Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Bulk Photo Prachar details.'
+          },
+          video: {
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Bulk Video Send Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Bulk Video Prachar details.'
+          },
+          call: {
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Bulk Call Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Bulk Call Prachar details.'
+          },
+          roadholding: {
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Road Holding Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Road Holding Prachar details.'
+          },
+          socialmedia: {
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Social Media Prachar Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Social Media Prachar details.'
+          },
+          vehiclebanner: {
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Vehicle Banner Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Vehicle Banner Prachar details.'
+          },
+          pamphlet: {
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Pamphlet Distribution Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Pamphlet Distribution details.'
+          }
+        };
+        const data = map[type] || map.sleep;
+        return {
+          html: [
+            ['Vidhansabha', data.vidhansabhaIdName],
+            ['Total Voter', data.totalVoters],
+            ['Total Mobile No', data.totalMobileNos],
+            [data.unitCostLabel, data.unitCostValue],
+            ['Total Cost', data.totalCost],
+            ['Status', 'Contact to Start Campaign']
+          ].map(([k, v]) => (
+            '<div class="row"><div class="k">' + k + '</div><div class="v">' + v + '</div></div>'
+          )).join(''),
+          waText: data.waText || ''
+        };
+      }
+
+      function openDetail({ titleText, videoId, rateType }) {
+        if (!detailModal) return;
+        const id = extractYouTubeId(videoId);
+        if (!id) {
+          if (detailHint) detailHint.textContent = 'Invalid YouTube link/ID. Please check and try again.';
+          return;
+        }
+
+        if (detailTitle) detailTitle.textContent = titleText || 'DETAIL';
+        if (detailHint) detailHint.textContent = 'If video does not play, tap "Open in YouTube".';
+        if (detailYouTube) detailYouTube.href = 'https://www.youtube.com/watch?v=' + encodeURIComponent(id);
+        if (detailVideoFrame) {
+          detailVideoFrame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?rel=0&playsinline=1&autoplay=1';
+        }
+
+        const r = buildRate(rateType);
+        if (detailRateBox) detailRateBox.innerHTML = r.html;
+        if (detailWhatsApp) detailWhatsApp.href = 'https://wa.me/919998092970?text=' + r.waText;
+
+        showModal(detailModal);
+      }
+
+      function openVideo(videoId, titleText) {
+        const id = extractYouTubeId(videoId);
+        if (!id) {
+          if (videoHint) videoHint.textContent = 'Invalid YouTube link/ID. Please check and try again.';
+          return;
+        }
+        videoTitle.textContent = titleText || 'Video';
+        if (videoHint) videoHint.textContent = 'If video does not play, tap "Open in YouTube".';
+        if (openOnYouTube) openOnYouTube.href = 'https://www.youtube.com/watch?v=' + encodeURIComponent(id);
+        videoFrame.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?rel=0&playsinline=1&autoplay=1';
+        showModal(videoModal);
+      }
+      function closeVideo() {
+        hideModal(videoModal);
+        videoFrame.src = '';
+        if (videoHint) videoHint.textContent = 'Tip: Video loads only after tap.';
+        if (openOnYouTube) openOnYouTube.href = '#';
+      }
+
+      function setRate(type) {
+        const map = {
+          sleep: {
+            title: 'Rate Card',
+            vidhansabhaIdName: '69 - Rajkot East',
+            totalVoters: '3,90,852',
+            totalMobileNos: '2,75,965',
+            unitCostLabel: 'Bulk Sleep Send Cost',
+            unitCostValue: '0.50 / Per Voter',
+            totalCost: '125789',
+            waText: 'Hello BJP WINGS,%0AI want to start Bulk Slip Campaign.%0AVidhansabha: 69 - Rajkot East%0ATotal Voter: 3,90,852%0ATotal Mobile No: 2,75,965'
+          },
+          slipprint: {
+            title: 'Rate Card',
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Bulk Slip Print Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Bulk Slip Print details.'
+          },
+          photo: {
+            title: 'Rate Card',
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Bulk Photo Send Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Bulk Photo Prachar details.'
+          },
+          video: {
+            title: 'Rate Card',
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Bulk Video Send Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Bulk Video Prachar details.'
+          },
+          call: {
+            title: 'Rate Card',
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Bulk Call Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Bulk Call Prachar details.'
+          },
+          roadholding: {
+            title: 'Rate Card',
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Road Holding Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Road Holding Prachar details.'
+          },
+          socialmedia: {
+            title: 'Rate Card',
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Social Media Prachar Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Social Media Prachar details.'
+          },
+          vehiclebanner: {
+            title: 'Rate Card',
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Vehicle Banner Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Vehicle Banner Prachar details.'
+          },
+          pamphlet: {
+            title: 'Rate Card',
+            vidhansabhaIdName: 'Vidhansabha Name',
+            totalVoters: '—',
+            totalMobileNos: '—',
+            unitCostLabel: 'Pamphlet Distribution Cost',
+            unitCostValue: 'Contact on WhatsApp',
+            totalCost: '—',
+            waText: 'Hello BJP WINGS,%0AI want Pamphlet Distribution details.'
+          }
+        };
+        const data = map[type] || map.sleep;
+        rateTitle.textContent = data.vidhansabhaIdName + ' — ' + data.title;
+        rateBox.className = 'rate';
+        rateBox.innerHTML = [
+          ['Vidhansabha', data.vidhansabhaIdName],
+          ['Total Voter', data.totalVoters],
+          ['Total Mobile No', data.totalMobileNos],
+          [data.unitCostLabel, data.unitCostValue],
+          ['Total Cost', data.totalCost],
+          ['Status', 'Contact to Start Campaign']
+        ].map(([k, v]) => (
+          '<div class="row"><div class="k">' + k + '</div><div class="v">' + v + '</div></div>'
+        )).join('');
+
+        rateNote.innerHTML =
+          '<a class="btn btn-wa" href="https://wa.me/919998092970?text=' + (data.waText || '') + '" target="_blank" rel="noopener" style="width:100%;">' +
+            '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20.52 3.48A11.91 11.91 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.6 5.95L0 24l6.31-1.65a11.88 11.88 0 0 0 5.75 1.47h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.16-3.45-8.44zm-8.46 18.3h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.74.98.99-3.65-.23-.38a9.85 9.85 0  1 1 8.39 4.64z" fill="rgba(0,0,0,.9)"/></svg>' +
+            'WhatsApp Now' +
+          '</a>' +
+          (data.note ? '<div class="note" style="margin-top:10px;">' + data.note + '</div>' : '');
+      }
+
+      document.addEventListener('click', (e) => {
+        const closeBtn = e.target.closest('[data-close]');
+        if (closeBtn) {
+          if (detailModal && detailModal.classList.contains('show')) closeDetail();
+          if (videoModal.classList.contains('show')) closeVideo();
+          if (rateModal.classList.contains('show')) hideModal(rateModal);
+          return;
+        }
+
+        if (detailModal && e.target === detailModal) closeDetail();
+        if (e.target === videoModal) closeVideo();
+        if (e.target === rateModal) hideModal(rateModal);
+
+        const listCard = e.target.closest('[data-open-detail]');
+        if (listCard) {
+          const titleText = listCard.getAttribute('data-title') || 'DETAIL';
+          const videoId = listCard.getAttribute('data-video') || '';
+          const rateType = listCard.getAttribute('data-rate') || 'sleep';
+          openDetail({ titleText, videoId, rateType });
+          return;
+        }
+
+        const tile = e.target.closest('[data-open-video]');
+        if (tile) {
+          e.preventDefault();
+          const id = tile.getAttribute('data-open-video');
+          const t = tile.getAttribute('data-video-title') || 'Sample Video';
+          openVideo(id, t);
+          return;
+        }
+
+        const rateBtn = e.target.closest('[data-rate]');
+        if (rateBtn) {
+          const type = rateBtn.getAttribute('data-rate');
+          setRate(type);
+          showModal(rateModal);
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        if (detailModal && detailModal.classList.contains('show')) closeDetail();
+        if (videoModal.classList.contains('show')) closeVideo();
+        if (rateModal.classList.contains('show')) hideModal(rateModal);
+      });
+    })();
+  </script>
+</body>
+</html>

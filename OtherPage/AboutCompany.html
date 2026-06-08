@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <title>HL Group of Company</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c9a84c;
+            --gold-light: #e8c97a;
+            --bg: #070707;
+            --card: #141414;
+            --card-soft: #1b1b1b;
+            --text: #f0ede6;
+            --muted: #a89d8e;
+            --line: rgba(201, 168, 76, 0.22);
+            --shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            max-width: 430px;
+            margin: 0 auto;
+            background: radial-gradient(circle at top right, rgba(201, 168, 76, 0.08), transparent 32%), var(--bg);
+            color: var(--text);
+            font-family: 'Cormorant Garamond', serif;
+            overflow-x: hidden;
+        }
+
+        .wrap {
+            padding: 18px 14px 24px;
+        }
+
+        .brand-chip {
+            margin-bottom: 14px;
+            border: 1px solid var(--line);
+            background: linear-gradient(145deg, rgba(201, 168, 76, 0.14), rgba(201, 168, 76, 0.03));
+            border-radius: 14px;
+            padding: 12px 14px;
+            box-shadow: var(--shadow);
+        }
+
+            .brand-chip p {
+                font-family: 'Rajdhani', sans-serif;
+                font-size: 10px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--gold);
+            }
+
+            .brand-chip h1 {
+                margin-top: 2px;
+                font-family: 'Playfair Display', serif;
+                font-size: 27px;
+                line-height: 1.1;
+            }
+
+        .section-card {
+            background: linear-gradient(180deg, var(--card-soft), var(--card));
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+        }
+
+        .sec-header {
+            padding: 16px 16px 12px;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+        }
+
+        .sec-eyebrow {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 9px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 3px;
+        }
+
+        .sec-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .video-container {
+            aspect-ratio: 16 / 9;
+            width: 100%;
+            background: #000;
+        }
+
+            .video-container iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+                display: block;
+            }
+
+        .owner-photo-wrap {
+            position: relative;
+            aspect-ratio: 5 / 4;
+            background: #0f0f0f;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+        }
+
+            .owner-photo-wrap img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: top center;
+                display: block;
+            }
+
+        .owner-photo-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(8, 8, 8, 1) 0%, rgba(8, 8, 8, 0.62) 30%, transparent 62%);
+        }
+
+        .owner-name-block {
+            position: absolute;
+            left: 14px;
+            right: 14px;
+            bottom: 14px;
+            z-index: 2;
+        }
+
+        .owner-name-xl {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            line-height: 1;
+            color: #fff;
+        }
+
+            .owner-name-xl em {
+                font-style: normal;
+                display: block;
+                font-size: 32px;
+                background: linear-gradient(135deg, var(--gold-light), var(--gold));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+        .owner-role-pill {
+            display: inline-block;
+            margin-top: 8px;
+            background: var(--gold);
+            color: white;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            border-radius: 999px;
+            padding: 6px 12px;
+        }
+
+        .owner-bio {
+            padding: 14px;
+        }
+
+        .owner-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .o-stat {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: rgba(201, 168, 76, 0.06);
+            text-align: center;
+            padding: 10px 6px;
+        }
+
+        .o-stat-num {
+            display: block;
+            font-family: 'Playfair Display', serif;
+            color: var(--gold);
+            font-size: 23px;
+            line-height: 1;
+        }
+
+        .o-stat-lbl {
+            display: block;
+            font-family: 'Rajdhani', sans-serif;
+            color: white;
+            font-size: 14px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 4px;
+            font-weight: 800;
+        }
+
+        .owner-quote {
+            border: 1px solid var(--line);
+            border-left: 3px solid var(--gold);
+            border-radius: 10px;
+            background: rgba(201, 168, 76, 0.09);
+            padding: 12px 12px 12px 14px;
+            font-style: italic;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            padding: 10px;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #1d1d1d;
+        }
+
+            .gallery-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+            .gallery-item::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to top, rgba(0, 0, 0, 0.45), transparent 60%);
+            }
+
+        .contact-body {
+            padding: 14px;
+        }
+
+        .contact-company {
+            font-family: 'Playfair Display', serif;
+            font-size: 35px;
+            line-height: 1;
+            text-align: center;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contact-person {
+            margin-top: 9px;
+            margin-bottom: 14px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .btn-solid, .btn-border {
+            display: block;
+            width: 100%;
+            border-radius: 10px;
+            padding: 13px;
+            text-align: center;
+            text-decoration: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+        }
+
+        .btn-solid {
+            color: #111;
+            background: linear-gradient(135deg, var(--gold), #a87e28);
+        }
+
+        .btn-border {
+            color: var(--gold);
+            border: 1px solid var(--line);
+            background: transparent;
+        }
+
+        footer {
+            text-align: center;
+            padding: 8px 4px 22px;
+        }
+
+            footer p {
+                font-family: 'Rajdhani', sans-serif;
+                font-size: 9px;
+                letter-spacing: 0.17em;
+                text-transform: uppercase;
+                color: rgba(168, 157, 142, 0.65);
+            }
+
+            footer span {
+                color: rgba(201, 168, 76, 0.86);
+            }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+            .reveal.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+    </style>
+
+    <style>
+        /* YouTube Reels Horizontal Tray Design */
+        .reels-horizontal-tray {
+            display: flex;
+            overflow-x: auto;
+            padding: 16px 14px 20px;
+            gap: 14px;
+            scrollbar-width: none; /* Firefox */
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+            .reels-horizontal-tray::-webkit-scrollbar {
+                display: none; /* Chrome/Safari */
+            }
+
+        .reel-card-item {
+            flex: 0 0 130px; /* Width of the Reel thumbnail */
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reel-img-box {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9 / 16; /* Mobile Reel Ratio */
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            background: #000;
+        }
+
+            .reel-img-box img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.4s ease;
+            }
+
+        .reel-card-item:hover .reel-img-box img {
+            transform: scale(1.08);
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 40%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .play-overlay span {
+                color: #fff;
+                font-size: 24px;
+                opacity: 0.8;
+                text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            }
+
+        .reel-label {
+            margin-top: 8px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+
+    <style>
+        /* ગ્રીડ લેઆઉટ */
+        .owner-stats-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 10px;
+        }
+
+            .stats-row .o-stat {
+                flex: 1;
+            }
+
+        .full-width {
+            flex: 100% !important;
+        }
+
+        /* હાઈલાઈટ ઈફેક્ટ */
+        .highlight-box {
+            border: 1.5px solid var(--gold) !important; /* ગોલ્ડન બોર્ડર */
+            background: linear-gradient(145deg, rgba(201, 168, 76, 0.2), rgba(0, 0, 0, 0.3)) !important;
+            box-shadow: 0 0 15px rgba(201, 168, 76, 0.3); /* ગ્લો ઈફેક્ટ */
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+            /* શાઈન એનિમેશન (પટ્ટી પસાર થશે) */
+            .highlight-box::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+                animation: shine-effect 4s infinite;
+            }
+
+        @keyframes shine-effect {
+            0% {
+                left: -100%;
+            }
+
+            20% {
+                left: 100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .o-stat-num {
+            font-size: 28px !important;
+            font-weight: 700;
+        }
+    </style>
+
+    <style>
+        .owner-quote-wrap {
+            position: relative;
+            margin-top: 20px;
+            padding: 30px 20px;
+            background: linear-gradient(145deg, rgba(201, 168, 76, 0.1), rgba(20, 20, 20, 0.8));
+            border-radius: 15px;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            text-align: center;
+        }
+
+        .owner-slogan {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            line-height: 1.5;
+            color: var(--text);
+            font-style: italic;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote-icon-start, .quote-icon-end {
+            font-family: 'Playfair Display', serif;
+            font-size: 60px;
+            color: var(--gold);
+            opacity: 0.3;
+            position: absolute;
+            line-height: 1;
+        }
+
+        .quote-icon-start {
+            top: 5px;
+            left: 15px;
+        }
+
+        .quote-icon-end {
+            bottom: -10px;
+            right: 15px;
+        }
+
+        .slogan-author {
+            margin-top: 15px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .btn-whatsapp {
+            color: #fff;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            border: none;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header class="brand-chip reveal">
+            <p>About Us</p>
+            <h1>HL Group of Company</h1>
+        </header>
+
+        <!--<section class="section-card reveal">
+            <div class="sec-header">
+                <div class="sec-eyebrow">Visual Profile</div>
+                <h2 class="sec-title">Political Journey</h2>
+            </div>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/dmqkwyXh8oE?modestbranding=1&rel=0&showinfo=0&controls=1&autohide=1"
+                        title="Video Player"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </section>-->
+
+        <section class="section-card reveal">
+            <div class="sec-header">
+                <div class="sec-eyebrow">Leadership Profile</div>
+                <h2 class="sec-title">Dr. Hiren Ghelani</h2>
+            </div>
+            <div class="owner-photo-wrap">
+                <img src="img/hirensir/newhl.jpeg" alt="Dr. Hiren Ghelani">
+                <div class="owner-photo-overlay"></div>
+                <div class="owner-name-block">
+                    <div class="owner-name-xl">
+                        <em>Dr. Hiren Ghelani</em>
+
+                    </div>
+                    <span class="owner-role-pill">The Political Strategist</span>
+                </div>
+            </div>
+            <div class="owner-bio reveal">
+                <div class="owner-stats-grid">
+                    <div class="stats-row">
+                        <div class="o-stat highlight-box">
+                            <span class="o-stat-num count" data-target="6">0</span><span class="o-stat-num">+</span>
+                            <span class="o-stat-lbl">State</span>
+                        </div>
+                        <div class="o-stat highlight-box">
+                            <span class="o-stat-num count" data-target="35">0</span><span class="o-stat-num">+</span>
+                            <span class="o-stat-lbl">Elections</span>
+                        </div>
+                    </div>
+
+                    <div class="stats-row">
+                        <div class="o-stat highlight-box full-width">
+                            <span class="o-stat-num count" data-target="9">0</span><span class="o-stat-num"> CR+</span>
+                            <span class="o-stat-lbl">Karyakarta</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="owner-quote-wrap reveal">
+                    <div class="quote-icon-start">“</div>
+                    <div class="owner-slogan">
+                        ઈલેકસન કોઈ સિસ્ટમ થી નહિ પણ કાર્યકર્તાઓના કાર્યો અને પ્રયાસો થી જીતાય છે.
+                    </div>
+                    <div class="quote-icon-end">”</div>
+                    <div class="slogan-author">— Dr. Hiren Ghelani</div>
+                </div>
+            </div>
+        </section>
+
+        <!--<section class="section-card reveal">
+            <div class="sec-header">
+                <div class="sec-eyebrow">Visual Insights</div>
+                <h2 class="sec-title">Featured Reels</h2>
+            </div>
+
+            <div class="reels-horizontal-tray">
+                <a href="https://youtube.com/shorts/wTpFr5HSpwg" target="_blank" class="reel-card-item">
+                    <div class="reel-img-box">
+                        <img src="https://img.youtube.com/vi/wTpFr5HSpwg/hqdefault.jpg" alt="DF">
+                        <div class="play-overlay"><span>▶</span></div>
+                    </div>
+                </a>
+
+                <a href="https://youtube.com/shorts/hh1KRd3GOXA" target="_blank" class="reel-card-item">
+                    <div class="reel-img-box">
+                        <img src="https://img.youtube.com/vi/hh1KRd3GOXA/hqdefault.jpg" alt="MH Campaign">
+                        <div class="play-overlay"><span>▶</span></div>
+                    </div>
+                </a>
+
+                <a href="https://youtube.com/shorts/Dj39OA1Od8c" target="_blank" class="reel-card-item">
+                    <div class="reel-img-box">
+                        <img src="https://img.youtube.com/vi/Dj39OA1Od8c/hqdefault.jpg" alt="Rupala Sabha">
+                        <div class="play-overlay"><span>▶</span></div>
+                    </div>
+                </a>
+
+                <a href="https://youtube.com/shorts/0Ys_bCyT0Ng" target="_blank" class="reel-card-item">
+                    <div class="reel-img-box">
+                        <img src="https://img.youtube.com/vi/0Ys_bCyT0Ng/hqdefault.jpg" alt="Amravati">
+                        <div class="play-overlay"><span>▶</span></div>
+                    </div>
+                </a>
+
+                <a href="https://youtube.com/shorts/-HuGabeuvFM" target="_blank" class="reel-card-item">
+                    <div class="reel-img-box">
+                        <img src="https://img.youtube.com/vi/-HuGabeuvFM/hqdefault.jpg" alt="Kutch">
+                        <div class="play-overlay"><span>▶</span></div>
+                    </div>
+                </a>
+
+                <a href="https://youtube.com/shorts/1GTsokqdwK0" target="_blank" class="reel-card-item">
+                    <div class="reel-img-box">
+                        <img src="https://img.youtube.com/vi/1GTsokqdwK0/hqdefault.jpg" alt="Rupala Meet">
+                        <div class="play-overlay"><span>▶</span></div>
+                    </div>
+                </a>
+
+                <a href="https://youtube.com/shorts/umBJPtE_150" target="_blank" class="reel-card-item">
+                    <div class="reel-img-box">
+                        <img src="https://img.youtube.com/vi/umBJPtE_150/hqdefault.jpg" alt="Bawankule">
+                        <div class="play-overlay"><span>▶</span></div>
+                    </div>
+                </a>
+
+                <a href="https://youtube.com/shorts/twSk1qWPvRU" target="_blank" class="reel-card-item">
+                    <div class="reel-img-box">
+                        <img src="https://img.youtube.com/vi/twSk1qWPvRU/hqdefault.jpg" alt="Shinde">
+                        <div class="play-overlay"><span>▶</span></div>
+                    </div>
+                </a>
+
+                <a href="https://youtube.com/shorts/UZFzJJRvRBg" target="_blank" class="reel-card-item">
+                    <div class="reel-img-box">
+                        <img src="https://img.youtube.com/vi/UZFzJJRvRBg/hqdefault.jpg" alt="Piyush Goyal">
+                        <div class="play-overlay"><span>▶</span></div>
+                    </div>
+                </a>
+
+                <a href="https://youtube.com/shorts/-LRXYQ4IvLo" target="_blank" class="reel-card-item">
+                    <div class="reel-img-box">
+                        <img src="https://img.youtube.com/vi/-LRXYQ4IvLo/hqdefault.jpg" alt="Australia">
+                        <div class="play-overlay"><span>▶</span></div>
+                    </div>
+                </a>
+
+                <a href="https://youtube.com/shorts/npTjzae6r6U" target="_blank" class="reel-card-item">
+                    <div class="reel-img-box">
+                        <img src="https://img.youtube.com/vi/npTjzae6r6U/hqdefault.jpg" alt="DF Personal">
+                        <div class="play-overlay"><span>▶</span></div>
+                    </div>
+                </a>
+            </div>
+        </section>-->
+
+        <!--<section class="section-card reveal">
+            <div class="sec-header">
+                <div class="sec-eyebrow">Gallery</div>
+                <h2 class="sec-title">Moments</h2>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="img/hirensir/N1.jpeg" alt="Gallery 1">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/hirensir/N2.jpeg" alt="Gallery 2">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/hirensir/N3.jpeg" alt="Gallery 3">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/hirensir/N4.jpeg" alt="Gallery 4">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/hirensir/N5.jpeg" alt="Gallery 5">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/hirensir/N6.jpeg" alt="Gallery 6">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/hirensir/N7.jpeg" alt="Gallery 7">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/hirensir/N8.jpeg" alt="Gallery 8">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/hirensir/N9.jpeg" alt="Gallery 8">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/hirensir/N10.jpeg" alt="Gallery 8">
+                </div>
+            </div>
+        </section>-->
+
+        <section class="section-card reveal">
+            <div class="sec-header">
+                <div class="sec-eyebrow">Connect With Us</div>
+                <h2 class="sec-title">HL Group</h2>
+            </div>
+            <div class="contact-body">
+                <div class="contact-company">HL Group</div>
+                <div class="contact-person">Dr. Hiren Ghelani · The Political Strategist</div>
+
+                <div class="contact-grid">
+                    <a href="tel:+919998092970" class="btn-solid">Call Now</a>
+                    <a href="https://wa.me/919998092970" class="btn-solid btn-whatsapp" target="_self">WhatsApp</a>
+                </div>
+
+                <a href="https://share.google/rt9mPZlZYYauYlhiA" target="_self" class="btn-border">
+                    Write a Google Review
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 <span>HL Group of Company</span> · All Rights Reserved</p>
+        <p style="margin-top:6px;">Founded by <span>Dr. Hiren Ghelani</span></p>
+    </footer>
+
+    <script>
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    io.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const startCounter = (el) => {
+                const target = parseInt(el.getAttribute('data-target'));
+                const countIt = () => {
+                    const displayed = parseInt(el.innerText);
+                    const increment = target / 50; // એનિમેશન સ્પીડ કંટ્રોલ
+
+                    if (displayed < target) {
+                        el.innerText = Math.ceil(displayed + increment);
+                        setTimeout(countIt, 30);
+                    } else {
+                        el.innerText = target;
+                    }
+                };
+                countIt();
+            };
+
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // સેક્શન દેખાય એટલે reveal ક્લાસ એડ કરો
+                        entry.target.classList.add('visible');
+
+                        // આ સેક્શનમાં રહેલા બધા .count ને શોધીને એનિમેશન શરૂ કરો
+                        const counters = entry.target.querySelectorAll('.count');
+                        counters.forEach(c => startCounter(c));
+
+                        // એકવાર એનિમેશન થઈ જાય એટલે ઓબ્ઝર્વર બંધ કરી દો
+                        counterObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            // આપણે Dr. Hiren Ghelani વાળા કાર્ડને જ ટાર્ગેટ કરીએ
+            const targetSection = document.querySelector('.owner-bio').parentElement;
+            if (targetSection) {
+                counterObserver.observe(targetSection);
+            }
+        });
+    </script>
+</body>
+</html>

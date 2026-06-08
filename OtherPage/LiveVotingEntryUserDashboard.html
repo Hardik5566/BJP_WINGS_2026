@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a2332" />
+  <title>લાઇવ મતદાન એન્ટ્રી — BJP WINGS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #b8860b;
+      --gold-dark: #8b6914;
+      --gold-light: #f5e6b8;
+      --navy: #1a2332;
+      --navy-mid: #243044;
+      --green: #1e7a3a;
+      --blue: #1e5a8a;
+      --orange: #c45c1a;
+      --red: #a80f0f;
+      --bg: #eef1f6;
+      --surface: #ffffff;
+      --text: #1a1f2e;
+      --muted: #5c6370;
+      --border: #d0d6e0;
+      --shadow: 0 4px 16px rgba(26, 31, 46, 0.09);
+      --shadow-lg: 0 8px 28px rgba(26, 31, 46, 0.14);
+      --radius: 14px;
+      --safe-b: env(safe-area-inset-bottom, 0px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
+
+    body {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Source Sans 3", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: calc(24px + var(--safe-b));
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* —— Header —— */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: linear-gradient(180deg, #141c28 0%, var(--navy) 100%);
+      color: #fff;
+      padding: max(12px, env(safe-area-inset-top)) 16px 14px;
+      border-bottom: 3px solid var(--gold);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .topbar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar img {
+      width: 46px;
+      height: auto;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+    }
+
+    .topbar-main { flex: 1; min-width: 0; }
+
+    .topbar h1 {
+      font-family: "Noto Sans Gujarati", sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar .sub {
+      margin-top: 3px;
+      font-size: 12px;
+      opacity: 0.82;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 5px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(184, 134, 11, 0.22);
+      border: 1px solid rgba(184, 134, 11, 0.55);
+      border-radius: 999px;
+      color: var(--gold-light);
+    }
+
+    .role-badge::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.9); }
+    }
+
+    .booth-count-pill {
+      flex-shrink: 0;
+      text-align: center;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+    }
+
+    .booth-count-pill .n {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--gold-light);
+    }
+
+    .booth-count-pill .l {
+      margin-top: 4px;
+      font-family: "Noto Sans Gujarati", sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      opacity: 0.85;
+    }
+
+    .wrap { padding: 12px 14px 0; }
+
+    /* —— Time panel —— */
+    .time-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .time-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .time-card .live {
+      font-size: 32px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+      line-height: 1.05;
+    }
+
+    .time-card .mini {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      font-family: "Noto Sans Gujarati", sans-serif;
+    }
+
+    .time-card .mini .tag {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    .time-card .mini .cd {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--red);
+    }
+
+    /* —— Section —— */
+    .sec { margin-bottom: 12px; }
+
+    .sec-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding: 0 2px;
+    }
+
+    .sec-k {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+    }
+
+    .sec-t {
+      font-family: "Noto Sans Gujarati", sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .live-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green);
+    }
+
+    .live-dot::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+
+    /* —— Summary card —— */
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+
+    .donut-wrap {
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    .donut-svg {
+      width: 140px;
+      height: 140px;
+      transform: rotate(-90deg);
+    }
+
+    .donut-svg .track { stroke: #e4e9ef; }
+    .donut-svg .arc-v { stroke: var(--green); transition: stroke-dasharray 0.5s ease; }
+
+    .donut-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .donut-text .pct {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--green);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .donut-text .cap {
+      font-family: "Noto Sans Gujarati", sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .kpi {
+      text-align: center;
+      padding: 10px 4px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .kpi .n {
+      font-size: 18px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+
+    .kpi .l {
+      margin-top: 5px;
+      font-family: "Noto Sans Gujarati", sans-serif;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .kpi.total::before { background: var(--blue); }
+    .kpi.voted::before { background: var(--green); }
+    .kpi.remain::before { background: var(--orange); }
+    .kpi.total .n { color: var(--blue); }
+    .kpi.voted .n { color: var(--green); }
+    .kpi.remain .n { color: var(--orange); }
+
+    /* —— Toolbar —— */
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .search-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      padding: 11px 12px 11px 38px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-family: "Noto Sans Gujarati", sans-serif;
+      font-size: 14px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .search-wrap input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--muted);
+    }
+
+    .sort-btn {
+      flex-shrink: 0;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    .sort-btn:active { background: #f4f6f9; }
+
+    /* —— Booth cards —— */
+    .booth-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .booth-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .booth-card:active {
+      transform: scale(0.99);
+    }
+
+    .booth-card-head {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .booth-no-block {
+      flex-shrink: 0;
+      width: 72px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 8px;
+      background: linear-gradient(160deg, var(--navy-mid) 0%, var(--navy) 100%);
+      color: #fff;
+      border-right: 3px solid var(--gold);
+    }
+
+    .booth-no-block .lbl {
+      font-family: "Noto Sans Gujarati", sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      opacity: 0.75;
+      letter-spacing: 0.06em;
+    }
+
+    .booth-no-block .num {
+      margin-top: 4px;
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .booth-card-body {
+      flex: 1;
+      min-width: 0;
+      padding: 12px 12px 10px;
+    }
+
+    .booth-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .pct-badge {
+      font-size: 15px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      padding: 4px 10px;
+      border-radius: 8px;
+      color: #fff;
+      min-width: 52px;
+      text-align: center;
+    }
+
+    .booth-mini-kpi {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .mini-cell {
+      text-align: center;
+      padding: 6px 2px;
+      border-radius: 8px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+    }
+
+    .mini-cell .v {
+      font-size: 14px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+
+    .mini-cell .k {
+      margin-top: 2px;
+      font-family: "Noto Sans Gujarati", sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .mini-cell.total .v { color: var(--blue); }
+    .mini-cell.voted .v { color: var(--green); }
+    .mini-cell.remain .v { color: var(--orange); }
+
+    .progress-track {
+      margin-top: 10px;
+      height: 8px;
+      background: #e8ecf2;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.45s ease, background 0.3s ease;
+      min-width: 2px;
+    }
+
+    .booth-card-foot {
+      display: flex;
+      gap: 8px;
+      padding: 0 12px 12px;
+    }
+
+    .btn-entry {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--green) 0%, #16632d 100%);
+      color: #fff;
+      font-family: "Noto Sans Gujarati", sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(30, 122, 58, 0.35);
+    }
+
+    .btn-entry:active {
+      transform: scale(0.98);
+    }
+
+    .btn-entry svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .btn-report {
+      flex-shrink: 0;
+      width: 48px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #f8fafc;
+      color: var(--blue);
+      cursor: pointer;
+    }
+
+    .btn-report:active { background: #eef2f7; }
+
+    .btn-report svg { width: 22px; height: 22px; }
+
+    /* —— Empty / loading —— */
+    .state-box {
+      text-align: center;
+      padding: 32px 16px;
+      font-family: "Noto Sans Gujarati", sans-serif;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .state-box.hidden { display: none; }
+
+    .loader {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 12px;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .foot-note {
+      margin-top: 16px;
+      padding: 12px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+      font-family: "Noto Sans Gujarati", sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-row">
+      <img src="bjp_only_logo.png" alt="BJP" width="46" height="46" onerror="this.style.display='none'" />
+      <div class="topbar-main">
+        <h1 id="userName">રાજેશભાઈ પટેલ</h1>
+        <div class="sub" id="userMobile">98765 43210</div>
+        <span class="role-badge">લાઇવ મતદાન એન્ટ્રી</span>
+      </div>
+      <div class="booth-count-pill" title="તમને ફાળવેલ બુથ">
+        <div class="n" id="boothCount">0</div>
+        <div class="l">બુથ</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <!-- Live clock -->
+    <section class="time-panel" aria-label="સમય">
+      <div class="time-card">
+        <div class="live" id="liveClock">--:--:--</div>
+        <div class="mini">
+          <div class="tag">બાકી સમય (મતદાન બંધ)</div>
+          <div class="cd" id="countdown">--</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Combined stats (all assigned booths) -->
+    <section class="sec">
+      <div class="sec-head">
+        <div>
+          <div class="sec-k">My booths</div>
+          <div class="sec-t">મારા બુથ — સંપૂર્ણ સારાંશ</div>
+        </div>
+        <span class="live-dot">Live</span>
+      </div>
+      <div class="summary-card">
+        <div class="donut-wrap">
+          <svg class="donut-svg" viewBox="0 0 36 36" aria-hidden="true">
+            <circle class="track" cx="18" cy="18" fill="none" r="15.9155" stroke-width="3" />
+            <circle class="arc-v" id="arcVoted" cx="18" cy="18" fill="none" r="15.9155" stroke-width="3"
+              stroke-dasharray="0 100" stroke-linecap="butt" pathLength="100" />
+          </svg>
+          <div class="donut-center">
+            <div class="donut-text">
+              <div class="pct" id="donutPct">0%</div>
+              <div class="cap">મતદાન %</div>
+            </div>
+          </div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi total">
+            <div class="n" id="kTotal">0</div>
+            <div class="l">ટોટલ</div>
+          </div>
+          <div class="kpi voted">
+            <div class="n" id="kVoted">0</div>
+            <div class="l">થયેલ</div>
+          </div>
+          <div class="kpi remain">
+            <div class="n" id="kRemain">0</div>
+            <div class="l">બાકી</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Booth list -->
+    <section class="sec">
+      <div class="sec-head">
+        <div>
+          <div class="sec-k">Booth list</div>
+          <div class="sec-t">બુથ પસંદ કરી મતદાન એન્ટ્રી કરો</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7" /><path d="M20 20l-3-3" />
+          </svg>
+          <input type="search" id="boothSearch" placeholder="બુથ નંબર શોધો…" autocomplete="off" />
+        </div>
+        <button type="button" class="sort-btn" id="sortBtn" title="ક્રમ બદલો">% ↓</button>
+      </div>
+
+      <div id="loadingState" class="state-box hidden">
+        <div class="loader"></div>
+        <div>લોડ થઈ રહ્યું છે…</div>
+      </div>
+      <div id="emptyState" class="state-box hidden">કોઈ બુથ મળ્યું નથી.</div>
+      <div class="booth-list" id="boothList" role="list"></div>
+    </section>
+
+    <p class="foot-note">
+      તમને ફાળવેલ દરેક બુથ માટે સ્કેન / મેન્યુઅલ એન્ટ્રી ખોલવા «મતદાન એન્ટ્રી» દબાવો.
+      <br />ડેટા લાઇવ અપડેટ થાય છે.
+    </p>
+  </div>
+
+  <script>
+    (function () {
+      /* —— Config: set from app / URL query —— */
+      var CONFIG = {
+        appId: 1,
+        userId: 12,
+        userName: "રાજેશભાઈ પટેલ",
+        userMobile: "98765 43210",
+        /* Assigned booths from tbl_user_booth — pipe or comma in URL: ?booths=12,45,78 */
+        assignedBooths: [12, 45, 78, 102, 156, 201],
+        closeHour: 18,
+        closeMinute: 0,
+        scanPage: "../livevoting/index.html",
+        /* WebService — set useApi true when wiring */
+        useApi: false,
+        apiUrl: "/WebService.asmx/dis_booth_wise_voting_report"
+      };
+
+      var COLOR_RANGES = [
+        { upto: 10, color: "#FF0000" },
+        { upto: 20, color: "#FF8C00" },
+        { upto: 30, color: "#FFA500" },
+        { upto: 40, color: "#FFD700" },
+        { upto: 50, color: "#ADFF2F" },
+        { upto: 60, color: "#32CD32" },
+        { upto: 70, color: "#008000" },
+        { upto: 80, color: "#006400" },
+        { upto: 90, color: "#004D00" },
+        { upto: 100, color: "#003300" }
+      ];
+
+      var DEMO_BOOTHS = [
+        { booth_no: 12, total_voter: 1240, total_voting: 892, total_remain: 348, voting_percent: 71.94 },
+        { booth_no: 45, total_voter: 980, total_voting: 412, total_remain: 568, voting_percent: 42.04 },
+        { booth_no: 78, total_voter: 1105, total_voting: 998, total_remain: 107, voting_percent: 90.32 },
+        { booth_no: 102, total_voter: 875, total_voting: 156, total_remain: 719, voting_percent: 17.83 },
+        { booth_no: 156, total_voter: 1320, total_voting: 1104, total_remain: 216, voting_percent: 83.64 },
+        { booth_no: 201, total_voter: 760, total_voting: 228, total_remain: 532, voting_percent: 30.00 }
+      ];
+
+      var allBooths = [];
+      var sortDesc = true;
+
+      function parseQuery() {
+        var q = new URLSearchParams(window.location.search);
+        if (q.get("app_id")) CONFIG.appId = parseInt(q.get("app_id"), 10) || CONFIG.appId;
+        if (q.get("user_id")) CONFIG.userId = parseInt(q.get("user_id"), 10) || CONFIG.userId;
+        if (q.get("name")) CONFIG.userName = decodeURIComponent(q.get("name"));
+        if (q.get("mobile")) CONFIG.userMobile = decodeURIComponent(q.get("mobile"));
+        var booths = q.get("booths") || q.get("booth_list");
+        if (booths) {
+          CONFIG.assignedBooths = booths.split(/[|,]/).map(function (x) {
+            return parseInt(x.trim(), 10);
+          }).filter(function (n) { return !isNaN(n) && n > 0; });
+        }
+      }
+
+      function colorForPercent(pct) {
+        var p = parseFloat(pct) || 0;
+        for (var i = 0; i < COLOR_RANGES.length; i++) {
+          if (p <= COLOR_RANGES[i].upto) return COLOR_RANGES[i].color;
+        }
+        return COLOR_RANGES[COLOR_RANGES.length - 1].color;
+      }
+
+      function fmt(n) {
+        return Number(n).toLocaleString("en-IN");
+      }
+
+      function pad(n) { return n < 10 ? "0" + n : "" + n; }
+
+      function tickClock() {
+        var now = new Date();
+        var h24 = now.getHours();
+        var m = now.getMinutes();
+        var s = now.getSeconds();
+        var ampm = h24 >= 12 ? " PM" : " AM";
+        var h = h24 % 12;
+        if (h === 0) h = 12;
+        document.getElementById("liveClock").textContent =
+          pad(h) + ":" + pad(m) + ":" + pad(s) + ampm;
+
+        var close = new Date(now);
+        close.setHours(CONFIG.closeHour, CONFIG.closeMinute, 0, 0);
+        if (close <= now) close.setDate(close.getDate() + 1);
+        var diff = Math.max(0, Math.floor((close - now) / 1000));
+        var ch = Math.floor(diff / 3600);
+        var cm = Math.floor((diff % 3600) / 60);
+        var cdTxt = "";
+        if (ch > 0) cdTxt += ch + " કલાક ";
+        cdTxt += cm + " મિનિટ";
+        document.getElementById("countdown").textContent = cdTxt;
+      }
+
+      function renderSummary(booths) {
+        var total = 0, voted = 0, remain = 0;
+        booths.forEach(function (b) {
+          total += b.total_voter;
+          voted += b.total_voting;
+          remain += b.total_remain;
+        });
+        var pct = total > 0 ? Math.round((voted / total) * 100) : 0;
+        document.getElementById("kTotal").textContent = fmt(total);
+        document.getElementById("kVoted").textContent = fmt(voted);
+        document.getElementById("kRemain").textContent = fmt(remain);
+        document.getElementById("donutPct").textContent = pct + "%";
+        var arc = document.getElementById("arcVoted");
+        if (arc) arc.setAttribute("stroke-dasharray", pct + " " + (100 - pct));
+      }
+
+      function entryUrl(boothNo) {
+        var u = CONFIG.scanPage +
+          "?app_id=" + encodeURIComponent(CONFIG.appId) +
+          "&booth=" + encodeURIComponent(boothNo) +
+          "&user_id=" + encodeURIComponent(CONFIG.userId);
+        return u;
+      }
+
+      function reportUrl(boothNo) {
+        return "#booth-" + boothNo;
+      }
+
+      function renderBoothCard(b) {
+        var pct = parseFloat(b.voting_percent) || 0;
+        var col = colorForPercent(pct);
+        var card = document.createElement("article");
+        card.className = "booth-card";
+        card.setAttribute("role", "listitem");
+        card.dataset.booth = String(b.booth_no);
+
+        card.innerHTML =
+          '<div class="booth-card-head">' +
+            '<div class="booth-no-block">' +
+              '<span class="lbl">બુથ</span>' +
+              '<span class="num">' + b.booth_no + '</span>' +
+            '</div>' +
+            '<div class="booth-card-body">' +
+              '<div class="booth-meta-row">' +
+                '<span style="font-family:\'Noto Sans Gujarati\',sans-serif;font-size:13px;font-weight:700;color:var(--muted)">લાઇવ મતદાન</span>' +
+                '<span class="pct-badge" style="background:' + col + '">' + pct.toFixed(1) + '%</span>' +
+              '</div>' +
+              '<div class="booth-mini-kpi">' +
+                '<div class="mini-cell total"><div class="v">' + fmt(b.total_voter) + '</div><div class="k">ટોટલ</div></div>' +
+                '<div class="mini-cell voted"><div class="v">' + fmt(b.total_voting) + '</div><div class="k">થયેલ</div></div>' +
+                '<div class="mini-cell remain"><div class="v">' + fmt(b.total_remain) + '</div><div class="k">બાકી</div></div>' +
+              '</div>' +
+              '<div class="progress-track"><div class="progress-fill" style="width:' + Math.min(100, pct) + '%;background:' + col + '"></div></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="booth-card-foot">' +
+            '<a class="btn-entry" href="' + entryUrl(b.booth_no) + '">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h3M4 17v3h3M17 4h3v3M17 20h3v3"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>' +
+              'મતદાન એન્ટ્રી' +
+            '</a>' +
+            '<a class="btn-report" href="' + reportUrl(b.booth_no) + '" title="વોટર લિસ્ટ">' +
+              '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 2l5 5h-5V4zM8 12h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>' +
+            '</a>' +
+          '</div>';
+
+        return card;
+      }
+
+      function renderList(booths) {
+        var list = document.getElementById("boothList");
+        var empty = document.getElementById("emptyState");
+        list.innerHTML = "";
+        if (!booths.length) {
+          empty.classList.remove("hidden");
+          return;
+        }
+        empty.classList.add("hidden");
+        booths.forEach(function (b) {
+          list.appendChild(renderBoothCard(b));
+        });
+        renderSummary(booths);
+      }
+
+      function filterAndSort() {
+        var q = (document.getElementById("boothSearch").value || "").trim();
+        var filtered = allBooths.filter(function (b) {
+          if (!q) return true;
+          return String(b.booth_no).indexOf(q) !== -1;
+        });
+        filtered.sort(function (a, b) {
+          var diff = (parseFloat(a.voting_percent) || 0) - (parseFloat(b.voting_percent) || 0);
+          return sortDesc ? -diff : diff;
+        });
+        renderList(filtered);
+      }
+
+      function loadDemo() {
+        var set = {};
+        CONFIG.assignedBooths.forEach(function (n) { set[n] = true; });
+        allBooths = DEMO_BOOTHS.filter(function (b) {
+          return set[b.booth_no];
+        });
+        if (!allBooths.length && CONFIG.assignedBooths.length) {
+          allBooths = CONFIG.assignedBooths.map(function (no, i) {
+            var t = 800 + (i * 120);
+            var v = Math.floor(t * (0.2 + (i % 5) * 0.15));
+            return {
+              booth_no: no,
+              total_voter: t,
+              total_voting: v,
+              total_remain: t - v,
+              voting_percent: Math.round((v / t) * 10000) / 100
+            };
+          });
+        }
+      }
+
+      function fetchFromApi() {
+        document.getElementById("loadingState").classList.remove("hidden");
+        var url = CONFIG.apiUrl + "?app_id=" + encodeURIComponent(CONFIG.appId);
+        return fetch(url, { method: "GET", credentials: "same-origin" })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            var rows = (data && data.d) ? data.d : data;
+            if (typeof rows === "string") rows = JSON.parse(rows);
+            var tables = rows.Tables || (rows[0] ? rows : null);
+            var table = Array.isArray(tables) ? tables[0] : (rows.Table || rows);
+            var list = table || [];
+            var set = {};
+            CONFIG.assignedBooths.forEach(function (n) { set[n] = true; });
+            allBooths = list.filter(function (row) {
+              return set[row.booth_no] || set[parseInt(row.booth_no, 10)];
+            }).map(function (row) {
+              return {
+                booth_no: row.booth_no,
+                total_voter: row.total_voter,
+                total_voting: row.total_voting,
+                total_remain: row.total_remain,
+                voting_percent: row.voting_percent
+              };
+            });
+          })
+          .catch(function (err) {
+            console.warn("API failed, using demo data", err);
+            loadDemo();
+          })
+          .finally(function () {
+            document.getElementById("loadingState").classList.add("hidden");
+          });
+      }
+
+      function init() {
+        parseQuery();
+        document.getElementById("userName").textContent = CONFIG.userName;
+        document.getElementById("userMobile").textContent = CONFIG.userMobile;
+        document.getElementById("boothCount").textContent = CONFIG.assignedBooths.length;
+
+        tickClock();
+        setInterval(tickClock, 1000);
+
+        document.getElementById("boothSearch").addEventListener("input", filterAndSort);
+        document.getElementById("sortBtn").addEventListener("click", function () {
+          sortDesc = !sortDesc;
+          this.textContent = sortDesc ? "% ↓" : "% ↑";
+          filterAndSort();
+        });
+
+        var done = function () {
+          allBooths.sort(function (a, b) { return a.booth_no - b.booth_no; });
+          filterAndSort();
+        };
+
+        if (CONFIG.useApi) {
+          fetchFromApi().then(done);
+        } else {
+          loadDemo();
+          done();
+        }
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#22434e" />
+  <title>Rajkot West — Assembly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* Brand #22434e + small steps for soft gradients */
+      --blue-950: #152a32;
+      --blue-900: #1c3842;
+      --blue-850: #22434e;
+      --blue-800: #2a505c;
+      --blue-750: #325d6b;
+      --bg: #ebeef0;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #22434e;
+      --accent-bright: #356878;
+      --accent-soft: #e8f0f2;
+      --border: #d5e0e3;
+      /* Visible outline on all card-style blocks */
+      --card-outline: #b8cad0;
+      --radius: 18px;
+      --shadow: 0 4px 20px rgba(15, 23, 42, 0.055);
+      --font: "DM Sans", system-ui, sans-serif;
+      --grad-header: linear-gradient(165deg, var(--blue-900) 0%, var(--blue-850) 100%);
+      --grad-header-soft: linear-gradient(165deg, var(--blue-850) 0%, var(--blue-800) 100%);
+      --grad-band: linear-gradient(90deg, var(--blue-850) 0%, var(--blue-750) 100%);
+      --grad-surface: linear-gradient(180deg, #f3f5fa 0%, #fafbfc 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font);
+      background: linear-gradient(180deg, var(--bg) 0%, #f4f6fa 100%);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.45;
+      margin: 0;
+      padding: 0 0 max(28px, env(safe-area-inset-bottom));
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* —— Full-width header (not a card) —— */
+    .page-header {
+      width: 100%;
+      padding: calc(18px + env(safe-area-inset-top)) 20px 54px;
+      background: var(--grad-header);
+      color: #fff;
+      box-shadow: none;
+      border-radius: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255,255,255,0.05) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .page-header-inner {
+      max-width: 420px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-header h1 {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.12;
+      text-shadow: none;
+    }
+
+    .page-header-gu {
+      font-size: 18px;
+      font-weight: 500;
+      opacity: 0.94;
+      margin-top: 8px;
+    }
+
+    .app {
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 10px 14px 0;
+    }
+
+    .sec-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-bright);
+      margin: 22px 0 10px;
+      padding-left: 4px;
+    }
+
+    .sec-label:first-of-type { margin-top: 4px; }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--card-outline);
+      margin-bottom: 12px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .kv-item {
+      padding: 12px 14px;
+      background: #f8fafc;
+      border-radius: 14px;
+      border: 1px solid var(--card-outline);
+    }
+
+    .kv-item span {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .kv-item strong {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    /* Voters — one card: total on top, Male | Female | Other below */
+    .voters-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--card-outline);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    /* First card overlap header */
+    .voters-card.is-top {
+      margin-top: -58px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .voters-card-total {
+      text-align: center;
+      padding: 22px 18px 18px;
+      background: var(--grad-surface);
+      border-bottom: 1px solid var(--card-outline);
+    }
+
+    .voters-card-total .lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .voters-card-total .num {
+      display: block;
+      margin-top: 8px;
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--accent);
+      line-height: 1.1;
+    }
+
+    .voters-card-total .hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .voters-card-split {
+      display: flex;
+      align-items: stretch;
+      padding: 14px 8px;
+      background: var(--card);
+    }
+
+    .voters-card-split .g {
+      flex: 1;
+      text-align: center;
+      padding: 6px 4px;
+      border-right: 1px solid var(--card-outline);
+    }
+
+    .voters-card-split .g:last-child { border-right: none; }
+
+    .voters-card-split .g span {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    .voters-card-split .g strong {
+      font-size: 17px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Party icons (inline SVG sizing) */
+    .party-ico {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+
+    .party-img {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      object-fit: contain;
+      vertical-align: middle;
+      border-radius: 4px;
+    }
+
+    .party-img.sm {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+
+    .party-img.inc {
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .party-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .party-line.inc { color: var(--accent-bright); }
+    .party-line.aap { color: var(--accent-bright); }
+    .party-line.bjp { color: #c2410c; }
+
+    /* MLA profile card */
+    .profile-card {
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--card-outline);
+      background:
+        radial-gradient(140% 90% at 20% 0%, rgba(255, 255, 255, 0.85) 0%, transparent 55%),
+        linear-gradient(135deg, #fff7dc 0%, #fff2c4 32%, #ffe6a3 62%, #fff 100%);
+      margin-bottom: 12px;
+    }
+
+    /* First card overlap header */
+    .profile-card.is-top {
+      margin-top: -58px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .mla-card {
+      padding: 16px 16px 14px;
+      background: transparent;
+    }
+
+    .mla-card-row {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .mla-photo {
+      width: 112px;
+      height: 112px;
+      border-radius: 22px;
+      object-fit: cover;
+      background: #e2e8f0;
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+      flex-shrink: 0;
+    }
+
+    .mla-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .mla-top {
+      display: block;
+    }
+
+    .mla-name {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: #1f2937;
+    }
+
+    .mla-party {
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mla-party-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      padding: 6px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.92);
+      font-size: 12px;
+      font-weight: 900;
+      color: #111827;
+    }
+
+    .mla-year {
+      font-size: 11px;
+      font-weight: 900;
+      padding: 6px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.92);
+      color: #374151;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mla-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .mla-metrics .m {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(0, 0, 0, 0.07);
+      border-radius: 12px;
+      padding: 10px 10px;
+      text-align: center;
+    }
+
+    .mla-metrics .m span {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .mla-metrics .m strong {
+      font-size: 13px;
+      font-weight: 900;
+      color: #111827;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* MLA list rows */
+    .face {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.1);
+      background: #e2e8f0;
+    }
+
+    .mla-line {
+      display: grid;
+      grid-template-columns: 56px 48px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mla-line:last-child { border-bottom: none; padding-bottom: 0; }
+    .mla-line:first-child { padding-top: 0; }
+
+    .yr {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.25;
+    }
+
+    .mla-line-mid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .mla-line-mid .n {
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .note-banner {
+      font-size: 13px;
+      color: var(--muted);
+      background: #fffbeb;
+      border: 1px solid var(--card-outline);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin: 14px 0 4px;
+      line-height: 1.4;
+    }
+
+    /* Accordion */
+    .accordion-item {
+      border-radius: var(--radius);
+      border: 1px solid var(--card-outline);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .accordion-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 14px;
+      border: none;
+      background: var(--grad-header-soft);
+      color: #fff;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .accordion-trigger .acc-titles {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .accordion-trigger .acc-year {
+      display: block;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .accordion-trigger .acc-sub {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0.92;
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+
+    .accordion-trigger .chev {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    .accordion-trigger.is-open .chev {
+      transform: rotate(180deg);
+    }
+
+    .accordion-panel {
+      border-top: 1px solid var(--card-outline);
+      background: #fafafa;
+    }
+
+    .accordion-panel[hidden] {
+      display: none !important;
+    }
+
+    .winner-block {
+      padding: 16px;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      background: var(--grad-surface);
+      border-bottom: 1px solid var(--card-outline);
+    }
+
+    .face.lg {
+      width: 88px;
+      height: 88px;
+      border-radius: 22px;
+    }
+
+    .winner-block .info { flex: 1; min-width: 0; }
+
+    .winner-block .lbl {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: var(--accent-bright);
+      margin-bottom: 4px;
+    }
+
+    .winner-block .name {
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .winner-block .party {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-inline {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .stat-inline div span {
+      display: block;
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-inline div strong {
+      font-size: 15px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cand-stack {
+      padding: 8px 12px 14px;
+      background: #fff;
+    }
+
+    .cand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 10px;
+      border-radius: 14px;
+      margin-bottom: 6px;
+      background: #f8fafc;
+      border: 1px solid var(--card-outline);
+    }
+
+    .cand-row:last-child { margin-bottom: 0; }
+
+    .cand-row .txt { flex: 1; min-width: 0; }
+
+    .cand-row .txt .nm { font-weight: 700; font-size: 14px; }
+
+    .cand-row .txt .pty {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .cand-row .nums { text-align: right; flex-shrink: 0; }
+
+    .cand-row .nums .v {
+      font-weight: 800;
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cand-row .nums .pct {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .poll-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 12px 14px 16px;
+      background: #f1f5f9;
+      font-size: 12px;
+      border-top: 1px solid var(--card-outline);
+    }
+
+    .poll-footer .cell {
+      background: #fff;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--card-outline);
+    }
+
+    .poll-footer .cell span {
+      display: block;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+
+    .poll-footer .cell strong {
+      font-size: 14px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .poll-footer .full { grid-column: 1 / -1; }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 20px;
+      line-height: 1.5;
+      padding: 0 8px 8px;
+    }
+
+    .sm-hide { font-size: inherit; }
+
+    /* Trend insight — chart from past majorities */
+    .insight-card {
+      position: relative;
+      padding: 22px 18px;
+      /* Single-card chart background (no inner card look) */
+      background:
+        linear-gradient(180deg, rgba(255, 247, 237, 0.95) 0%, #ffffff 70%),
+        repeating-linear-gradient(
+          to top,
+          rgba(34, 67, 78, 0.08) 0px,
+          rgba(34, 67, 78, 0.08) 1px,
+          transparent 1px,
+          transparent 26px
+        );
+    }
+
+    .insight-chart-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .insight-bars {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 8px;
+      height: 176px;
+      padding: 10px 2px 6px;
+    }
+
+    .insight-col {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      height: 100%;
+    }
+
+    .insight-bar-wrap {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      min-height: 0;
+    }
+
+    .insight-bar {
+      width: 100%;
+      max-width: 42px;
+      height: var(--h, 20%);
+      border-radius: 10px 10px 4px 4px;
+      background: linear-gradient(180deg, #ffb865 0%, #ff7a18 55%, #e8590c 100%);
+      min-height: 3px;
+      transition: height 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 10px 18px rgba(232, 89, 12, 0.22);
+      border: 1px solid rgba(232, 89, 12, 0.28);
+    }
+
+    .insight-val {
+      font-size: 10px;
+      font-weight: 800;
+      color: #b54712;
+      margin-bottom: 4px;
+      text-align: center;
+      line-height: 1.15;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .insight-year {
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--muted);
+      margin-top: 6px;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .insight-year small {
+      display: block;
+      font-size: 8px;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+    /* (old sparkline removed; keep class harmless if referenced) */
+    .insight-line-svg { display: none; }
+  </style>
+</head>
+<body>
+  <!-- SVG symbols for party icons (decorative; replace with official assets if required) -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="ico-bjp" viewBox="0 0 32 32">
+        <circle cx="16" cy="16" r="15" fill="#FF9933"/>
+        <path fill="#22434e" d="M16 4c-2 4-6 7-6 11 0 5 4 9 8 11 4-2 8-6 8-11 0-4-4-7-6-11h-4z"/>
+        <circle cx="16" cy="13" r="3.2" fill="#fff"/>
+      </symbol>
+      <symbol id="ico-inc" viewBox="0 0 32 32">
+        <circle cx="16" cy="16" r="15" fill="#356878"/>
+        <path fill="#fff" d="M10 18c2-5 6-8 12-9-1 4-4 7-8 8 2 2 5 3 8 2-2 4-7 6-12 5z"/>
+      </symbol>
+      <symbol id="ico-aap" viewBox="0 0 32 32">
+        <rect width="32" height="32" rx="6" fill="#356878"/>
+        <path fill="#fff" d="M8 22 L16 8 L24 22 Z"/>
+      </symbol>
+      <symbol id="ico-generic" viewBox="0 0 32 32">
+        <circle cx="16" cy="16" r="14" fill="#94a3b8"/>
+        <text x="16" y="20" text-anchor="middle" fill="#fff" font-size="11" font-weight="700" font-family="sans-serif">?</text>
+      </symbol>
+    </defs>
+  </svg>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <h1>Rajkot West</h1>
+      <p class="page-header-gu">રાજકોટ પશ્ચિમ</p>
+    </div>
+  </header>
+
+  <main class="app">
+    <div class="sec-label">Current MLA</div>
+    <div class="profile-card is-top">
+      <div class="mla-card">
+        <div class="mla-card-row">
+          <img class="mla-photo" alt="MLA photo" src="img/darshita.jpg" width="112" height="112" />
+          <div class="mla-main">
+            <div class="mla-top">
+              <div class="mla-name">Dr. Darshita Paras Shah</div>
+              <div class="mla-party">
+                <span class="mla-party-left">
+                  <img class="party-img sm" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="20" height="20" />
+                  BJP
+                </span>
+                <span class="mla-year">Elected · 2022</span>
+              </div>
+            </div>
+            <div class="mla-metrics">
+              <div class="m"><span>Votes</span><strong>1,38,687</strong></div>
+              <div class="m"><span>Lead %</span><strong>51.95%</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label">Voters</div>
+    <div class="voters-card">
+      <div class="voters-card-total">
+        <span class="lbl">Total electors</span>
+        <span class="num">3,50,580</span>
+      </div>
+      <div class="voters-card-split" role="group" aria-label="Gender breakdown">
+        <div class="g"><span>Male</span><strong>210,348</strong></div>
+        <div class="g"><span>Female</span><strong>140,232</strong></div>
+        <div class="g"><span>Other</span><strong>0</strong></div>
+      </div>
+    </div>
+
+    <div class="sec-label">Members of the Legislative Assembly</div>
+    <div class="card">
+      <div class="mla-line">
+        <span class="yr">2022</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Darshita+Shah&size=128&background=22434e&color=fff&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Dr. Darshita Paras Shah</div>
+          <div class="party-line bjp"><img class="party-img" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="22" height="22" /><span>BJP</span></div>
+        </div>
+      </div>
+      <div class="mla-line">
+        <span class="yr">2017</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Vijay+Rupani&size=128&background=e2e8f0&color=475569&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Vijay Rupani</div>
+          <div class="party-line bjp"><img class="party-img" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="22" height="22" /><span>BJP</span></div>
+        </div>
+      </div>
+      <div class="mla-line">
+        <span class="yr">2014<br>(by)</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Vijay+Rupani&size=128&background=e2e8f0&color=475569&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Vijay Rupani</div>
+          <div class="party-line bjp"><img class="party-img" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="22" height="22" /><span>BJP · by-election</span></div>
+        </div>
+      </div>
+      <div class="mla-line">
+        <span class="yr">2012</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Vajubhai+Vala&size=128&background=e2e8f0&color=475569&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Vajubhai Vala</div>
+          <div class="party-line bjp"><img class="party-img" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="22" height="22" /><span>BJP</span></div>
+        </div>
+      </div>
+      <div class="note-banner">Major boundary changes: constituency renamed from Rajkot II to Rajkot West.</div>
+      <div class="mla-line">
+        <span class="yr">2007</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Vajubhai+Vala&size=128&background=e2e8f0&color=475569&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Vajubhai Vala</div>
+          <div class="party-line bjp"><img class="party-img" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="22" height="22" /><span>BJP</span></div>
+        </div>
+      </div>
+      <div class="mla-line">
+        <span class="yr">2002</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Vajubhai+Vala&size=128&background=e2e8f0&color=475569&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Vajubhai Vala</div>
+          <div class="party-line bjp"><img class="party-img" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="22" height="22" /><span>BJP</span></div>
+        </div>
+      </div>
+      <div class="mla-line">
+        <span class="yr">2002<br>(Feb)</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Narendra+Modi&size=128&background=f97316&color=fff&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Narendra Modi</div>
+          <div class="party-line bjp"><img class="party-img" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="22" height="22" /><span>BJP · Rajkot II by-election</span></div>
+        </div>
+      </div>
+      <div class="mla-line">
+        <span class="yr">1998</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Vajubhai+Vala&size=128&background=e2e8f0&color=475569&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Vajubhai Roodabhai Vala</div>
+          <div class="party-line bjp"><img class="party-img" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="22" height="22" /><span>BJP</span></div>
+        </div>
+      </div>
+      <div class="mla-line">
+        <span class="yr">1985</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Vajubhai+Vala&size=128&background=e2e8f0&color=475569&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Vajubhai Vala</div>
+          <div class="party-line"><svg class="party-ico" aria-hidden="true"><use href="#ico-generic"/></svg><span>—</span></div>
+        </div>
+      </div>
+      <div class="mla-line">
+        <span class="yr">1980</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Manibhai+Ranpara&size=128&background=e2e8f0&color=475569&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Manibhai Ranpara</div>
+          <div class="party-line bjp"><img class="party-img" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="22" height="22" /><span>BJP</span></div>
+        </div>
+      </div>
+      <div class="mla-line">
+        <span class="yr">1975</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Arvindbhai+Maniyar&size=128&background=e2e8f0&color=475569&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Arvindbhai Maniyar</div>
+          <div class="party-line"><svg class="party-ico" aria-hidden="true"><use href="#ico-generic"/></svg><span>—</span></div>
+        </div>
+      </div>
+      <div class="mla-line">
+        <span class="yr">1972</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=Pradummansinh+Jadeja&size=128&background=e2e8f0&color=475569&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">Pradummansinh Jadeja</div>
+          <div class="party-line"><svg class="party-ico" aria-hidden="true"><use href="#ico-generic"/></svg><span>—</span></div>
+        </div>
+      </div>
+      <div class="mla-line">
+        <span class="yr">1967</span>
+        <img class="face" alt="" src="https://ui-avatars.com/api/?name=M+P+Jadeja&size=128&background=e2e8f0&color=475569&bold=true" width="44" height="44" />
+        <div class="mla-line-mid">
+          <div class="n">M. P. Jadeja</div>
+          <div class="party-line inc"><img class="party-img inc" alt="INC" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/inc.png" width="22" height="22" /><span>INC</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label">Trend insight</div>
+    <div class="card insight-card">
+      <div class="insight-chart-title">Lead (majority) by year · votes</div>
+      <div class="insight-bars" role="img" aria-label="Lead (majority votes) by election year">
+        <div class="insight-col">
+          <span class="insight-val">15.5k</span>
+          <div class="insight-bar-wrap"><div class="insight-bar" style="--h:14.6%" data-h="14.6"></div></div>
+          <span class="insight-year">1990</span>
+        </div>
+        <div class="insight-col">
+          <span class="insight-val">28.7k</span>
+          <div class="insight-bar-wrap"><div class="insight-bar" style="--h:27.1%" data-h="27.1"></div></div>
+          <span class="insight-year">1998</span>
+        </div>
+        <div class="insight-col">
+          <span class="insight-val">14.7k</span>
+          <div class="insight-bar-wrap"><div class="insight-bar" style="--h:13.9%" data-h="13.9"></div></div>
+          <span class="insight-year">2002<small>Feb · II</small></span>
+        </div>
+        <div class="insight-col">
+          <span class="insight-val">9.9k</span>
+          <div class="insight-bar-wrap"><div class="insight-bar" style="--h:9.3%" data-h="9.3"></div></div>
+          <span class="insight-year">2007</span>
+        </div>
+        <div class="insight-col">
+          <span class="insight-val">25.0k</span>
+          <div class="insight-bar-wrap"><div class="insight-bar" style="--h:23.6%" data-h="23.6"></div></div>
+          <span class="insight-year">2012</span>
+        </div>
+        <div class="insight-col">
+          <span class="insight-val">23.7k</span>
+          <div class="insight-bar-wrap"><div class="insight-bar" style="--h:22.4%" data-h="22.4"></div></div>
+          <span class="insight-year">2014<small>By</small></span>
+        </div>
+        <div class="insight-col">
+          <span class="insight-val">53.8k</span>
+          <div class="insight-bar-wrap"><div class="insight-bar" style="--h:50.7%" data-h="50.7"></div></div>
+          <span class="insight-year">2017</span>
+        </div>
+        <div class="insight-col">
+          <span class="insight-val">1.06L</span>
+          <div class="insight-bar-wrap"><div class="insight-bar" style="--h:100%" data-h="100"></div></div>
+          <span class="insight-year">2022</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label">Election results</div>
+    <p style="font-size:12px;color:var(--muted);margin:-4px 4px 12px;">Tap a year to expand · only one section open at a time</p>
+
+    <!-- 2022 -->
+    <div class="accordion-item">
+      <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="panel-2022" id="btn-2022">
+        <span class="acc-titles"><span class="acc-year">2022</span></span>
+        <span class="chev" aria-hidden="true">▼</span>
+      </button>
+      <div class="accordion-panel" id="panel-2022" role="region" aria-labelledby="btn-2022" hidden>
+        <div class="winner-block">
+          <img class="face lg" alt="" src="img/darshita.jpg" width="88" height="88" />
+          <div class="info">
+            <div class="lbl">Winner</div>
+            <div class="name">Dr. Darshita Paras Shah</div>
+            <div class="party"><img class="party-img sm" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="20" height="20" /> BJP</div>
+            <div class="stat-inline">
+              <div><span>Votes</span><strong>1,38,687</strong></div>
+              <div><span>Vote share</span><strong>67.98%</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="cand-stack">
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Mansukhbhai+Kalariya&size=128&background=2a505c&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Kalariya Mansukhbhai Jadavbhai</div><div class="pty"><img class="party-img inc sm" alt="INC" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/inc.png" width="20" height="20" /> INC</div></div>
+            <div class="nums"><div class="v">32,712</div><div class="pct">16.03%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Dineshkumar+Joshi&size=128&background=22434e&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Dineshkumar Mohanbhai Joshi</div><div class="pty"><svg class="party-ico" aria-hidden="true"><use href="#ico-aap"/></svg> AAP</div></div>
+            <div class="nums"><div class="v">26,319</div><div class="pct">12.90%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=NOTA&size=128&background=64748b&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">None of the above</div><div class="pty">NOTA</div></div>
+            <div class="nums"><div class="v">3,419</div><div class="pct">1.68%</div></div>
+          </div>
+        </div>
+        <div class="poll-footer">
+          <div class="cell"><span>Majority</span><strong>1,05,975 (51.95%)</strong></div>
+          <div class="cell"><span>Turnout</span><strong>—</strong></div>
+          <div class="cell full"><span>Registered electors</span><strong>3,50,580</strong></div>
+          <div class="cell full"><span>Result</span><strong>BJP hold</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2017 -->
+    <div class="accordion-item">
+      <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="panel-2017" id="btn-2017">
+        <span class="acc-titles"><span class="acc-year">2017</span></span>
+        <span class="chev" aria-hidden="true">▼</span>
+      </button>
+      <div class="accordion-panel" id="panel-2017" role="region" aria-labelledby="btn-2017" hidden>
+        <div class="winner-block">
+          <img class="face lg" alt="" src="https://ui-avatars.com/api/?name=Vijay+Rupani&size=256&background=f97316&color=fff&bold=true&rounded=true" width="88" height="88" />
+          <div class="info">
+            <div class="lbl">Winner</div>
+            <div class="name">Vijay Rupani</div>
+            <div class="party"><img class="party-img sm" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="20" height="20" /> BJP</div>
+            <div class="stat-inline">
+              <div><span>Votes</span><strong>1,31,586</strong></div>
+              <div><span>Share</span><strong>60.67%</strong> <small style="color:#356878;font-weight:700;">+4.47</small></div>
+            </div>
+          </div>
+        </div>
+        <div class="cand-stack">
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Indranil+Rajguru&size=128&background=2a505c&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Indranil Rajguru</div><div class="pty"><img class="party-img inc sm" alt="INC" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/inc.png" width="20" height="20" /> INC</div></div>
+            <div class="nums"><div class="v">77,831</div><div class="pct">35.89%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Vijaybhai+Parmar&size=128&background=94a3b8&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Vijaybhai Somabhai Parmar</div><div class="pty">BSP</div></div>
+            <div class="nums"><div class="v">1,198</div><div class="pct">0.55%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Ketan+Chandarana&size=128&background=94a3b8&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Ketan Mansukhbhai Chandarana</div><div class="pty">SS</div></div>
+            <div class="nums"><div class="v">578</div><div class="pct">0.27%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Rajendra+Chauhan&size=128&background=94a3b8&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Rajendrakumar Shamjibhai Chauhan</div><div class="pty">IND</div></div>
+            <div class="nums"><div class="v">509</div><div class="pct">0.23%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=NOTA&size=128&background=64748b&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">None of the Above</div><div class="pty">NOTA</div></div>
+            <div class="nums"><div class="v">3,309</div><div class="pct">1.53%</div></div>
+          </div>
+        </div>
+        <div class="poll-footer">
+          <div class="cell"><span>Majority</span><strong>53,755 (24.78%)</strong></div>
+          <div class="cell"><span>Turnout</span><strong>2,16,883 · 68.48%</strong></div>
+          <div class="cell full"><span>Result</span><strong>BJP hold · Swing +4.47</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2014 -->
+    <div class="accordion-item">
+      <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="panel-2014" id="btn-2014">
+        <span class="acc-titles"><span class="acc-year">2014 · By-election</span></span>
+        <span class="chev" aria-hidden="true">▼</span>
+      </button>
+      <div class="accordion-panel" id="panel-2014" role="region" aria-labelledby="btn-2014" hidden>
+        <div class="winner-block">
+          <img class="face lg" alt="" src="https://ui-avatars.com/api/?name=Vijay+Rupani&size=256&background=f97316&color=fff&bold=true&rounded=true" width="88" height="88" />
+          <div class="info">
+            <div class="lbl">Winner</div>
+            <div class="name">Vijaybhai Ramniklalbhai Rupani</div>
+            <div class="party"><img class="party-img sm" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="20" height="20" /> BJP</div>
+            <div class="stat-inline">
+              <div><span>Votes</span><strong>81,092</strong></div>
+              <div><span>Share</span><strong>56.20%</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="cand-stack">
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Jayantibhai+Kalaria&size=128&background=2a505c&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Jayantibhai Kalaria</div><div class="pty"><img class="party-img inc sm" alt="INC" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/inc.png" width="20" height="20" /> INC</div></div>
+            <div class="nums"><div class="v">57,352</div><div class="pct">39.75%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Bhavesh+Lokhil&size=128&background=94a3b8&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Bhavesh Lokhil</div><div class="pty">NCP</div></div>
+            <div class="nums"><div class="v">1,027</div><div class="pct">0.71%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Tejasbhai+Trivedi&size=128&background=94a3b8&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Tejasbhai Anilbhai Trivedi</div><div class="pty">IND</div></div>
+            <div class="nums"><div class="v">514</div><div class="pct">0.36%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Imranbhai+Kachara&size=128&background=94a3b8&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Imranbhai Ramjanbhai Kachara</div><div class="pty">IND</div></div>
+            <div class="nums"><div class="v">373</div><div class="pct">0.26%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=NOTA&size=128&background=64748b&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">None of the Above</div><div class="pty">NOTA</div></div>
+            <div class="nums"><div class="v">3,110</div><div class="pct">2.16%</div></div>
+          </div>
+        </div>
+        <div class="poll-footer">
+          <div class="cell"><span>Majority</span><strong>23,740 (16.45%)</strong></div>
+          <div class="cell"><span>Turnout</span><strong>1,44,282 · 49.43%</strong></div>
+          <div class="cell full"><span>Result</span><strong>BJP hold · Swing +2.03</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2012 -->
+    <div class="accordion-item">
+      <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="panel-2012" id="btn-2012">
+        <span class="acc-titles"><span class="acc-year">2012</span></span>
+        <span class="chev" aria-hidden="true">▼</span>
+      </button>
+      <div class="accordion-panel" id="panel-2012" role="region" aria-labelledby="btn-2012" hidden>
+        <div class="winner-block">
+          <img class="face lg" alt="" src="https://ui-avatars.com/api/?name=Vajubhai+Vala&size=256&background=f97316&color=fff&bold=true&rounded=true" width="88" height="88" />
+          <div class="info">
+            <div class="lbl">Winner</div>
+            <div class="name">Vajubhai Rudabhai Vala</div>
+            <div class="party"><img class="party-img sm" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="20" height="20" /> BJP</div>
+            <div class="stat-inline">
+              <div><span>Votes</span><strong>90,405</strong></div>
+              <div><span>Share</span><strong>54.17%</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="cand-stack">
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Atul+Rajani&size=128&background=2a505c&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Atul Rasikbhai Rajani</div><div class="pty"><img class="party-img inc sm" alt="INC" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/inc.png" width="20" height="20" /> INC</div></div>
+            <div class="nums"><div class="v">65,427</div><div class="pct">39.20%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Jaydeep+Makadia&size=128&background=94a3b8&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Jaydeep Jayantibhai Makadia</div><div class="pty">GPP</div></div>
+            <div class="nums"><div class="v">5,194</div><div class="pct">3.11%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Sandipbhai+Jivarajani&size=128&background=94a3b8&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Sandipbhai Hargovindbhai Jivarajani</div><div class="pty">IND</div></div>
+            <div class="nums"><div class="v">1,784</div><div class="pct">1.07%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Pravinbhai+Sanchaniya&size=128&background=94a3b8&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Pravinbhai Damjibhai Sanchaniya</div><div class="pty">BSP</div></div>
+            <div class="nums"><div class="v">1,645</div><div class="pct">0.99%</div></div>
+          </div>
+        </div>
+        <div class="poll-footer">
+          <div class="cell"><span>Majority</span><strong>24,978 (14.97%)</strong></div>
+          <div class="cell"><span>Turnout</span><strong>1,66,891 · 63.58%</strong></div>
+          <div class="cell full"><span>Result</span><strong>BJP hold</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2007 -->
+    <div class="accordion-item">
+      <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="panel-2007" id="btn-2007">
+        <span class="acc-titles"><span class="acc-year">2007</span></span>
+        <span class="chev" aria-hidden="true">▼</span>
+      </button>
+      <div class="accordion-panel" id="panel-2007" role="region" aria-labelledby="btn-2007" hidden>
+        <div class="winner-block">
+          <img class="face lg" alt="" src="https://ui-avatars.com/api/?name=Vajubhai+Vala&size=256&background=f97316&color=fff&bold=true&rounded=true" width="88" height="88" />
+          <div class="info">
+            <div class="lbl">Winner</div>
+            <div class="name">Vajubhai Vala</div>
+            <div class="party"><img class="party-img sm" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="20" height="20" /> BJP · M</div>
+            <div class="stat-inline"><div><span>Votes</span><strong>48,215</strong></div></div>
+          </div>
+        </div>
+        <div class="cand-stack">
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Kashmira+Nathwani&size=128&background=2a505c&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Nathwani Kashmira Bakulbhai</div><div class="pty"><img class="party-img inc sm" alt="INC" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/inc.png" width="20" height="20" /> INC · F</div></div>
+            <div class="nums"><div class="v">38,359</div></div>
+          </div>
+        </div>
+        <div class="poll-footer"><div class="cell full"><span>Note</span><strong>Add full rows when available</strong></div></div>
+      </div>
+    </div>
+
+    <!-- 2002 Feb -->
+    <div class="accordion-item">
+      <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="panel-2002f" id="btn-2002f">
+        <span class="acc-titles"><span class="acc-year">2002 · Feb by-election</span></span>
+        <span class="chev" aria-hidden="true">▼</span>
+      </button>
+      <div class="accordion-panel" id="panel-2002f" role="region" aria-labelledby="btn-2002f" hidden>
+        <div class="winner-block">
+          <img class="face lg" alt="" src="https://ui-avatars.com/api/?name=Narendra+Modi&size=256&background=f97316&color=fff&bold=true&rounded=true" width="88" height="88" />
+          <div class="info">
+            <div class="lbl">Winner</div>
+            <div class="name">Narendra Modi</div>
+            <div class="party"><img class="party-img sm" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="20" height="20" /> BJP</div>
+            <div class="stat-inline">
+              <div><span>Votes</span><strong>45,298</strong></div>
+              <div><span>Share</span><strong>57.32%</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="cand-stack">
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Ashwinbhai+Mehta&size=128&background=2a505c&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Ashwinbhai Narbheshankar Mehta</div><div class="pty"><img class="party-img inc sm" alt="INC" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/inc.png" width="20" height="20" /> INC</div></div>
+            <div class="nums"><div class="v">30,570</div><div class="pct">38.68%</div></div>
+          </div>
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Makwana+Bharatbhai&size=128&background=94a3b8&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Makwana Bharatbhai Bhikhalal</div><div class="pty">IND</div></div>
+            <div class="nums"><div class="v">748</div><div class="pct">0.95%</div></div>
+          </div>
+        </div>
+        <div class="poll-footer">
+          <div class="cell full"><span>Turnout</span><strong>79,028</strong></div>
+          <div class="cell full"><span>Result</span><strong>BJP hold</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1998 -->
+    <div class="accordion-item">
+      <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="panel-1998" id="btn-1998">
+        <span class="acc-titles"><span class="acc-year">1998</span></span>
+        <span class="chev" aria-hidden="true">▼</span>
+      </button>
+      <div class="accordion-panel" id="panel-1998" role="region" aria-labelledby="btn-1998" hidden>
+        <div class="winner-block">
+          <img class="face lg" alt="" src="https://ui-avatars.com/api/?name=Vajubhai+Vala&size=256&background=f97316&color=fff&bold=true&rounded=true" width="88" height="88" />
+          <div class="info">
+            <div class="name">Vajubhai Roodabhai Vala</div>
+            <div class="party"><img class="party-img sm" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="20" height="20" /> BJP</div>
+            <div class="stat-inline"><div><span>Votes</span><strong>43,034</strong></div></div>
+          </div>
+        </div>
+        <div class="cand-stack">
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Kashmeeraben+Nathvanee&size=128&background=2a505c&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Kashmeeraben Bakulbhai Nathvanee</div><div class="pty">AIRJP · F</div></div>
+            <div class="nums"><div class="v">14,316</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1990 -->
+    <div class="accordion-item">
+      <button type="button" class="accordion-trigger" aria-expanded="false" aria-controls="panel-1990" id="btn-1990">
+        <span class="acc-titles"><span class="acc-year">1990</span></span>
+        <span class="chev" aria-hidden="true">▼</span>
+      </button>
+      <div class="accordion-panel" id="panel-1990" role="region" aria-labelledby="btn-1990" hidden>
+        <div class="winner-block">
+          <img class="face lg" alt="" src="https://ui-avatars.com/api/?name=Vajubhai+Vala&size=256&background=f97316&color=fff&bold=true&rounded=true" width="88" height="88" />
+          <div class="info">
+            <div class="name">Vajubhai Vala</div>
+            <div class="party"><img class="party-img sm" alt="BJP" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/bjp_icon.png" width="20" height="20" /> BJP</div>
+            <div class="stat-inline"><div><span>Votes</span><strong>31,864</strong></div></div>
+          </div>
+        </div>
+        <div class="cand-stack">
+          <div class="cand-row">
+            <img class="face" alt="" src="https://ui-avatars.com/api/?name=Sudhir+Joshi&size=128&background=2a505c&color=fff&bold=true" width="44" height="44" />
+            <div class="txt"><div class="nm">Sudhir Joshi</div><div class="pty"><img class="party-img inc sm" alt="INC" src="https://rajkotcorporation.bjpwings.com/assembly_Genrate_info/img/inc.png" width="20" height="20" /> INC · M</div></div>
+            <div class="nums"><div class="v">16,388</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+   
+  </main>
+
+  <script>
+    (function () {
+      var triggers = document.querySelectorAll(".accordion-trigger");
+      triggers.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var panelId = btn.getAttribute("aria-controls");
+          var panel = document.getElementById(panelId);
+          var wasOpen = btn.getAttribute("aria-expanded") === "true";
+          triggers.forEach(function (b) {
+            b.setAttribute("aria-expanded", "false");
+            b.classList.remove("is-open");
+            var p = document.getElementById(b.getAttribute("aria-controls"));
+            if (p) p.hidden = true;
+          });
+          if (!wasOpen) {
+            btn.setAttribute("aria-expanded", "true");
+            btn.classList.add("is-open");
+            if (panel) panel.hidden = false;
+          }
+        });
+      });
+
+      /* Animate insight bars from 0 */
+      requestAnimationFrame(function () {
+        document.querySelectorAll(".insight-bar").forEach(function (bar) {
+          var h = bar.style.getPropertyValue("--h").trim() || "0%";
+          bar.style.setProperty("--h", "0%");
+          requestAnimationFrame(function () {
+            bar.style.setProperty("--h", h);
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

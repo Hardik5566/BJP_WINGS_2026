@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BJP_Wings", "http://localhost:3893", "{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "true"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_3893"
+		Debug.AspNetCompiler.PhysicalPath = "..\BJP_Wings\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_3893\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_3893"
+		Release.AspNetCompiler.PhysicalPath = "..\BJP_Wings\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_3893\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "..\BJP_Wings\"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {819DCAA1-7F8C-43C9-B87C-5AD1497F7ECC}
+	EndGlobalSection
+EndGlobal

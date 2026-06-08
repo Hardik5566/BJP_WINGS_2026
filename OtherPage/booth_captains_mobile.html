@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <title>બુથ કેપ્ટન — મોબાઇલ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0f2744;
+      --navy-deep: #0a1a2e;
+      --page-bg: #e8ecf2;
+      --card: #ffffff;
+      --text: #1a1d21;
+      --muted: #5c6470;
+      --gold-1: #f4e4b8;
+      --gold-2: #d4a84b;
+      --gold-3: #8b6914;
+      --gold-shine: #fff8e7;
+      --accent: #c41e3a;
+      --shadow: 0 12px 40px rgba(15, 39, 68, 0.12);
+      --shadow-soft: 0 2px 12px rgba(15, 39, 68, 0.08);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      max-width: 430px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: var(--page-bg);
+      color: var(--text);
+      font-family: "Noto Sans Gujarati", "Outfit", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: env(safe-area-inset-bottom, 16px);
+    }
+
+    .app-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      padding-top: max(14px, env(safe-area-inset-top));
+      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy) 100%);
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .back {
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .back svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .app-title {
+      flex: 1;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.02em;
+      margin-right: 40px;
+    }
+
+    .content {
+      padding: 18px 16px 32px;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+      padding-left: 2px;
+    }
+
+    /* —— Booth Captain: golden card —— */
+    .booth-hero {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow), 0 0 0 1px rgba(212, 168, 75, 0.35);
+      margin-bottom: 24px;
+    }
+
+    .booth-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 100% 70% at 0% 0%, rgba(255, 255, 255, 0.5) 0%, transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(255, 248, 231, 0.4) 0%, transparent 50%),
+        linear-gradient(145deg, #fff9e6 0%, var(--gold-1) 28%, var(--gold-2) 58%, #7a5a10 100%);
+      z-index: 0;
+    }
+
+    .booth-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        -12deg,
+        transparent,
+        transparent 16px,
+        rgba(255, 255, 255, 0.05) 16px,
+        rgba(255, 255, 255, 0.05) 17px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .booth-hero-inner {
+      position: relative;
+      z-index: 2;
+      padding: 20px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .booth-main {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      column-gap: 16px;
+      align-items: center;
+    }
+
+    .booth-avatar-col {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .booth-hero .avatar-wrap {
+      width: 96px;
+      height: 96px;
+    }
+
+    .booth-hero .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      border: 3px solid rgba(255, 255, 255, 0.95);
+      box-shadow:
+        0 0 0 1px rgba(212, 168, 75, 0.65),
+        0 8px 22px rgba(60, 45, 12, 0.28);
+      background: linear-gradient(145deg, #e8dcc4, #c9a85a);
+    }
+
+    .booth-hero .avatar.placeholder {
+      display: grid;
+      place-items: center;
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--navy-deep);
+    }
+
+    .booth-text-col {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 7px;
+      padding: 2px 0;
+    }
+
+    .booth-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--navy-deep);
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+
+    .booth-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .booth-designation {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 11px 5px;
+      border-radius: 999px;
+      background: linear-gradient(165deg, #a67c1a 0%, #7a5a12 38%, #4a3508 72%, #2d1f05 100%);
+      border: 1px solid rgba(255, 224, 160, 0.45);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        0 2px 10px rgba(60, 42, 8, 0.28);
+      color: #fff8ec;
+      font-size: 0.76rem;
+      font-weight: 700;
+      line-height: 1.2;
+      flex-shrink: 1;
+      min-width: 0;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .booth-voter-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 4px 6px;
+      padding: 4px 9px 5px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #132a45 0%, #0a1a2e 100%);
+      border: 1px solid rgba(212, 168, 75, 0.42);
+      box-shadow: 0 2px 8px rgba(10, 26, 46, 0.2);
+      flex-shrink: 1;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .booth-voter-badge-label {
+      font-size: 0.56rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: rgba(255, 255, 255, 0.72);
+      line-height: 1.2;
+      text-align: right;
+    }
+
+    .booth-voter-badge-num {
+      font-family: "Outfit", sans-serif;
+      font-size: 0.84rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: #ffe8b8;
+      line-height: 1;
+    }
+
+    .booth-phone {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-top: 1px;
+    }
+
+    .booth-phone svg {
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    .booth-phone a {
+      color: inherit;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    /* —— Voter Captain —— */
+    .sub-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding: 0 2px;
+    }
+
+    .sub-head h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .sub-head .chip {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--muted);
+      background: var(--card);
+      padding: 7px 12px;
+      border-radius: 999px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(15, 39, 68, 0.06);
+      text-align: center;
+      line-height: 1.25;
+      max-width: 58%;
+    }
+
+    .voter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .voter-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(15, 39, 68, 0.07);
+    }
+
+    .voter-card-top {
+      --voter-photo: 56px;
+      display: grid;
+      grid-template-columns: var(--voter-photo) minmax(0, 1fr);
+      column-gap: 12px;
+      align-items: center;
+      padding: 14px 16px 12px;
+    }
+
+    .voter-card .avatar-wrap {
+      width: var(--voter-photo, 56px);
+      height: var(--voter-photo, 56px);
+      flex-shrink: 0;
+    }
+
+    .voter-card .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      border: 2px solid #dfe6ef;
+      box-shadow:
+        0 0 0 1px rgba(15, 39, 68, 0.06),
+        0 4px 12px rgba(15, 39, 68, 0.1);
+      background: linear-gradient(160deg, #f2f5f9 0%, #e2e8f0 100%);
+    }
+
+    .voter-card .avatar.placeholder {
+      display: grid;
+      place-items: center;
+      font-size: clamp(0.85rem, 2.4vw, 1rem);
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+
+    .voter-block {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-rows: auto auto;
+      column-gap: 10px;
+      row-gap: 3px;
+      align-items: start;
+    }
+
+    .voter-name {
+      grid-column: 1;
+      grid-row: 1;
+      min-width: 0;
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.28;
+      margin: 0;
+    }
+
+    .voter-phone {
+      grid-column: 1;
+      grid-row: 2;
+      display: block;
+      font-size: 0.875rem;
+      color: var(--muted);
+      font-weight: 500;
+      line-height: 1.28;
+      margin: 0;
+    }
+
+    .voter-phone a {
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .voter-actions {
+      grid-column: 2;
+      grid-row: 1 / -1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      align-self: center;
+      justify-self: end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .voter-card .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      border: 1px solid rgba(15, 39, 68, 0.1);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      padding: 0;
+      background: #fff;
+      color: var(--navy);
+      box-shadow: 0 1px 2px rgba(15, 39, 68, 0.06);
+    }
+
+    .voter-card .icon-btn.muted {
+      background: #f6f7f9;
+      color: #64748b;
+      border-color: rgba(15, 39, 68, 0.06);
+    }
+
+    .voter-card .icon-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .voter-card .icon-btn:active {
+      opacity: 0.88;
+    }
+
+    .voter-card-foot {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      border-top: 1px solid rgba(15, 39, 68, 0.08);
+      background: linear-gradient(180deg, #fafbfc 0%, #f4f6f9 100%);
+    }
+
+    .voter-metric {
+      padding: 12px 8px;
+      text-align: center;
+      position: relative;
+    }
+
+    .voter-metric:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 22%;
+      bottom: 22%;
+      width: 1px;
+      background: rgba(15, 39, 68, 0.1);
+    }
+
+    .voter-metric .metric-num {
+      font-family: "Outfit", sans-serif;
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+
+    .voter-metric .metric-lbl {
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.3;
+    }
+  </style>
+</head>
+<body>
+  <header class="app-bar">
+    <button type="button" class="back" aria-label="પાછા">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </button>
+    <h1 class="app-title">બુથ નં. - 2</h1>
+  </header>
+
+  <main class="content">
+
+    <article class="booth-hero" aria-label="બુથ કેપ્ટન">
+      <div class="booth-hero-inner">
+        <div class="booth-main">
+          <div class="booth-avatar-col">
+            <div class="avatar-wrap">
+              <img class="avatar" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=240&h=240&fit=crop" alt="બુથ કેપ્ટન ફોટો" />
+            </div>
+          </div>
+          <div class="booth-text-col">
+            <h2 class="booth-name">Vijay BC</h2>
+            <div class="booth-meta-row">
+              <span class="booth-designation">બૂથ કેપ્ટન</span>
+              <span class="booth-voter-badge" title="ટોટલ મતદાર: 150" aria-label="ટોટલ મતદાર 150">
+                <span class="booth-voter-badge-label">મતદાર</span>
+                <span class="booth-voter-badge-num">150</span>
+              </span>
+            </div>
+            <p class="booth-phone">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+              <a href="tel:7788997766">7788997766</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div class="sub-head">
+      <h2>વોટર કેપ્ટન</h2>
+      <span class="chip">+ વોટર કેપ્ટન બનાવો</span>
+    </div>
+
+    <div class="voter-list">
+      <article class="voter-card">
+        <div class="voter-card-top">
+          <div class="avatar-wrap">
+            <img class="avatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=180&h=180&fit=crop" alt="" />
+          </div>
+          <div class="voter-block">
+            <h3 class="voter-name">1. રાજેશ પટેલ</h3>
+            <p class="voter-phone"><a href="tel:9876543210">9876543210</a></p>
+            <div class="voter-actions">
+              <button type="button" class="icon-btn" aria-label="કૉલ">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </button>
+              <button type="button" class="icon-btn muted" aria-label="વધુ વિકલ્પો">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="voter-card-foot">
+          <div class="voter-metric">
+            <div class="metric-num">1</div>
+            <div class="metric-lbl">વોટર નં. થી</div>
+          </div>
+          <div class="voter-metric">
+            <div class="metric-num">100</div>
+            <div class="metric-lbl">વોટર નં. સુધી</div>
+          </div>
+          <div class="voter-metric">
+            <div class="metric-num">100</div>
+            <div class="metric-lbl">ટોટલ મતદાર</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="voter-card">
+        <div class="voter-card-top">
+          <div class="avatar-wrap">
+            <img class="avatar" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=180&h=180&fit=crop" alt="" />
+          </div>
+          <div class="voter-block">
+            <h3 class="voter-name">2. સીતા બેન શાહ</h3>
+            <p class="voter-phone"><a href="tel:9123456789">9123456789</a></p>
+            <div class="voter-actions">
+              <button type="button" class="icon-btn" aria-label="કૉલ">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </button>
+              <button type="button" class="icon-btn muted" aria-label="વધુ વિકલ્પો">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="voter-card-foot">
+          <div class="voter-metric">
+            <div class="metric-num">101</div>
+            <div class="metric-lbl">વોટર નં. થી</div>
+          </div>
+          <div class="voter-metric">
+            <div class="metric-num">200</div>
+            <div class="metric-lbl">વોટર નં. સુધી</div>
+          </div>
+          <div class="voter-metric">
+            <div class="metric-num">100</div>
+            <div class="metric-lbl">ટોટલ મતદાર</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="voter-card">
+        <div class="voter-card-top">
+          <div class="avatar-wrap">
+            <div class="avatar placeholder" aria-hidden="true">AM</div>
+          </div>
+          <div class="voter-block">
+            <h3 class="voter-name">3. અમિત મેહતા</h3>
+            <p class="voter-phone"><a href="tel:9988776655">9988776655</a></p>
+            <div class="voter-actions">
+              <button type="button" class="icon-btn" aria-label="કૉલ">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </button>
+              <button type="button" class="icon-btn muted" aria-label="વધુ વિકલ્પો">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="voter-card-foot">
+          <div class="voter-metric">
+            <div class="metric-num">201</div>
+            <div class="metric-lbl">વોટર નં. થી</div>
+          </div>
+          <div class="voter-metric">
+            <div class="metric-num">300</div>
+            <div class="metric-lbl">વોટર નં. સુધી</div>
+          </div>
+          <div class="voter-metric">
+            <div class="metric-num">100</div>
+            <div class="metric-lbl">ટોટલ મતદાર</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

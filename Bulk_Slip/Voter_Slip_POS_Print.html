@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Voter Slip — Thermal POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #e8e8e8;
+            --ui-line: #ddd;
+            --slip-w: 300px;
+            --radius: 14px;
+            --dash: 2px dashed #000;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: var(--bg);
+            font-family: "Noto Sans Devanagari", sans-serif;
+            padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+        }
+
+        .app-bar {
+            padding: 16px 20px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            background: #fff;
+            border-bottom: 1px solid var(--ui-line);
+        }
+
+        .app-bar h1 { font-size: 1rem; font-weight: 700; }
+
+        .section { padding: 16px 20px 0; }
+
+        .card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 16px;
+            border: 1px solid var(--ui-line);
+        }
+
+        .bt-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--ui-line);
+            font-size: 0.86rem;
+            font-weight: 600;
+        }
+
+        .bt-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e53935;
+            flex-shrink: 0;
+        }
+
+        .bt-dot.on { background: #22c55e; }
+
+        .bt-status small { margin-left: auto; font-size: 0.74rem; color: #888; }
+
+        .btn-print:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%) translateY(12px);
+            bottom: 88px;
+            max-width: 340px;
+            width: calc(100% - 40px);
+            padding: 11px 14px;
+            background: #111;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.25s;
+            z-index: 50;
+        }
+
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        .bt-dropdown {
+            width: 100%;
+            padding: 14px 40px 14px 14px;
+            border: 1.5px solid var(--ui-line);
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            font-family: inherit;
+            appearance: none;
+            background: #fafafa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+        }
+
+        .thermal-stage {
+            margin-top: 16px;
+            background: #d4d4d4;
+            border-radius: var(--radius);
+            padding: 20px 12px 26px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .thermal-paper {
+            width: 100%;
+            max-width: var(--slip-w);
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,.1);
+        }
+
+        /* —— Reference slip (B&W thermal) —— */
+        .slip {
+            padding: 10px 10px 14px;
+            color: #000;
+            font-size: 11px;
+            line-height: 1.45;
+        }
+
+        .slip-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .slip-logo {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .slip-party {
+            flex: 1;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: 0.01em;
+        }
+
+        .slip-dash-box {
+            border: var(--dash);
+            padding: 10px 8px;
+            text-align: center;
+            margin: 10px 0 12px;
+        }
+
+        .slip-dash-box .corp {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .slip-dash-box .panel {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .slip-voter {
+            margin-bottom: 12px;
+        }
+
+        .slip-line {
+            margin-bottom: 7px;
+            font-size: 11px;
+        }
+
+        /* भाग | विभाग | क्रमांक */
+        .slip-meta-box {
+            display: flex;
+            border: 1px solid #000;
+            margin-bottom: 12px;
+        }
+
+        .slip-meta-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px 6px;
+            border-right: 1px solid #000;
+        }
+
+        .slip-meta-item:last-child {
+            border-right: none;
+        }
+
+        .slip-meta-lbl {
+            display: block;
+            font-size: 9px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .slip-meta-val {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .slip-line.name {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .slip-line .lbl {
+            font-weight: 600;
+        }
+
+        .slip-loc {
+            margin-top: 8px;
+            font-size: 10.5px;
+            line-height: 1.5;
+        }
+
+        .slip-loc .lbl {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        /* Candidate rows */
+        .slip-cands {
+            margin: 14px 0 12px;
+            padding: 2px 0;
+        }
+
+        .cand-row {
+            display: flex;
+            align-items: stretch;
+            border: 1px solid #000;
+            margin-bottom: 8px;
+            min-height: 40px;
+            padding: 0;
+        }
+
+        .cand-num {
+            width: 32px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            border-right: 1px solid #000;
+            padding: 8px 6px;
+        }
+
+        .cand-name {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 8px 10px;
+            font-size: 10px;
+            font-weight: 600;
+            border-right: 1px solid #000;
+            text-align: left;
+        }
+
+        .cand-logo {
+            width: 40px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 6px;
+        }
+
+        .cand-logo img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+        }
+
+        .slip-msg {
+            text-align: center;
+            font-size: 9px;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            padding: 0 4px;
+        }
+
+        .slip-thanks {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .action-bar {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            width: 100%;
+            max-width: 430px;
+            padding: 12px 20px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            background: #fff;
+            border-top: 1px solid var(--ui-line);
+        }
+
+        .btn-print {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.94rem;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        @media print {
+            body { background: #fff; padding: 0; }
+            .app-bar, .card, .action-bar, .thermal-stage { background: none; padding: 0; margin: 0; }
+            .thermal-paper { box-shadow: none; max-width: 58mm; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-bar">
+        <h1>Voter Slip — Thermal Print</h1>
+    </header>
+
+    <div class="section">
+        <div class="card">
+            <div class="bt-status">
+                <span class="bt-dot" id="btDot"></span>
+                <span id="btStatusText">Not connected</span>
+                <small id="btStatusSub"></small>
+            </div>
+            <select class="bt-dropdown" id="deviceSelect">
+                <option value="">Select Bluetooth Device</option>
+            </select>
+        </div>
+
+        <div class="thermal-stage">
+            <div class="thermal-paper">
+                <div class="slip" id="slipPrint">
+
+                    <div class="slip-head">
+                        <img src="img/bjp_only_logo.png" alt="" class="slip-logo" />
+                        <div class="slip-party" id="pParty">भारतीय जनता पार्टी</div>
+                        <img src="img/bjp_only_logo.png" alt="" class="slip-logo" />
+                    </div>
+
+                    <div class="slip-dash-box">
+                        <div class="corp" id="pCorp">राजकोट महानगरपालिका</div>
+                        <div class="panel" id="pPanel">69 - Nagpur East</div>
+                    </div>
+
+                    <div class="slip-voter">
+                        <div class="slip-meta-box">
+                            <div class="slip-meta-item">
+                                <span class="slip-meta-lbl">भाग</span>
+                                <span class="slip-meta-val" id="pBhag">28</span>
+                            </div>
+                            <div class="slip-meta-item">
+                                <span class="slip-meta-lbl">विभाग</span>
+                                <span class="slip-meta-val" id="pVibhag">4</span>
+                            </div>
+                            <div class="slip-meta-item">
+                                <span class="slip-meta-lbl">क्रमांक</span>
+                                <span class="slip-meta-val" id="pKram">1048</span>
+                            </div>
+                        </div>
+                        <p class="slip-line name"><span class="lbl">नाम :</span> <span id="pName">हार्दिक चौरसिया</span></p>
+                        <p class="slip-line"><span class="lbl">पिता/पति :</span> <span id="pFamily">सुरेश चौरसिया</span></p>
+                        <p class="slip-line"><span class="lbl">जाति/आयु :</span> <span id="pSexAge">पुरुष / 22</span></p>
+                        <p class="slip-line"><span class="lbl">वोटर आईडी नंबर :</span> <span id="pIdcard">ZMH8909723</span></p>
+                        <div class="slip-loc">
+                            <span class="lbl">मतदान स्थल :</span>
+                            <span id="pLoc">त.मी.क. वर्तक नगर प्रभाग समिती ऑफिस ग्राउंड फ्लोर पब्लिक फॅसिलिटेशन सेंटर पार्टीशन 1 वेदांत कॉम्प्लेक्स नव ब्लडा. ठाणे 400606</span>
+                        </div>
+                    </div>
+
+                    <div class="slip-cands" id="pCands">
+                        <div class="cand-row" data-cand="1">
+                            <div class="cand-num">1</div>
+                            <div class="cand-name">उम्मीदवार का नाम</div>
+                            <div class="cand-logo"><img src="img/bjp_only_logo.png" alt="" /></div>
+                        </div>
+                        <div class="cand-row" data-cand="2">
+                            <div class="cand-num">2</div>
+                            <div class="cand-name">उम्मीदवार का नाम</div>
+                            <div class="cand-logo"><img src="img/bjp_only_logo.png" alt="" /></div>
+                        </div>
+                        <div class="cand-row" data-cand="3">
+                            <div class="cand-num">3</div>
+                            <div class="cand-name">उम्मीदवार का नाम</div>
+                            <div class="cand-logo"><img src="img/bjp_only_logo.png" alt="" /></div>
+                        </div>
+                        <div class="cand-row" data-cand="4">
+                            <div class="cand-num">4</div>
+                            <div class="cand-name">उम्मीदवार का नाम</div>
+                            <div class="cand-logo"><img src="img/bjp_only_logo.png" alt="" /></div>
+                        </div>
+                    </div>
+
+                    <p class="slip-msg" id="pMsg">कृपया अपना कीमती वोट देकर विजय बनायें</p>
+                    <div class="slip-thanks" id="pThanks">धन्यवाद</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="action-bar">
+        <button type="button" class="btn-print">Print</button>
+    </footer>
+
+</body>
+</html>

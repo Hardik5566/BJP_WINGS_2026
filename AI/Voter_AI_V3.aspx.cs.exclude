@@ -1,0 +1,365 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using WebGrease.Activities;
+
+public partial class AI_Voter_AI_V3 : System.Web.UI.Page
+{
+    string connString = ConfigurationManager.ConnectionStrings["BJPWingsDB"].ConnectionString;
+    string openAIKey = ConfigurationManager.AppSettings["OpenAIKey"];
+    string appID = ConfigurationManager.AppSettings["AppID"];
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            LoadStatistics();
+            LoadSuggestions();
+        }
+    }
+
+    private void LoadStatistics()
+    {
+        try
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+
+                // Total Voters
+                SqlCommand cmd1 = new SqlCommand("SELECT COUNT(*) FROM tbl_voting_record WHERE app_id = @appID", conn);
+                cmd1.Parameters.AddWithValue("@appID", appID);
+                lblTotalVoters.Text = cmd1.ExecuteScalar().ToString();
+
+                // Supporters (voter_status = '1')
+                SqlCommand cmd2 = new SqlCommand(@"
+                        SELECT COUNT(DISTINCT voter_idcard) 
+                        FROM tbl_voter_survey 
+                        WHERE voter_status = '1' AND is_latest = 1 AND app_id = @appID", conn);
+                cmd2.Parameters.AddWithValue("@appID", appID);
+                lblSupporters.Text = cmd2.ExecuteScalar().ToString();
+
+                // Opposers (voter_status = '2')
+                SqlCommand cmd3 = new SqlCommand(@"
+                        SELECT COUNT(DISTINCT voter_idcard) 
+                        FROM tbl_voter_survey 
+                        WHERE voter_status = '2' AND is_latest = 1 AND app_id = @appID", conn);
+                cmd3.Parameters.AddWithValue("@appID", appID);
+                lblOpposers.Text = cmd3.ExecuteScalar().ToString();
+
+                // Total Booths
+                SqlCommand cmd4 = new SqlCommand("SELECT COUNT(DISTINCT part_no) FROM tbl_voting_record WHERE app_id = @appID", conn);
+                cmd4.Parameters.AddWithValue("@appID", appID);
+                lblBooths.Text = cmd4.ExecuteScalar().ToString();
+
+                // Total Workers
+                SqlCommand cmd5 = new SqlCommand("SELECT COUNT(*) FROM tbl_user WHERE status = 1 AND app_id = @appID", conn);
+                cmd5.Parameters.AddWithValue("@appID", appID);
+                lblWorkers.Text = cmd5.ExecuteScalar().ToString();
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log error but don't show to user
+            System.Diagnostics.Debug.WriteLine("Stats Error: " + ex.Message);
+        }
+    }
+
+    private void LoadSuggestions()
+    {
+        var suggestions = new List<string>
+            {
+                "બૂથ નંબર 1 ના તમામ સપોર્ટર બતાવો",
+                "30 વર્ષથી ઓછી ઉંમરની મહિલા મતદારો",
+                "Show voters with family_id = 100",
+                "કેટલા મતદારોએ સર્વે પૂરો કર્યો?",
+                "રમેશ પટેલ નામના મતદારની વિગતો",
+                "છેલ્લા 7 દિવસના સર્વે",
+                "બૂથ 3 માં કેટલા વિરોધી છે?",
+                "જ્ઞાતિ નંબર 5 ના મતદારો"
+            };
+        rptSuggestions.DataSource = suggestions;
+        rptSuggestions.DataBind();
+    }
+
+    protected void btnAsk_Click(object sender, EventArgs e)
+    {
+        string question = txtQuestion.Text.Trim();
+        if (string.IsNullOrEmpty(question))
+        {
+            ShowError("કૃપા કરીને પ્રશ્ન લખો");
+            return;
+        }
+
+        try
+        {
+            // Step 1: AI generates SQL from question
+            string sql = GenerateSQLFromQuestion(question);
+            lblSQL.Text = sql;
+
+            // Step 2: Execute SQL
+            DataTable dt = ExecuteSQL(sql);
+
+            // Step 3: AI generates answer from data
+            string answer = GenerateAnswerFromData(question, sql, dt);
+            lblAnswer.Text = answer;
+
+            // Step 4: Show results
+            gvResult.DataSource = dt;
+            gvResult.DataBind();
+            lblRowCount.Text = "કુલ " + dt.Rows.Count + " પંક્તિઓ";
+
+            divResults.Visible = true;
+            lblError.Visible = false;
+        }
+        catch (Exception ex)
+        {
+            ShowError("Error: " + ex.Message);
+        }
+    }
+
+    private string GenerateSQLFromQuestion(string question)
+    {
+        using (var client = new HttpClient())
+        {
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {openAIKey}");
+
+            // Complete database schema description for AI
+            string schema = @"
+DATABASE SCHEMA:
+
+1. tbl_voting_record (Voter Master Table):
+   - idcard_no: Voter ID number (PRIMARY KEY)
+   - f_name: First name (Gujarati) - [પ્રથમ નામ]
+   - m_name: Middle name (Gujarati) - [મધ્યમ નામ]
+   - surname: Last name/surname (Gujarati) - [અટક]
+   - eng_f_name: First name (English)
+   - eng_m_name: Middle name (English)
+   - eng_surname: Last name (English)
+   - Full name = f_name + ' ' + m_name + ' ' + surname
+   - age: Age (can be number or string)
+   - sex: Gender (M/F)
+   - contact_no: Mobile number
+   - part_no: Booth number (બૂથ નંબર)
+   - ac_no: Assembly constituency
+   - house_no: House number
+   - localityid: Area/Locality (Gujarati)
+   - polling_location: Polling station
+   - family_id: Family ID (same family members have same family_id)
+
+2. tbl_voter_survey (Survey Table):
+   - survey_id: Unique ID
+   - voter_idcard: Links to tbl_voting_record.idcard_no
+   - booth_no: Booth number
+   - survey_by: Worker ID (links to tbl_user)
+   - survey_date: Survey date/time
+   - voter_available: 1=Available, 0=Not available
+   - not_available_reason: Reason if not available
+   - age: Age at survey time
+   - religion: Religion ID (Master)
+   - caste: Caste ID (Master)
+   - contact_no: Contact number
+   - address: Full address
+   - ration_card: Ration card number
+   - scheme_id_list: Government schemes (comma separated)
+   - voter_status: 
+        '1' = Supporter (સપોર્ટર)
+        '2' = Opponent (વિરોધી)
+        '3' = Neutral (ન્યૂટ્રલ)
+        '4' = Undecided (અનિશ્ચિત)
+        '5' = Other (અન્ય)
+   - note: Important notes
+   - visit_count: Number of visits
+   - is_latest: 1=Latest survey, 0=Old survey
+   - lat_long: Location coordinates
+   - visit_location: Visit location name
+
+3. tbl_user (Worker Table):
+   - user_id: Worker ID
+   - name: Worker name
+   - mobile_no: Mobile number
+   - user_type: admin/worker/supervisor
+   - booth_no: Primary booth
+   - status: 1=Active, 0=Inactive
+
+4. tbl_user_booth (Worker-Booth Mapping):
+   - user_id: Worker ID
+   - booth_no: Booth assigned
+
+RULES:
+- Always use is_latest=1 for latest survey data
+- For full name, use: f_name + ' ' + m_name + ' ' + surname
+- Gujarati text is in NVARCHAR columns
+- English text is in eng_* columns
+- Filter by app_id = " + appID + @" usually
+- Return only SELECT queries, no modifications
+- Make questions understanding in Gujarati/Hindi/English
+- Include relevant joins based on question
+- Limit results to 1000 rows maximum unless specified";
+
+            var request = new
+            {
+                model = "gpt-3.5-turbo",
+                messages = new[]
+                {
+                        new {
+                            role = "system",
+                            content = "You are an expert SQL developer. Based on the database schema, convert the user's question into a SQL query. Return ONLY the SQL query, no explanations. Understand questions in Gujarati, Hindi, or English. Include proper joins and use is_latest=1 for surveys. Schema: " + schema
+                        },
+                        new { role = "user", content = question }
+                    },
+                temperature = 0.3,
+                max_tokens = 500
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var response = client.PostAsync("https://api.openai.com/v1/chat/completions", content).Result;
+            var responseString = response.Content.ReadAsStringAsync().Result;
+
+            dynamic json = JObject.Parse(responseString);
+            string sql = json.choices[0].message.content.ToString();
+
+            // Clean up SQL
+            sql = sql.Replace("```sql", "").Replace("```", "").Trim();
+
+            // Add app_id filter if not present and table has app_id
+            if (!sql.ToLower().Contains("app_id") && (sql.ToLower().Contains("tbl_voting_record") || sql.ToLower().Contains("tbl_voter_survey")))
+            {
+                if (sql.ToLower().Contains("where"))
+                {
+                    sql = sql.Replace("WHERE", "WHERE app_id = " + appID + " AND ");
+                }
+                else
+                {
+                    sql = sql + " WHERE app_id = " + appID;
+                }
+            }
+
+            return sql;
+        }
+    }
+
+    private DataTable ExecuteSQL(string sql)
+    {
+        // Security check - only SELECT allowed
+        if (!sql.Trim().StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new Exception("Only SELECT queries are allowed");
+        }
+
+        DataTable dt = new DataTable();
+
+        using (SqlConnection conn = new SqlConnection(connString))
+        {
+            SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+            da.Fill(dt);
+        }
+
+        return dt;
+    }
+
+    private string GenerateAnswerFromData(string question, string sql, DataTable dt)
+    {
+        if (dt.Rows.Count == 0)
+        {
+            return "❌ કોઈ ડેટા મળ્યો નથી. કૃપા કરીને બીજો પ્રશ્ન પૂછો.";
+        }
+
+        // Convert DataTable to text for AI
+        string dataText = "";
+        int rowCount = 0;
+        foreach (DataRow row in dt.Rows)
+        {
+            rowCount++;
+            foreach (DataColumn col in dt.Columns)
+            {
+                dataText += $"{col.ColumnName}: {row[col]} | ";
+            }
+            dataText += "\n";
+            if (rowCount > 20) // Limit to 20 rows for AI context
+            {
+                dataText += $"... અને {dt.Rows.Count - 20} વધુ પંક્તિઓ\n";
+                break;
+            }
+        }
+
+        using (var client = new HttpClient())
+        {
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {openAIKey}");
+
+            var request = new
+            {
+                model = "gpt-3.5-turbo",
+                messages = new[]
+                {
+                        new {
+                            role = "system",
+                            content = @"You are BJP Wings AI Assistant. Based on the SQL query results, answer the user's question in a helpful way. 
+                            Use Gujarati language with proper grammar. Be concise but informative. 
+                            If it's a list of voters, mention the count and key details.
+                            If it's statistics, explain the numbers clearly.
+                            Always be polite and professional."
+                        },
+                        new {
+                            role = "user",
+                            content = $"પ્રશ્ન: {question}\n\nSQL ક્વેરી: {sql}\n\nપરિણામો:\n{dataText}\n\nકુલ પંક્તિઓ: {dt.Rows.Count}\n\nકૃપા કરીને ગુજરાતીમાં જવાબ આપો:"
+                        }
+                    },
+                temperature = 0.5
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var response = client.PostAsync("https://api.openai.com/v1/chat/completions", content).Result;
+            var responseString = response.Content.ReadAsStringAsync().Result;
+
+            dynamic json = JObject.Parse(responseString);
+            return json.choices[0].message.content.ToString();
+        }
+    }
+
+    protected void Suggestion_Click(object sender, CommandEventArgs e)
+    {
+        txtQuestion.Text = e.CommandArgument.ToString();
+        btnAsk_Click(sender, e);
+    }
+
+    protected void btnClear_Click(object sender, EventArgs e)
+    {
+        txtQuestion.Text = "";
+        divResults.Visible = false;
+        lblError.Visible = false;
+    }
+
+    protected void btnRefreshStats_Click(object sender, EventArgs e)
+    {
+        LoadStatistics();
+    }
+
+    protected void gvResult_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        gvResult.PageIndex = e.NewPageIndex;
+        // Re-bind the data
+        if (!string.IsNullOrEmpty(lblSQL.Text))
+        {
+            DataTable dt = ExecuteSQL(lblSQL.Text);
+            gvResult.DataSource = dt;
+            gvResult.DataBind();
+        }
+    }
+
+    private void ShowError(string message)
+    {
+        lblError.Text = message;
+        lblError.Visible = true;
+        divResults.Visible = false;
+    }
+}

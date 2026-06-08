@@ -1,0 +1,244 @@
+﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Data;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class AI_Temp : System.Web.UI.Page
+{
+    
+    string connString = ConfigurationManager.ConnectionStrings["BJPWingsDB"].ConnectionString;
+    string azureEndpoint = ConfigurationManager.AppSettings["AzureOpenAIEndpoint"];
+    string azureKey = ConfigurationManager.AppSettings["AzureOpenAIKey"];
+    string azureDeployment = ConfigurationManager.AppSettings["AzureDeployment"];
+    string appID = "1";
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            LoadStatistics();
+            LoadSuggestions();
+        }
+    }
+
+    private void LoadStatistics()
+    {
+        using (SqlConnection conn = new SqlConnection(connString))
+        {
+            conn.Open();
+
+            SqlCommand cmd1 = new SqlCommand("SELECT COUNT(*) FROM tbl_voting_record WHERE app_id = @appID", conn);
+            cmd1.Parameters.AddWithValue("@appID", appID);
+            lblVoters.Text = cmd1.ExecuteScalar().ToString();
+
+            SqlCommand cmd2 = new SqlCommand(@"SELECT COUNT(DISTINCT voter_idcard) FROM tbl_voter_survey WHERE voter_status = '1' AND is_latest = 1 AND app_id = @appID", conn);
+            cmd2.Parameters.AddWithValue("@appID", appID);
+            lblSupporters.Text = cmd2.ExecuteScalar().ToString();
+
+            SqlCommand cmd3 = new SqlCommand(@"SELECT COUNT(DISTINCT voter_idcard) FROM tbl_voter_survey WHERE voter_status = '2' AND is_latest = 1 AND app_id = @appID", conn);
+            cmd3.Parameters.AddWithValue("@appID", appID);
+            lblOpposers.Text = cmd3.ExecuteScalar().ToString();
+
+            SqlCommand cmd4 = new SqlCommand("SELECT COUNT(DISTINCT part_no) FROM tbl_voting_record WHERE app_id = @appID", conn);
+            cmd4.Parameters.AddWithValue("@appID", appID);
+            lblBooths.Text = cmd4.ExecuteScalar().ToString();
+
+            SqlCommand cmd5 = new SqlCommand("SELECT COUNT(*) FROM tbl_user WHERE status = 1 AND app_id = @appID", conn);
+            cmd5.Parameters.AddWithValue("@appID", appID);
+            lblWorkers.Text = cmd5.ExecuteScalar().ToString();
+        }
+    }
+
+    private void LoadSuggestions()
+    {
+        rptSuggestions.DataSource = new List<string> {
+                "બૂથ 1 ના સપોર્ટર", "30 વર્ષથી ઓછી મહિલાઓ",
+                "Show family_id = 100", "કેટલા સર્વે થયા?",
+                "રમેશ પટેલ નામના મતદાર", "બૂથ 3 ના વિરોધી"
+            };
+        rptSuggestions.DataBind();
+    }
+
+    protected async void btnAsk_Click(object sender, EventArgs e)
+    {
+        string question = txtQuestion.Text.Trim();
+        if (string.IsNullOrEmpty(question)) return;
+
+        try
+        {
+            // Step 1: AI generates SQL
+            string sql = await GenerateSQLFromQuestion(question);
+            lblSQL.Text = sql;
+
+            // Step 2: Execute SQL
+            DataTable dt = ExecuteSQL(sql);
+
+            // Step 3: AI generates answer
+            string answer = await GenerateAnswerFromData(question, sql, dt);
+            lblAnswer.Text = answer;
+
+            // Step 4: Show results
+            gvResult.DataSource = dt;
+            gvResult.DataBind();
+            lblRowCount.Text = "કુલ " + dt.Rows.Count + " પરિણામો";
+            divResults.Visible = true;
+            lblError.Visible = false;
+        }
+        catch (Exception ex)
+        {
+            lblError.Text = "Error: " + ex.Message;
+            lblError.Visible = true;
+        }
+    }
+
+    private async System.Threading.Tasks.Task<string> GenerateSQLFromQuestion(string question)
+    {
+        using (var client = new HttpClient())
+        {
+            // Azure OpenAI endpoint URL
+            string url = $"{azureEndpoint}openai/deployments/{azureDeployment}/chat/completions?api-version=2023-07-01-preview";
+
+            client.DefaultRequestHeaders.Add("api-key", azureKey);
+
+            var requestBody = new
+            {
+                messages = new[]
+                {
+                        new {
+                            role = "system",
+                            content = @"You are an expert SQL developer. Database schema:
+
+1. tbl_voting_record:
+   - idcard_no (Voter ID), f_name (પ્રથમ નામ), m_name (મધ્યમ નામ), surname (અટક)
+   - age, sex (M/F), part_no (બૂથ નંબર), contact_no, family_id
+   - Full name = f_name + ' ' + m_name + ' ' + surname
+
+2. tbl_voter_survey:
+   - voter_idcard (links to tbl_voting_record)
+   - voter_status: '1'=સપોર્ટર, '2'=વિરોધી, '3'=ન્યૂટ્રલ
+   - is_latest=1 for latest survey, survey_date, note
+
+3. tbl_user:
+   - user_id, name, mobile_no, booth_no
+
+Always use is_latest=1 for surveys. Return ONLY the SQL query. app_id = " + appID
+                        },
+                        new { role = "user", content = question }
+                    },
+                temperature = 0.3,
+                max_tokens = 500
+            };
+
+            string jsonBody = JsonConvert.SerializeObject(requestBody);
+            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync(url, content);
+            string responseString = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception("Azure OpenAI Error: " + responseString);
+
+            dynamic json = JObject.Parse(responseString);
+            string sql = json.choices[0].message.content.ToString();
+
+            // Clean SQL
+            sql = sql.Replace("```sql", "").Replace("```", "").Trim();
+
+            return sql;
+        }
+    }
+
+    private DataTable ExecuteSQL(string sql)
+    {
+        if (!sql.Trim().StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
+            throw new Exception("Only SELECT queries allowed");
+
+        DataTable dt = new DataTable();
+        using (SqlConnection conn = new SqlConnection(connString))
+        {
+            SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+            da.Fill(dt);
+        }
+        return dt;
+    }
+
+    private async System.Threading.Tasks.Task<string> GenerateAnswerFromData(string question, string sql, DataTable dt)
+    {
+        if (dt.Rows.Count == 0)
+            return "❌ કોઈ ડેટા મળ્યો નથી.";
+
+        // Convert data to text (first 10 rows only)
+        string dataText = "";
+        for (int i = 0; i < Math.Min(10, dt.Rows.Count); i++)
+        {
+            foreach (DataColumn col in dt.Columns)
+            {
+                dataText += $"{col.ColumnName}: {dt.Rows[i][col]} | ";
+            }
+            dataText += "\n";
+        }
+
+        using (var client = new HttpClient())
+        {
+            string url = $"{azureEndpoint}openai/deployments/{azureDeployment}/chat/completions?api-version=2023-07-01-preview";
+            client.DefaultRequestHeaders.Add("api-key", azureKey);
+
+            var requestBody = new
+            {
+                messages = new[]
+                {
+                        new {
+                            role = "system",
+                            content = "You are BJP Wings AI Assistant. Answer in Gujarati based on the data. Be helpful and concise."
+                        },
+                        new {
+                            role = "user",
+                            content = $"પ્રશ્ન: {question}\n\nપરિણામો ({dt.Rows.Count} પંક્તિઓ):\n{dataText}\n\nગુજરાતીમાં જવાબ આપો:"
+                        }
+                    },
+                temperature = 0.5
+            };
+
+            string jsonBody = JsonConvert.SerializeObject(requestBody);
+            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync(url, content);
+            string responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic json = JObject.Parse(responseString);
+            return json.choices[0].message.content.ToString();
+        }
+    }
+
+    protected void Suggestion_Click(object sender, CommandEventArgs e)
+    {
+        txtQuestion.Text = e.CommandArgument.ToString();
+        btnAsk_Click(sender, e);
+    }
+
+    protected void btnClear_Click(object sender, EventArgs e)
+    {
+        txtQuestion.Text = "";
+        divResults.Visible = false;
+    }
+
+    protected void gvResult_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        gvResult.PageIndex = e.NewPageIndex;
+        if (!string.IsNullOrEmpty(lblSQL.Text))
+        {
+            DataTable dt = ExecuteSQL(lblSQL.Text);
+            gvResult.DataSource = dt;
+            gvResult.DataBind();
+        }
+    }
+}

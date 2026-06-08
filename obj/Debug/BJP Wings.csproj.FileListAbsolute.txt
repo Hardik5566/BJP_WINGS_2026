@@ -1,0 +1,76 @@
+E:\BJP Wings\BJP Wings\bin\BJP Wings.dll.config
+E:\BJP Wings\BJP Wings\bin\BJP Wings.dll
+E:\BJP Wings\BJP Wings\bin\BJP Wings.pdb
+E:\BJP Wings\BJP Wings\bin\roslyn\csc.exe
+E:\BJP Wings\BJP Wings\bin\roslyn\csc.exe.config
+E:\BJP Wings\BJP Wings\bin\roslyn\csc.rsp
+E:\BJP Wings\BJP Wings\bin\roslyn\csi.exe
+E:\BJP Wings\BJP Wings\bin\roslyn\csi.exe.config
+E:\BJP Wings\BJP Wings\bin\roslyn\csi.rsp
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.CodeAnalysis.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.CSharp.Core.targets
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.Managed.Core.targets
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.VisualBasic.Core.targets
+E:\BJP Wings\BJP Wings\bin\roslyn\Microsoft.Win32.Primitives.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.AppContext.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Collections.Immutable.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Console.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Diagnostics.DiagnosticSource.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Diagnostics.StackTrace.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Globalization.Calendars.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.IO.Compression.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.IO.Compression.ZipFile.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.IO.FileSystem.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.IO.FileSystem.Primitives.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Net.Http.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Net.Sockets.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Reflection.Metadata.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Runtime.InteropServices.RuntimeInformation.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Security.Cryptography.Encoding.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Security.Cryptography.Primitives.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Text.Encoding.CodePages.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Threading.Tasks.Extensions.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.ValueTuple.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Xml.ReaderWriter.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Xml.XmlDocument.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Xml.XPath.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\System.Xml.XPath.XDocument.dll
+E:\BJP Wings\BJP Wings\bin\roslyn\vbc.exe
+E:\BJP Wings\BJP Wings\bin\roslyn\vbc.exe.config
+E:\BJP Wings\BJP Wings\bin\roslyn\vbc.rsp
+E:\BJP Wings\BJP Wings\bin\roslyn\VBCSCompiler.exe
+E:\BJP Wings\BJP Wings\bin\roslyn\VBCSCompiler.exe.config
+E:\BJP Wings\BJP Wings\bin\Antlr3.Runtime.dll
+E:\BJP Wings\BJP Wings\bin\Microsoft.AspNet.FriendlyUrls.dll
+E:\BJP Wings\BJP Wings\bin\Microsoft.AspNet.Web.Optimization.WebForms.dll
+E:\BJP Wings\BJP Wings\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+E:\BJP Wings\BJP Wings\bin\Microsoft.ScriptManager.MSAjax.dll
+E:\BJP Wings\BJP Wings\bin\Microsoft.ScriptManager.WebForms.dll
+E:\BJP Wings\BJP Wings\bin\Microsoft.Web.Infrastructure.dll
+E:\BJP Wings\BJP Wings\bin\Newtonsoft.Json.dll
+E:\BJP Wings\BJP Wings\bin\System.Web.Optimization.dll
+E:\BJP Wings\BJP Wings\bin\WebGrease.dll
+E:\BJP Wings\BJP Wings\bin\System.Web.Optimization.xml
+E:\BJP Wings\BJP Wings\bin\Newtonsoft.Json.xml
+E:\BJP Wings\BJP Wings\bin\Antlr3.Runtime.pdb
+E:\BJP Wings\BJP Wings\bin\Microsoft.AspNet.FriendlyUrls.xml
+E:\BJP Wings\BJP Wings\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+E:\BJP Wings\BJP Wings\obj\Debug\BJP Wings.csproj.AssemblyReference.cache
+E:\BJP Wings\BJP Wings\obj\Debug\BJP Wings.csproj.CoreCompileInputs.cache
+E:\BJP Wings\BJP Wings\obj\Debug\BJP Wings.csproj.Up2Date
+E:\BJP Wings\BJP Wings\obj\Debug\BJP Wings.dll
+E:\BJP Wings\BJP Wings\obj\Debug\BJP Wings.pdb
+E:\BJP Wings\BJP_Wings\obj\Debug\BJP Wings.csproj.AssemblyReference.cache
+E:\BJP Wings\BJP_Wings\obj\Debug\BJP Wings.csproj.CoreCompileInputs.cache
+F:\MH Coporation 2025\BJP_Wings\obj\Debug\BJP Wings.csproj.AssemblyReference.cache
+F:\MH Coporation 2025\BJP_Wings\obj\Debug\BJP Wings.csproj.CoreCompileInputs.cache

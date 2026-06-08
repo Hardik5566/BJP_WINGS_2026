@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>BJP Wings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Noto+Sans+Gujarati:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #0a0a0a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 12px;
+            font-family: 'Noto Sans Gujarati', sans-serif;
+        }
+
+        .card {
+            background: linear-gradient(160deg, #1e1008, #111, #0d0d0d);
+            border: 1px solid rgba(255,140,0,0.3);
+            border-radius: 18px;
+            padding: 20px 18px 18px;
+            max-width: 360px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,140,0,0.08);
+            animation: pop 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+
+        @keyframes pop {
+            from { opacity: 0; transform: scale(0.88); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        /* ── HEADER ROW: Logo + BJP Wings inline ── */
+        .header-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255,140,0,0.18);
+        }
+
+        /* Lotus */
+        .lotus-wrap {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            filter: drop-shadow(0 0 8px rgba(255,140,0,0.5));
+        }
+
+        /* Brand text */
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+        }
+
+        .brand-bjp {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            background: linear-gradient(135deg, #FF9933, #FF6600);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-wings {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 8px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #c9a84c;
+        }
+
+        /* Tricolor accent */
+        .tricolor {
+            height: 3px;
+            width: 38px;
+            border-radius: 2px;
+            background: linear-gradient(to right, #FF9933 33.3%, #fff 33.3% 66.6%, #138808 66.6%);
+            margin-top: 4px;
+            opacity: 0.75;
+        }
+
+        /* ── MESSAGE ── */
+        .msg {
+            font-size: 14.5px;
+            font-weight: 400;
+            line-height: 1.95;
+            color: #ede8df;
+        }
+
+        .msg .hi {
+            color: #FFB347;
+            font-weight: 700;
+        }
+
+        /* ── AUTHOR ── */
+        .author-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,140,0,0.15);
+        }
+
+        .author-dash {
+            width: 20px; height: 2px;
+            border-radius: 1px;
+            background: linear-gradient(to right, #FF9933, #c9a84c);
+            flex-shrink: 0;
+        }
+
+        .author-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: #c9a84c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+    <!-- HEADER: Logo + BJP Wings side by side -->
+    <div class="header-row">
+        <div class="lotus-wrap">
+            <img src="img/bjp_only_logo.png" style="width:45px" />
+        </div>
+
+        <div class="brand-text">
+            <span class="brand-bjp">BJP WINGS</span>
+            <span class="brand-wings">The Election Strategic Planning</span>
+            <div class="tricolor"></div>
+        </div>
+    </div>
+
+    <!-- MESSAGE -->
+    <div class="msg">
+        પ્રિય <span class="hi">કાર્યકર્તા મિત્રો</span>,<br>
+        આપની મહેનત, શિસ્ત અને સેવા ભાવથી અમે ખૂબ ગર્વ અનુભવ્યે છીએ. આપ સૌ સંગઠનની <span class="hi">સાચી તાકાત</span> છો.<br>
+        આપના સાથ અને સમર્પણ માટે દિલથી આભાર. આવી જ લાગણી સાથે આગળ વધીએ,<br>
+        <span class="hi">વિજય નિશ્ચિત છે.</span>
+    </div>
+
+    <!-- AUTHOR -->
+    <div class="author-row">
+        <div class="author-dash"></div>
+        <div class="author-name">ઉમ્મેદવારશ્રીઓ તથા WINGS TEAM</div>
+    </div>
+
+</div>
+
+</body>
+</html>

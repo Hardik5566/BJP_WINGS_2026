@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>BJP Wings — The Election Strategic Planning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Noto+Sans+Gujarati:wght@300;400;600;700&family=Rajdhani:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c9a84c;
+            --gold-lt: #edd97e;
+            --saffron: #FF9933;
+            --saffron-dark: #FF6B00;
+            --bg: #070707;
+            --card: #111111;
+            --text: #f0ede6;
+            --muted: #9a8e7e;
+            --line: rgba(201,168,76,0.20);
+            --yt-red: #FF0000;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            max-width: 430px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at 20% 0%, rgba(255,153,51,0.07) 0%, transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(201,168,76,0.07) 0%, transparent 50%), var(--bg);
+            color: var(--text);
+            font-family: 'Cormorant Garamond', serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            padding-bottom: 40px;
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -250% center;
+            }
+
+            100% {
+                background-position: 250% center;
+            }
+        }
+
+        @keyframes ytPulse {
+            0%,100% {
+                box-shadow: 0 0 0 0 rgba(255,0,0,0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 10px rgba(255,0,0,0);
+            }
+        }
+
+        /* ── HEADER ── */
+        .header {
+            padding: 26px 18px 0;
+            animation: fadeUp .55s ease both;
+        }
+
+        .logo-wrap {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .lotus-svg-wrap {
+            width: 58px;
+            height: 58px;
+            filter: drop-shadow(0 0 12px rgba(255,107,0,0.5));
+        }
+
+            .lotus-svg-wrap img {
+                width: 100%;
+                height: auto;
+            }
+
+        .brand-text-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .hd-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 900;
+            background: linear-gradient(110deg, var(--gold-lt) 0%, var(--gold) 40%, #fff3c0 60%, var(--gold) 100%);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s linear infinite;
+        }
+
+        .hd-sub {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-top: 2px;
+        }
+
+        .tricolor {
+            margin: 20px 18px 22px;
+            height: 2px;
+            background: linear-gradient(90deg, #FF9933 33.3%, #fff 33.3% 66.6%, #138808 66.6%);
+            opacity: .4;
+        }
+
+        /* -- BOTTOM 25% OVERLAY DESIGN -- */
+        .split-card {
+            margin: 0 16px 22px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            background: var(--card);
+            position: relative;
+            min-height: 350px; /* Taller height looks better for bottom overlays */
+            animation: fadeUp .6s .12s ease both;
+        }
+
+        .col-photo {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+            .col-photo img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .col-msg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 2;
+            height: 30%; /* Approximately bottom 25-30% */
+            padding: 15px 20px;
+            /* Elegant dark gradient for text readability */
+            background: linear-gradient(to top, rgba(7,7,7,1) 0%, rgba(7,7,7,0.8) 70%, transparent 100%);
+            /*display: flex;*/
+            justify-content: space-between;
+            align-items: flex-end; /* Keeps text at the very bottom */
+        }
+
+        .msg-text-wrap {
+            flex: 1;
+            text-align: left;
+        }
+
+        .msg-headline {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gold-lt);
+            margin-bottom: 2px;
+        }
+
+        .msg-body {
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            font-size: 15px;
+            color: rgba(240,237,230,0.8);
+        }
+
+        .msg-sig {
+            text-align: right;
+            padding-left: 15px;
+            border-left: 1px solid var(--line);
+        }
+
+        .sig-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gold-lt);
+        }
+
+        .sig-role {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 9px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sig-role {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── YOUTUBE CARD ── */
+        .yt-card {
+            margin: 0 16px 28px;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            background: #0f0f0f;
+            padding: 20px;
+            animation: fadeUp .6s .22s ease both;
+        }
+
+        .yt-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .yt-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--yt-red);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: ytPulse 2s infinite;
+        }
+
+        .yt-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+            .yt-thumb img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .yt-play-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-btn-circle {
+            width: 60px;
+            height: 60px;
+            background: var(--yt-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid var(--line);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+            footer span {
+                color: var(--gold);
+            }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-wrap">
+            <div class="lotus-svg-wrap">
+                <img src="bjp_only_logo.png" alt="BJP Logo">
+            </div>
+            <div class="brand-text-block">
+                <div class="hd-title">BJP WINGS</div>
+                <div class="hd-sub">The Election Strategic Planning</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tricolor"></div>
+
+    <div class="split-card">
+        <div class="col-photo">
+            <img src="hirensir/newhl.jpeg" alt="Dr. Hiren Ghelani">
+        </div>
+
+        <div class="col-msg">
+            <div class="msg-text-wrap">
+                <div class="msg-headline">"ધન્યવાદ !"</div>
+                <div class="msg-body">
+                    આપના સહકાર અને વિશ્વાસ માટે હાર્દિક આભાર.
+                </div>
+            </div>
+
+            <div class="msg-sig">
+                <div class="sig-name">Dr. Hiren Ghelani</div>
+                <div class="sig-role">The Political Advisor</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="yt-card">
+        <div class="yt-head">
+            <div class="yt-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M23.5 6.2a3.01 3.01 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3.01 3.01 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3.01 3.01 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3.01 3.01 0 0 0 2.1-2.1A31.5 31.5 0 0 0 24 12a31.5 31.5 0 0 0-.5-5.8z" /><path d="M9.75 15.5l6.25-3.5-6.25-3.5v7z" fill="red" /></svg>
+            </div>
+            <div>
+                <div style="font-family: 'Rajdhani'; font-size: 10px; color: var(--gold); letter-spacing: 2px;">WATCH</div>
+                <div style="font-family: 'Playfair Display'; font-size: 18px; font-weight: 700;">Political Profile</div>
+            </div>
+        </div>
+
+        <div id="videoContainer">
+            <div class="yt-thumb" onclick="loadVideo()">
+                <img src="https://img.youtube.com/vi/dmqkwyXh8oE/hqdefault.jpg" alt="Video Thumbnail">
+                <div class="yt-play-overlay">
+                    <div class="play-btn-circle">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z" /></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 <span>BJP WINGS</span> · All Rights Reserved</p>
+        <p style="margin-top:5px;">Founded by <span>Dr. Hiren Ghelani</span></p>
+    </footer>
+
+    <script>
+        function loadVideo() {
+            const container = document.getElementById('videoContainer');
+            const videoId = 'dmqkwyXh8oE';
+            container.innerHTML = `
+                    <iframe
+                        width="100%"
+                        height="100%"
+                        style="aspect-ratio: 16/9; border-radius: 12px; border: 1px solid rgba(255,0,0,0.2);"
+                        src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>`;
+        }
+    </script>
+</body>
+</html>

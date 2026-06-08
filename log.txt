@@ -1,0 +1,21 @@
+
+
+----- RAW DATA -----
+{
+  "voters": [
+    {"name":"John","mobile":"9876543210"},
+    {"name":"Rahul","mobile":"9999999999"}
+  ]
+}
+
+----- JSON DATA (json-style) -----
+[
+  {
+    "name": "John",
+    "mobile": "9876543210"
+  },
+  {
+    "name": "Rahul",
+    "mobile": "9999999999"
+  }
+]

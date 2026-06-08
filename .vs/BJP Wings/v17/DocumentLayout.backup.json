@@ -1,0 +1,109 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "F:\\MH Coporation 2025\\BJP_Wings\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}|http://localhost:3893|f:\\mh coporation 2025\\bjp_wings\\masteradmin\\import_voter_data.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}|http://localhost:3893|solutionrelative:masteradmin\\import_voter_data.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}|http://localhost:3893|f:\\mh coporation 2025\\bjp_wings\\masteradmin\\import_voter_data.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}|http://localhost:3893|solutionrelative:masteradmin\\import_voter_data.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}|http://localhost:3893|f:\\mh coporation 2025\\bjp_wings\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}|http://localhost:3893|solutionrelative:web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}|http://localhost:3893|f:\\mh coporation 2025\\bjp_wings\\app_code\\dal\\command.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}|http://localhost:3893|solutionrelative:app_code\\dal\\command.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}|http://localhost:3893|f:\\mh coporation 2025\\bjp_wings\\app_code\\dal\\connection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2EF0E79-1D9D-41DB-9B91-6ECE3D22ED6C}|http://localhost:3893|solutionrelative:app_code\\dal\\connection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Web.config",
+              "DocumentMoniker": "F:\\MH Coporation 2025\\BJP_Wings\\Web.config",
+              "RelativeDocumentMoniker": "Web.config",
+              "ToolTip": "F:\\MH Coporation 2025\\BJP_Wings\\Web.config",
+              "RelativeToolTip": "Web.config",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAWwFYAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-03-26T11:49:13.984Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "command.cs",
+              "DocumentMoniker": "F:\\MH Coporation 2025\\BJP_Wings\\App_Code\\DAL\\command.cs",
+              "RelativeDocumentMoniker": "App_Code\\DAL\\command.cs",
+              "ToolTip": "F:\\MH Coporation 2025\\BJP_Wings\\App_Code\\DAL\\command.cs",
+              "RelativeToolTip": "App_Code\\DAL\\command.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAgwEMAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-26T11:46:44.545Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "connection.cs",
+              "DocumentMoniker": "F:\\MH Coporation 2025\\BJP_Wings\\App_Code\\DAL\\connection.cs",
+              "RelativeDocumentMoniker": "App_Code\\DAL\\connection.cs",
+              "ToolTip": "F:\\MH Coporation 2025\\BJP_Wings\\App_Code\\DAL\\connection.cs",
+              "RelativeToolTip": "App_Code\\DAL\\connection.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-26T11:46:20.826Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Import_Voter_Data.aspx",
+              "DocumentMoniker": "F:\\MH Coporation 2025\\BJP_Wings\\MasterAdmin\\Import_Voter_Data.aspx",
+              "RelativeDocumentMoniker": "MasterAdmin\\Import_Voter_Data.aspx",
+              "ToolTip": "F:\\MH Coporation 2025\\BJP_Wings\\MasterAdmin\\Import_Voter_Data.aspx",
+              "RelativeToolTip": "MasterAdmin\\Import_Voter_Data.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2026-03-26T11:45:23.237Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Import_Voter_Data.aspx.cs",
+              "DocumentMoniker": "F:\\MH Coporation 2025\\BJP_Wings\\MasterAdmin\\Import_Voter_Data.aspx.cs",
+              "RelativeDocumentMoniker": "MasterAdmin\\Import_Voter_Data.aspx.cs",
+              "ToolTip": "F:\\MH Coporation 2025\\BJP_Wings\\MasterAdmin\\Import_Voter_Data.aspx.cs",
+              "RelativeToolTip": "MasterAdmin\\Import_Voter_Data.aspx.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAmwBUAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-26T11:45:30.466Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

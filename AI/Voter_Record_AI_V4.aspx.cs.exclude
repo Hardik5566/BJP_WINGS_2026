@@ -1,0 +1,224 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class AI_Voter_Record_AI_V4 : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+
+    string sqlConn = System.Configuration.ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+    int currentAppId = 1; // Rule 1: Always filter by app_id = 1
+
+    protected void btnAsk_Click(object sender, EventArgs e)
+    {
+        Page.RegisterAsyncTask(new PageAsyncTask(ProcessSmartRequest));
+    }
+
+    private async Task ProcessSmartRequest()
+    {
+        string userQuestion = txtQuestion.Text.Trim();
+        if (string.IsNullOrEmpty(userQuestion)) return;
+
+        litUserQuery.Text = userQuestion;
+        phResult.Visible = true;
+        divWelcome.Visible = false;
+
+        // Directly call the SQL Generator (Skipping the Table Mapper step)
+        //string finalSql = await GetFinalSqlFromAI(userQuestion);
+        string aiJsonResponse = await GetFinalSqlFromAI(userQuestion);
+
+        string cleanJson = aiJsonResponse;
+        if (cleanJson.Contains("```"))
+        {
+            cleanJson = cleanJson.Split(new[] { "```json", "```" }, StringSplitOptions.None)[1].Trim();
+        }
+        else if (cleanJson.Contains("{"))
+        {
+            cleanJson = cleanJson.Substring(cleanJson.IndexOf("{")).Trim();
+        }
+
+        // STEP 2: Parse the clean JSON
+        var responseObj = JsonConvert.DeserializeObject<dynamic>(cleanJson);
+
+
+        //var responseObj = JsonConvert.DeserializeObject<dynamic>(aiJsonResponse);
+        string naturalSentence = responseObj.answer;
+        string finalSql = responseObj.sql;
+
+        lblSqlDebug.Text = "-- Generated SQL --\n" + finalSql;
+
+        try
+        {
+            ExecuteAndBind(finalSql);
+        }
+        catch (Exception ex)
+        {
+            lblError.Text = "Query Error: " + ex.Message;
+        }
+
+        txtQuestion.Text = "";
+    }
+
+    private async Task<string> GetFinalSqlFromAI(string question)
+    {
+        // Consolidated rules and schema for tbl_voting_record
+        // These rules are now hard-coded and will not change.
+        string systemPrompt = $@"You are an Intelligent Election Assistant. You must respond ONLY in a JSON object.
+    
+    [JSON STRUCTURE]
+    {{
+      ""answer"": ""A human-like, satisfying response that summarizes what you found or why you chose this data."",
+      ""sql"": ""The exact T-SQL query to execute""
+    }}
+
+    [SATISFACTION RULES]
+    1. If the user asks for a name, be polite: 'I have found the record for Hardik Patel in Booth No 4. Here are the details.'
+    2. If the user asks for a count, be specific: 'I found total {{count}} voters in the age group of 20 to 25. Please check the list below.'
+    3. If the user asks for something complex, explain it: 'To find voters who haven't received slips, I've filtered the records where the delivery status is pending.'
+
+[DATABASE SCHEMA]
+View: vw_voter_search_AI
+- ac_no (int): Assembly No
+- part_no (int): Booth/Part Number (This is BOOTH)
+- slnoinpart (int): Serial No
+- f_name (nvarchar): First Name Unicode
+- eng_f_name (nvarchar): First Name English
+- m_name  (nvarchar): Father/Middle Name Unicode
+- eng_m_name  (nvarchar): Father/Middle Name English
+- f_surname (nvarchar): Surname Unicode
+- idcard_no (nvarchar): Voter ID
+- sex (nvarchar): Gender (M/F)
+- age (nvarchar): Age (Needs CAST)
+- contact_no (nvarchar): Mobile
+- family_id (bigint): Family ID
+- sleep_send (int): 1 = Received Slip, 0 = Not Received
+- polling_location (nvarchar): Voting Place Name (Unicode / Matdan Sthal)
+- eng_polling_location (nvarchar): Voting Place Name (English)
+- app_id (int): {currentAppId}
+
+[PERMANENT RULES]
+1. APP ID: Every query MUST have 'app_id = {currentAppId}'.
+2. SLIP/SLEEP: 'voter not received sleep' means: (sleep_send = 0 OR sleep_send IS NULL).
+3. SLIP/SLEEP: 'voter received sleep' means: sleep_send = 1.
+4. NAMES: Search both f_name (N'') and eng_f_name using OR.
+5. AGE: Use TRY_CAST(NULLIF(age, '-') AS INT) for any age math.
+6. SECURITY: Use 'WITH (NOLOCK)'. No 'SELECT *'. List explicit columns.
+7. COUNT: If user says 'how many' or 'total', use SELECT COUNT(*).
+
+8. Every SELECT query MUST start with 'SELECT TOP 1000' and include 'WITH (NOLOCK)'. Every query MUST include 'app_id = {currentAppId}'. Use single quotes N'' for strings (never double quotes). Use TRY_CAST(NULLIF(age, '-') AS INT) for age math. Search names using (f_name LIKE N'%keyword%' OR eng_f_name LIKE '%keyword%'). Treat 'not received sleep' as (sleep_send = 0 OR sleep_send IS NULL). For all lists, ALWAYS include these columns in this exact order: part_no AS [Booth No], slnoinpart AS [Voter Sr No], (f_name + ' ' + m_name + ' ' + f_surname) AS [Voter Name Gujarati], (eng_f_name + ' ' + eng_m_name + ' ' + eng_surname) AS [Voter Name English], age AS [Age], sex AS [Gender], polling_location AS [Address], idcard_no AS [Voter ID].
+9. BOOTH: 'part_no' is the booth number.
+10. FIRST TIME VOTERS: If user asks for 'First time' or 'Nava' (New) voters, filter by age BETWEEN 18 AND 23.
+
+[NEW: RANGE & GROUPING RULE - CRITICAL]
+10. If the user asks for multiple age ranges (e.g., '18-22, 23-25'), you MUST use UNION ALL to show them as separate rows with a label.
+    Example Format:
+    SELECT '18-22' AS [Age Range], COUNT(*) AS [Total Voters] FROM tbl_voting_record WITH (NOLOCK) WHERE app_id = {currentAppId} AND TRY_CAST(NULLIF(age, '-') AS INT) BETWEEN 18 AND 22
+    UNION ALL
+    SELECT '23-25' AS [Age Range], COUNT(*) AS [Total Voters] FROM tbl_voting_record WITH (NOLOCK) WHERE app_id = {currentAppId} AND TRY_CAST(NULLIF(age, '-') AS INT) BETWEEN 23 AND 25
+
+
+[STRICT RULES]
+1. DUPLICATE VOTER RULE: 
+   If the user asks for ""duplicates"", you MUST find voters with the SAME idcard_no.
+   Example Logic:
+   SELECT idcard_no, COUNT(*) as [Total Occurrences]
+   FROM tbl_voting_record WITH (NOLOCK)
+   WHERE app_id = {currentAppId}
+   GROUP BY idcard_no
+   HAVING COUNT(*) > 1;
+
+[Family]
+FAMILY LIST RULE: If asked for ""family list"" of a specific voter, you MUST find their family_id first and then show all members.
+   Example: 
+   SELECT f_name, eng_f_name,eng_m_name ,f_surname, idcard_no, age, part_no 
+   FROM tbl_voting_record WITH (NOLOCK) 
+   WHERE family_id = (SELECT TOP 1 family_id FROM tbl_voting_record WHERE idcard_no = 'QUERY_ID' AND app_id = {currentAppId}) 
+   AND app_id = {currentAppId}
+
+
+[POLLING LOCATION RULE]
+- If a user mentions a place, school, or location:
+  - Use: [polling_location] LIKE N'%keyword%' OR [eng_polling_location] LIKE '%keyword%'
+  - Use only the core name (e.g., if user says 'Saraswati Primary School', search '%SARASWATI PRIMARY%').
+  - This ensures that slight differences in spelling or suffixes (School vs Vidhyalaya) don't break the search.
+
+[EXAMPLE]
+User: ketal voter aa polling location par voting karse 'SARASWATI PRIMARY SCHOOL'
+Response: {{
+  ""answer"": ""I am searching for voters named Ketal at the Saraswati Primary School polling location."",
+  ""sql"": ""SELECT f_name, eng_f_name, eng_m_name, f_surname, idcard_no, age, part_no FROM vw_voter_search_AI WITH (NOLOCK) WHERE app_id = 1 AND (polling_location LIKE N'%SARASWATI PRIMARY%' OR eng_polling_location LIKE '%SARASWATI PRIMARY%') AND (f_name LIKE N'%ketal%' OR eng_f_name LIKE '%ketal%') ORDER BY f_name;""
+}}
+
+[PIVOT/SIDE-BY-SIDE EXAMPLE]
+User: ""booth wise sleep send and not send voter count""
+SQL:
+SELECT 
+    part_no AS [Booth No], 
+    SUM(CASE WHEN sleep_send = 1 THEN 1 ELSE 0 END) AS [Total slip send voter],
+    SUM(CASE WHEN (sleep_send = 0 OR sleep_send IS NULL) THEN 1 ELSE 0 END) AS [Total slip not send voter]
+FROM tbl_voting_record WITH (NOLOCK)
+WHERE app_id = {currentAppId}
+GROUP BY part_no
+ORDER BY part_no;
+
+[ERROR PREVENTION]
+- NEVER filter by 'age < 18' unless specifically asked for 'under 18'.
+- If the user asks for 'voters who did not receive sleep', do NOT filter by age.";
+
+        string rawSql = await CallAzureOpenAI(systemPrompt, question);
+
+        return rawSql.Replace("```sql", "").Replace("```", "").Trim();
+    }
+
+    private async Task<string> CallAzureOpenAI(string systemMsg, string userMsg)
+    {
+        string endpoint = System.Configuration.ConfigurationManager.AppSettings["AzureOpenAIEndpoint"];
+        string apiKey = System.Configuration.ConfigurationManager.AppSettings["AzureOpenAIKey"];
+        string deployment = System.Configuration.ConfigurationManager.AppSettings["AzureDeployment"];
+        string url = $"{endpoint.TrimEnd('/')}/openai/deployments/{deployment}/chat/completions?api-version=2024-05-01-preview";
+
+        using (HttpClient client = new HttpClient())
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var body = new
+            {
+                messages = new[] {
+                    new { role = "system", content = systemMsg },
+                    new { role = "user", content = userMsg }
+                },
+                temperature = 0
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(url, content);
+            string responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic data = JsonConvert.DeserializeObject(responseString);
+            return data.choices[0].message.content.ToString();
+        }
+    }
+
+    private void ExecuteAndBind(string sql)
+    {
+        using (SqlConnection conn = new SqlConnection(sqlConn))
+        {
+            SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            gvResults.DataSource = dt;
+            gvResults.DataBind();
+        }
+    }
+}

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Privacy Policy – BJP WINGS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --saffron:   #FF6B00;
+      --saffron-lt:#FF8C38;
+      --saffron-dk:#C94E00;
+      --green:     #138808;
+      --green-lt:  #1CAE0A;
+      --navy:      #0A0F2C;
+      --navy-mid:  #141A3C;
+      --navy-soft: #1E2650;
+      --white:     #FFFFFF;
+      --off-white: #F7F5F0;
+      --muted:     #9EA8C4;
+      --card-bg:   rgba(255,255,255,0.04);
+      --border:    rgba(255,107,0,0.18);
+      --radius:    14px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative; z-index: 10;
+      background: linear-gradient(135deg, var(--navy-mid) 0%, var(--navy-soft) 100%);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    header::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--saffron), var(--white) 50%, var(--green));
+    }
+
+    /* Decorative wheel */
+    .ashoka-wheel {
+      position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
+      width: 280px; height: 280px; opacity: 0.06;
+      animation: spin 60s linear infinite;
+    }
+    @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+    .header-inner {
+      max-width: 900px; margin: 0 auto;
+      padding: 48px 32px 40px;
+      position: relative; z-index: 2;
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,107,0,0.12);
+      border: 1px solid rgba(255,107,0,0.30);
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--saffron-lt);
+      margin-bottom: 20px;
+    }
+    .badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--saffron-lt); display: inline-block; }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 30%, var(--saffron-lt));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 14px;
+    }
+
+    .header-meta {
+      display: flex; flex-wrap: wrap; gap: 24px;
+      font-size: 13px; color: var(--muted); font-weight: 400;
+      margin-top: 18px;
+    }
+    .header-meta span { display: flex; align-items: center; gap: 6px; }
+    .header-meta svg { opacity: 0.7; }
+
+    /* ── TOC ── */
+    .toc-wrapper {
+      max-width: 900px; margin: 40px auto 0;
+      padding: 0 32px;
+      position: relative; z-index: 5;
+    }
+
+    .toc {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      backdrop-filter: blur(8px);
+    }
+
+    .toc-title {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--saffron);
+      margin-bottom: 16px;
+    }
+
+    .toc ol {
+      list-style: none;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 6px 24px;
+    }
+    .toc ol li a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 400;
+      display: flex; align-items: center; gap: 8px;
+      transition: color 0.2s;
+    }
+    .toc ol li a:hover { color: var(--saffron-lt); }
+    .toc ol li a::before {
+      content: attr(data-num);
+      font-size: 10px; font-weight: 600;
+      color: var(--saffron); opacity: 0.6;
+      min-width: 20px;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 900px; margin: 0 auto;
+      padding: 48px 32px 80px;
+      position: relative; z-index: 5;
+    }
+
+    /* ── SECTION CARD ── */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 40px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.5s ease both;
+    }
+    .section-card:nth-child(1)  { animation-delay: 0.05s; }
+    .section-card:nth-child(2)  { animation-delay: 0.10s; }
+    .section-card:nth-child(3)  { animation-delay: 0.15s; }
+    .section-card:nth-child(4)  { animation-delay: 0.20s; }
+    .section-card:nth-child(5)  { animation-delay: 0.25s; }
+    .section-card:nth-child(6)  { animation-delay: 0.30s; }
+    .section-card:nth-child(7)  { animation-delay: 0.35s; }
+    .section-card:nth-child(8)  { animation-delay: 0.40s; }
+    .section-card:nth-child(9)  { animation-delay: 0.45s; }
+    .section-card:nth-child(10) { animation-delay: 0.50s; }
+    .section-card:nth-child(11) { animation-delay: 0.55s; }
+    .section-card:nth-child(12) { animation-delay: 0.60s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: linear-gradient(180deg, var(--saffron) 0%, transparent 100%);
+      border-radius: 4px 0 0 4px;
+    }
+
+    .section-num {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--saffron); opacity: 0.7;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--white);
+      margin-bottom: 18px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    h2 .icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(255,107,0,0.12);
+      border: 1px solid rgba(255,107,0,0.25);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 16px;
+    }
+
+    p { font-size: 14.5px; color: #C8D0E0; margin-bottom: 14px; }
+    p:last-child { margin-bottom: 0; }
+
+    ul, ol {
+      padding-left: 0; list-style: none;
+      margin-bottom: 14px;
+    }
+    li {
+      font-size: 14.5px; color: #C8D0E0;
+      padding: 5px 0 5px 22px;
+      position: relative;
+    }
+    li::before {
+      content: '›';
+      position: absolute; left: 0;
+      color: var(--saffron); font-weight: 700;
+    }
+
+    strong { color: var(--white); font-weight: 500; }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight {
+      background: rgba(255,107,0,0.08);
+      border: 1px solid rgba(255,107,0,0.22);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 14px; color: #e0c8a0;
+    }
+
+    /* ── ROLES GRID ── */
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 12px; margin: 18px 0;
+    }
+    .role-pill {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .role-pill .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-orange  { background: var(--saffron); }
+    .dot-green   { background: var(--green-lt); }
+    .dot-blue    { background: #4A90D9; }
+    .dot-purple  { background: #9B6DFF; }
+    .dot-yellow  { background: #F5C518; }
+
+    /* ── CONTACT CARD ── */
+    .contact-card {
+      background: linear-gradient(135deg, rgba(255,107,0,0.10), rgba(19,136,8,0.08));
+      border: 1px solid rgba(255,107,0,0.25);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-top: 16px;
+    }
+    .contact-card p { margin: 4px 0; font-size: 14px; }
+    .contact-card a { color: var(--saffron-lt); text-decoration: none; }
+    .contact-card a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 5;
+      border-top: 1px solid var(--border);
+      background: var(--navy-mid);
+      text-align: center;
+      padding: 32px;
+    }
+    .footer-tricolor {
+      display: flex; justify-content: center; gap: 0;
+      margin-bottom: 20px;
+    }
+    .tc { height: 4px; width: 80px; }
+    .tc-s { background: var(--saffron); border-radius: 4px 0 0 4px; }
+    .tc-w { background: var(--white); }
+    .tc-g { background: var(--green); border-radius: 0 4px 4px 0; }
+
+    .footer-app { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; }
+    .footer-app span { color: var(--saffron); }
+
+    footer p { font-size: 12.5px; color: var(--muted); margin: 0; }
+
+    /* ── SCROLL TO TOP ── */
+    #scrollTop {
+      position: fixed; bottom: 28px; right: 28px; z-index: 100;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--saffron); border: none; cursor: pointer;
+      color: white; font-size: 18px;
+      box-shadow: 0 4px 20px rgba(255,107,0,0.4);
+      display: none; align-items: center; justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #scrollTop:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(255,107,0,0.55); }
+    #scrollTop.visible { display: flex; }
+
+    @media (max-width: 600px) {
+      .header-inner { padding: 36px 20px 30px; }
+      .section-card { padding: 24px 22px; }
+      .toc-wrapper, main { padding-left: 20px; padding-right: 20px; }
+      .toc ol { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <!-- Decorative Ashoka Wheel -->
+  <svg class="ashoka-wheel" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="90" stroke="white" stroke-width="2"/>
+    <circle cx="100" cy="100" r="8" fill="white"/>
+    <circle cx="100" cy="100" r="70" stroke="white" stroke-width="1"/>
+    <script>
+      // spokes generated inline
+    </script>
+    <!-- 24 spokes -->
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(0 100 100)"/>
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(15 100 100)"/>
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(30 100 100)"/>
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(45 100 100)"/>
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(60 100 100)"/>
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(75 100 100)"/>
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(90 100 100)"/>
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(105 100 100)"/>
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(120 100 100)"/>
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(135 100 100)"/>
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(150 100 100)"/>
+    <line x1="100" y1="30"  x2="100" y2="170" stroke="white" stroke-width="1.2" transform="rotate(165 100 100)"/>
+  </svg>
+
+  <div class="header-inner">
+    <div class="badge"><span></span> Official Legal Document</div>
+    <h1>Privacy Policy</h1>
+    <p style="color:#9EA8C4; font-size:15px; max-width:560px;">
+      This policy explains how <strong style="color:#FF8C38;">BJP WINGS</strong> collects, uses, and safeguards your information when you use our election management mobile application.
+    </p>
+    <div class="header-meta">
+      <span>
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        Last Updated: June 1, 2025
+      </span>
+      <span>
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        App: BJP WINGS (Android &amp; iOS)
+      </span>
+      <span>
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+        Available in English &amp; Hindi
+      </span>
+    </div>
+  </div>
+</header>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc-wrapper">
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol>
+      <li><a href="#s1" data-num="01">Information We Collect</a></li>
+      <li><a href="#s2" data-num="02">How We Use Your Information</a></li>
+      <li><a href="#s3" data-num="03">User Roles &amp; Access Levels</a></li>
+      <li><a href="#s4" data-num="04">Voter Data Handling</a></li>
+      <li><a href="#s5" data-num="05">Communications &amp; Voter Slips</a></li>
+      <li><a href="#s6" data-num="06">Survey &amp; Analytics</a></li>
+      <li><a href="#s7" data-num="07">Data Sharing &amp; Third Parties</a></li>
+      <li><a href="#s8" data-num="08">Data Security</a></li>
+      <li><a href="#s9" data-num="09">Data Retention</a></li>
+      <li><a href="#s10" data-num="10">Your Rights</a></li>
+      <li><a href="#s11" data-num="11">Children's Privacy</a></li>
+      <li><a href="#s12" data-num="12">Contact Us</a></li>
+    </ol>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+
+  <!-- 1. Information We Collect -->
+  <div class="section-card" id="s1">
+    <div class="section-num">Section 01</div>
+    <h2><span class="icon">📋</span> Information We Collect</h2>
+    <p>When you register and use BJP WINGS, we may collect the following categories of information:</p>
+
+    <p><strong>A. Account &amp; Identity Information</strong></p>
+    <ul>
+      <li>Full name, mobile number, and email address of the registered user</li>
+      <li>Assigned role (Admin, Sub-Admin, Booth Pramukh, Volunteer, etc.)</li>
+      <li>Profile photo (optional)</li>
+      <li>Constituency, district, and booth assignment details</li>
+    </ul>
+
+    <p><strong>B. Voter Information</strong></p>
+    <ul>
+      <li>Voter name, age, gender, and voter ID number (as per electoral rolls)</li>
+      <li>Booth number, ward, and constituency data</li>
+      <li>Contact number (where provided by the voter or authorized data source)</li>
+      <li>Survey responses and field notes added by volunteers</li>
+    </ul>
+
+    <p><strong>C. Device &amp; Technical Information</strong></p>
+    <ul>
+      <li>Device model, OS version, unique device identifiers</li>
+      <li>IP address and approximate location (GPS, only when permission granted)</li>
+      <li>App usage logs, crash reports, and session data</li>
+    </ul>
+
+    <p><strong>D. Communication Logs</strong></p>
+    <ul>
+      <li>Records of voter slips sent via the application</li>
+      <li>Call logs initiated through in-app calling features</li>
+      <li>Bulk message dispatch history</li>
+    </ul>
+  </div>
+
+  <!-- 2. How We Use -->
+  <div class="section-card" id="s2">
+    <div class="section-num">Section 02</div>
+    <h2><span class="icon">⚙️</span> How We Use Your Information</h2>
+    <p>BJP WINGS uses collected data strictly for election campaign management and coordination purposes. Specifically, we use your information to:</p>
+    <ul>
+      <li>Authenticate users and enforce role-based access control within the app</li>
+      <li>Enable searching, sorting, and filtering of voter lists assigned to each booth</li>
+      <li>Facilitate sending of voter slips, reminder messages, and campaign notifications</li>
+      <li>Enable volunteers to conduct and record voter surveys in the field</li>
+      <li>Generate analytics dashboards for survey responses and outreach performance</li>
+      <li>Track voter contact status and survey completion rates by booth/ward</li>
+      <li>Coordinate between Booth Pramukhs, Volunteers, Sub-Admins, and Admins</li>
+      <li>Improve app functionality, fix bugs, and enhance user experience</li>
+      <li>Comply with applicable legal obligations</li>
+    </ul>
+
+    <div class="highlight">
+      ⚠️ <strong>Important:</strong> BJP WINGS does not use voter data for commercial advertising, third-party marketing, or any purpose unrelated to authorised political campaign management activities.
+    </div>
+  </div>
+
+  <!-- 3. User Roles -->
+  <div class="section-card" id="s3">
+    <div class="section-num">Section 03</div>
+    <h2><span class="icon">👥</span> User Roles &amp; Access Levels</h2>
+    <p>BJP WINGS operates a tiered access model. Each role can only access the data necessary for their responsibilities:</p>
+
+    <div class="roles-grid">
+      <div class="role-pill"><span class="dot dot-orange"></span> Admin</div>
+      <div class="role-pill"><span class="dot dot-blue"></span> Sub Admin</div>
+      <div class="role-pill"><span class="dot dot-green"></span> Booth Pramukh</div>
+      <div class="role-pill"><span class="dot dot-purple"></span> Volunteer</div>
+      <div class="role-pill"><span class="dot dot-yellow"></span> Viewer</div>
+    </div>
+
+    <ul>
+      <li><strong>Admin:</strong> Full access to all constituencies, data, analytics, and user management</li>
+      <li><strong>Sub Admin:</strong> Access to assigned districts or assembly segments; can manage Booth Pramukhs</li>
+      <li><strong>Booth Pramukh:</strong> Access limited to their assigned booth's voter list and survey data</li>
+      <li><strong>Volunteer:</strong> Can view assigned voter records, conduct surveys, and send voter slips</li>
+      <li><strong>Viewer:</strong> Read-only access to analytics and reports, no voter data editing</li>
+    </ul>
+
+    <p>All role assignments are controlled by Admins. Users may not access data outside their assigned scope.</p>
+  </div>
+
+  <!-- 4. Voter Data Handling -->
+  <div class="section-card" id="s4">
+    <div class="section-num">Section 04</div>
+    <h2><span class="icon">🗳️</span> Voter Data Handling</h2>
+    <p>Voter data used within BJP WINGS is sourced from <strong>official electoral rolls</strong> published by the Election Commission of India and authorized party databases. We are committed to responsible handling of this data:</p>
+    <ul>
+      <li>Voter data is used solely for lawful political outreach and campaign coordination</li>
+      <li>No voter data is sold, rented, or shared with commercial third parties</li>
+      <li>All data is stored in encrypted form on secure servers</li>
+      <li>Access to voter data is restricted by booth/ward assignment and user role</li>
+      <li>Volunteers and workers are prohibited from downloading or exporting voter data outside the app</li>
+      <li>Data exports (if permitted) are logged and audited by Admins</li>
+    </ul>
+
+    <div class="highlight">
+      📜 BJP WINGS complies with the guidelines issued by the <strong>Election Commission of India</strong> regarding use of electoral rolls and voter information for political campaign purposes.
+    </div>
+  </div>
+
+  <!-- 5. Communications & Voter Slips -->
+  <div class="section-card" id="s5">
+    <div class="section-num">Section 05</div>
+    <h2><span class="icon">📨</span> Communications &amp; Voter Slips</h2>
+    <p>BJP WINGS enables authorised party workers to communicate with voters through the following methods:</p>
+    <ul>
+      <li><strong>Voter Slips:</strong> Digital or printable slips sent to inform voters of their booth number, date, and polling details</li>
+      <li><strong>In-App Calling:</strong> Direct calling feature to connect volunteers with assigned voters for outreach</li>
+      <li><strong>SMS &amp; WhatsApp Messages:</strong> Bulk or individual messages sent for campaign reminders, event invitations, and voter mobilisation</li>
+      <li><strong>Push Notifications:</strong> Internal notifications to app users for task assignments and updates</li>
+    </ul>
+    <p>All communications initiated through BJP WINGS are logged for quality assurance and compliance purposes. Call logs and message histories are accessible to authorised Admins and Sub-Admins for review.</p>
+    <p>Users are prohibited from using BJP WINGS communication features for harassment, unsolicited spam, or any activity that violates the <strong>Model Code of Conduct</strong> issued by the Election Commission of India.</p>
+  </div>
+
+  <!-- 6. Survey & Analytics -->
+  <div class="section-card" id="s6">
+    <div class="section-num">Section 06</div>
+    <h2><span class="icon">📊</span> Survey &amp; Analytics</h2>
+    <p>BJP WINGS provides powerful survey and analytics tools to measure campaign progress and voter sentiment:</p>
+    <ul>
+      <li><strong>Field Surveys:</strong> Volunteers collect structured responses from voters on issues, support levels, and preferences</li>
+      <li><strong>Survey Analytics Dashboard:</strong> Aggregated and anonymised trends are displayed to authorised users</li>
+      <li><strong>Booth-wise Performance Tracking:</strong> Admin and Sub-Admin roles can monitor survey completion, call rates, and slip distribution per booth</li>
+      <li><strong>Demographic Insights:</strong> Age-group, gender-wise, and ward-wise aggregated analytics to assist planning</li>
+      <li><strong>Export Reports:</strong> Authorised Admins may export aggregated reports; individual voter-level export is controlled and logged</li>
+    </ul>
+
+    <div class="highlight">
+      🔒 Survey responses linked to individual voters are treated as sensitive data. Analytics displayed to Volunteers show only anonymised or aggregated summaries — not other voters' individual responses.
+    </div>
+  </div>
+
+  <!-- 7. Data Sharing -->
+  <div class="section-card" id="s7">
+    <div class="section-num">Section 07</div>
+    <h2><span class="icon">🔗</span> Data Sharing &amp; Third Parties</h2>
+    <p>We do not sell, trade, or rent your personal information or voter data to any third party. We may share data in the following limited circumstances:</p>
+    <ul>
+      <li><strong>Within the Party Organisation:</strong> Data is shared only with authorised party functionaries according to their assigned roles and geographical scope</li>
+      <li><strong>Service Providers:</strong> Trusted technology vendors (cloud hosting, SMS gateway, analytics providers) may process data on our behalf under strict data processing agreements</li>
+      <li><strong>Legal Compliance:</strong> We may disclose data when required by law, court order, or lawful authority</li>
+      <li><strong>Security Incidents:</strong> In case of a data breach, affected parties and relevant authorities will be notified as required by applicable law</li>
+    </ul>
+    <p>All third-party service providers are contractually bound to process data only as directed by us and to maintain appropriate security standards.</p>
+  </div>
+
+  <!-- 8. Data Security -->
+  <div class="section-card" id="s8">
+    <div class="section-num">Section 08</div>
+    <h2><span class="icon">🔐</span> Data Security</h2>
+    <p>We implement robust technical and organisational measures to protect all data within BJP WINGS:</p>
+    <ul>
+      <li>All data in transit is encrypted using <strong>TLS 1.2 / 1.3</strong> (HTTPS)</li>
+      <li>Data at rest is encrypted using <strong>AES-256</strong> encryption</li>
+      <li>Authentication is secured with <strong>OTP-based login</strong> and optional multi-factor authentication</li>
+      <li>Role-based access controls prevent unauthorised access to out-of-scope data</li>
+      <li>Session tokens expire automatically after periods of inactivity</li>
+      <li>All administrative actions (role changes, data exports) are logged in an audit trail</li>
+      <li>Regular security audits and vulnerability assessments are conducted</li>
+      <li>Server infrastructure is hosted on ISO 27001 certified cloud platforms</li>
+    </ul>
+
+    <div class="highlight">
+      🛡️ While we take every reasonable precaution, no system is completely immune to security risks. We encourage all users to keep their login credentials confidential and report any suspicious activity immediately.
+    </div>
+  </div>
+
+  <!-- 9. Data Retention -->
+  <div class="section-card" id="s9">
+    <div class="section-num">Section 09</div>
+    <h2><span class="icon">🗂️</span> Data Retention</h2>
+    <p>We retain data only as long as necessary for the purposes described in this policy:</p>
+    <ul>
+      <li><strong>User Account Data:</strong> Retained for the duration of the user's active account and up to 1 year after deactivation</li>
+      <li><strong>Voter Data:</strong> Retained for the duration of the election cycle for which it is collected. Post-election, voter data is archived or deleted per Admin directives</li>
+      <li><strong>Survey Responses:</strong> Retained for up to 2 years for analytical and reporting purposes, after which they are anonymised or deleted</li>
+      <li><strong>Communication Logs:</strong> Call and message logs are retained for 6 months for compliance review</li>
+      <li><strong>App Usage Logs:</strong> Technical logs are retained for up to 90 days</li>
+    </ul>
+    <p>Users may request deletion of their personal account data by contacting us (see Section 12). Voter data deletion requests are managed by the designated Admin for the respective constituency.</p>
+  </div>
+
+  <!-- 10. Your Rights -->
+  <div class="section-card" id="s10">
+    <div class="section-num">Section 10</div>
+    <h2><span class="icon">⚖️</span> Your Rights</h2>
+    <p>As a registered user of BJP WINGS, you have the following rights regarding your personal data:</p>
+    <ul>
+      <li><strong>Right to Access:</strong> Request a copy of the personal data we hold about you</li>
+      <li><strong>Right to Correction:</strong> Request correction of inaccurate or incomplete personal data</li>
+      <li><strong>Right to Deletion:</strong> Request deletion of your personal account and associated data (subject to legal retention obligations)</li>
+      <li><strong>Right to Restriction:</strong> Request restriction of processing in certain circumstances</li>
+      <li><strong>Right to Object:</strong> Object to certain types of data processing</li>
+      <li><strong>Right to Data Portability:</strong> Request your data in a structured, machine-readable format</li>
+      <li><strong>Right to Withdraw Consent:</strong> Where processing is based on consent, you may withdraw it at any time</li>
+    </ul>
+    <p>To exercise any of these rights, please contact us using the details in Section 12. We will respond within <strong>30 days</strong> of your request.</p>
+  </div>
+
+  <!-- 11. Children's Privacy -->
+  <div class="section-card" id="s11">
+    <div class="section-num">Section 11</div>
+    <h2><span class="icon">🔞</span> Children's Privacy</h2>
+    <p>BJP WINGS is intended solely for use by adults (18 years and above) who are authorised party workers, volunteers, or officials. The application is not designed for or directed at persons under 18 years of age.</p>
+    <p>We do not knowingly collect personal data from minors. If we become aware that personal data of a minor has been inadvertently collected, we will take immediate steps to delete such data.</p>
+    <p>Voter data within the application pertains only to voters who are eligible to vote (18+) as per the official electoral rolls of India.</p>
+  </div>
+
+  <!-- 12. Contact -->
+  <div class="section-card" id="s12">
+    <div class="section-num">Section 12</div>
+    <h2><span class="icon">📬</span> Contact Us</h2>
+    <p>If you have any questions, concerns, or requests related to this Privacy Policy or the handling of your data, please reach out to our Data Protection Officer:</p>
+
+    <div class="contact-card">
+      <p><strong style="color:#FF8C38; font-size:16px;">BJP WINGS – Data Protection Officer</strong></p>
+      <p style="margin-top:12px;">📧 Email: <a href="mailto:privacy@bjpwings.in">privacy@bjpwings.in</a></p>
+      <p>📞 Phone: <a href="tel:+911800000000">+91 1800-000-000</a> (Toll Free)</p>
+      <p>🏢 Address: BJP WINGS App Team, [Your Office Address], India</p>
+      <p style="margin-top:12px; font-size:13px; color:#9EA8C4;">We endeavour to respond to all privacy-related queries within <strong style="color:#fff;">30 business days</strong>.</p>
+    </div>
+
+    <p style="margin-top:20px;">We reserve the right to update this Privacy Policy from time to time to reflect changes in our practices or applicable law. Any significant changes will be notified to users via in-app notification or email. The "Last Updated" date at the top of this page will always reflect the most recent revision.</p>
+    <p>Continued use of BJP WINGS after the effective date of any changes constitutes your acceptance of the updated Privacy Policy.</p>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-tricolor">
+    <div class="tc tc-s"></div>
+    <div class="tc tc-w"></div>
+    <div class="tc tc-g"></div>
+  </div>
+  <div class="footer-app">BJP <span>WINGS</span></div>
+  <p>Election Management Platform &nbsp;·&nbsp; Privacy Policy</p>
+  <p style="margin-top:8px;">© 2025 BJP WINGS. All rights reserved. &nbsp;|&nbsp; <a href="#" style="color:var(--saffron-lt); text-decoration:none;">Terms of Service</a> &nbsp;|&nbsp; <a href="#" style="color:var(--saffron-lt); text-decoration:none;">Support</a></p>
+</footer>
+
+<!-- SCROLL TO TOP -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  const btn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 300);
+  });
+</script>
+</body>
+</html>

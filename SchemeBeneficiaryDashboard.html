@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>યોજના લાભાર્થી — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@500;600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root{
+      --gold:#b8860b;
+      --gold-dark:#7a5f0a;
+      --green:#1e7a3a;
+      --blue:#1e5a8a;
+      --orange:#c45c1a;
+      --bg:#e8ecf2;
+      --surface:#ffffff;
+      --text:#1a1f2e;
+      --muted:#5c6470;
+      --border:#c8d0dc;
+      --shadow:0 2px 12px rgba(20,30,50,.08);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{
+      max-width:430px;
+      margin:0 auto;
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Source Sans 3',system-ui,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      padding-bottom:20px;
+    }
+    a{color:inherit;text-decoration:none}
+
+    .topbar{
+      background:#1a2332;
+      color:#fff;
+      padding:16px 18px;
+      border-bottom:3px solid var(--gold);
+    }
+    .topbar-row{display:flex;align-items:center;gap:14px}
+    .topbar img{width:46px;height:auto}
+    .topbar h1{font-size:17px;font-weight:700}
+    .topbar .tag{font-size:10px;font-weight:600;opacity:.7;margin-top:4px;letter-spacing:.08em;text-transform:uppercase}
+
+    .wrap{padding:14px 16px 0}
+
+    .sec{margin-bottom:16px}
+    .sec-title{
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:15px;
+      font-weight:700;
+      color:var(--text);
+      margin-bottom:10px;
+      padding-left:2px;
+    }
+
+    .card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      padding:18px 16px;
+    }
+
+    /* Summary: donut LEFT | counts RIGHT — one chart only */
+    .summary-split{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      min-height:160px;
+    }
+    .summary-chart{
+      flex-shrink:0;
+      width:150px;
+      position:relative;
+    }
+    .donut-svg{width:150px;height:150px;transform:rotate(-90deg);display:block}
+    .donut-svg .track{stroke:#dee6ee}
+    .donut-svg .arc-ben{stroke:var(--green)}
+    .donut-center{
+      position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+      text-align:center;pointer-events:none;width:90px;
+    }
+    .donut-text .pct{font-size:24px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums;line-height:1}
+    .donut-text .cap{font-size:10px;font-weight:600;color:var(--muted);margin-top:4px;font-family:'Noto Sans Gujarati',sans-serif}
+
+    .summary-stats{
+      flex:1;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      justify-content:center;
+    }
+    .stat-row{
+      display:flex;
+      align-items:baseline;
+      justify-content:space-between;
+      gap:10px;
+      padding-bottom:10px;
+      border-bottom:1px solid var(--border);
+    }
+    .stat-row:last-child{border-bottom:none;padding-bottom:0}
+    .stat-row .lbl{
+      font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;
+    }
+    .stat-row .num{
+      font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;
+    }
+    .stat-row.voters .num{color:var(--blue)}
+    .stat-row.ben .num{color:var(--green)}
+    .stat-row.non .num{color:var(--orange)}
+
+    /* Real chart container */
+    .chart-panel{
+      margin-top:4px;
+      padding:18px 12px 14px;
+      background:#f5f7fb;
+      border:1px solid var(--border);
+    }
+    .chart-panel .chart-caption{
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:14px;font-weight:700;color:var(--text);
+      margin-bottom:14px;
+      padding:0 4px;
+    }
+    .chart-canvas-wrap{
+      position:relative;
+      height:260px;
+      width:100%;
+      background:var(--surface);
+      border:1px solid var(--border);
+      padding:8px 6px 4px;
+    }
+
+    /* Scheme rows */
+    .scheme-list{display:flex;flex-direction:column;gap:10px}
+    .scheme-row{
+      padding:15px 16px;
+      border:1px solid var(--border);
+      background:#fafbfd;
+    }
+    .scheme-row .name{font-size:14px;font-weight:700;line-height:1.2}
+    .scheme-row .count{font-size:17px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums}
+    .scheme-row .row-bar{margin-top:12px;height:7px;border:1px solid var(--border);background:#fff;overflow:hidden}
+    .scheme-row .row-bar span{display:block;height:100%;background:var(--green)}
+    .scheme-row-inner{width:100%}
+
+    .report-list{display:flex;flex-direction:column;gap:10px}
+    .report-item{
+      display:flex;align-items:center;gap:14px;
+      padding:16px 16px;border:1px solid var(--border);background:var(--surface);
+    }
+    .report-item:active{background:#f0f3f8}
+    .report-icon{
+      width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+      border:1px solid var(--border);background:#fff;color:var(--gold-dark);flex-shrink:0;
+    }
+    .report-icon svg{width:21px;height:21px}
+    .report-icon svg path{fill:currentColor}
+    .report-body{font-size:15px;font-weight:700}
+
+    .tiny{font-size:10px;color:var(--muted);margin-top:14px;text-align:center}
+  </style>
+</head>
+<body>
+  <!--<header class="topbar">
+    <div class="topbar-row">
+      <img src="OtherPage/bjp_only_logo.png" alt="" width="46" height="46" />
+      <div>
+        <h1>યોજના લાભાર્થી</h1>
+        <div class="tag">Dashboard</div>
+      </div>
+    </div>
+  </header>-->
+
+  <div class="wrap">
+    <section class="sec">
+      <!--<div class="sec-title">સારાંશ</div>-->
+      <div class="card">
+        <div class="summary-split">
+          <div class="summary-chart">
+            <svg class="donut-svg" viewBox="0 0 36 36" aria-hidden="true">
+              <circle class="track" cx="18" cy="18" fill="none" r="15.9155" stroke-width="3"/>
+              <circle class="arc-ben" id="arcBen" cx="18" cy="18" fill="none" r="15.9155" stroke-width="3"
+                stroke-dasharray="0 100" stroke-linecap="butt" pathLength="100"/>
+            </svg>
+            <div class="donut-center">
+              <div class="donut-text">
+                <div class="pct" id="benPct">—%</div>
+                <div class="cap">લાભાર્થી %</div>
+              </div>
+            </div>
+          </div>
+          <div class="summary-stats">
+            <div class="stat-row voters">
+              <span class="lbl">Total voter</span>
+              <span class="num" id="kVoters">—</span>
+            </div>
+            <div class="stat-row ben">
+              <span class="lbl">Beneficiary</span>
+              <span class="num" id="kBeneficiary">—</span>
+            </div>
+            <div class="stat-row non">
+              <span class="lbl">Non beneficiary</span>
+              <span class="num" id="kNonBen">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec-title">યોજના મુજબ ચાર્ટ</div>
+      <div class="card" style="padding:0;border:none;background:transparent;box-shadow:none">
+        <div class="chart-panel">
+          <!--<div class="chart-caption">યોજના પ્રમાણે ગણતરી</div>-->
+          <div class="chart-canvas-wrap">
+            <canvas id="schemeBarChart" aria-label="યોજના પ્રમાણે બાર ચાર્ટ"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec-title">યોજના લિસ્ટ</div>
+      <div class="card" style="padding:14px">
+        <div class="scheme-list" id="schemeList"></div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="sec-title">રિપોર્ટ</div>
+      <div class="report-list">
+        <a class="report-item" href="#" data-report="booth">
+          <div class="report-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 3L2 9v12h7v-7h6v7h7V9L12 3zm0 2.18l6 4v2.64l-6-4-6 4V9.82l6-4z"/></svg>
+          </div>
+          <div class="report-body">બુથ પ્રમાણે</div>
+          <span style="color:var(--muted);font-size:20px;font-weight:700">›</span>
+        </a>
+        <a class="report-item" href="#" data-report="address">
+          <div class="report-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+          </div>
+          <div class="report-body">સરનામું પ્રમાણે</div>
+          <span style="color:var(--muted);font-size:20px;font-weight:700">›</span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    (function () {
+      var totalVoters = 284560;
+      var nonBenUnique = 92140;
+      var benUnique = totalVoters - nonBenUnique;
+
+      var schemes = [
+        { short: 'PM-K', name: 'PM-KISAN', count: 48200 },
+        { short: 'AYU', name: 'Ayushman', count: 65200 },
+        { short: 'UJJ', name: 'Ujjwala', count: 38900 },
+        { short: 'PMA', name: 'PMAY', count: 22100 },
+        { short: 'SCH', name: 'Scholarship', count: 14800 },
+        { short: 'PEN', name: 'Pension', count: 27600 }
+      ];
+
+      function fmt(n) {
+        return Number(n).toLocaleString('en-IN');
+      }
+
+      document.getElementById('kVoters').textContent = fmt(totalVoters);
+      document.getElementById('kBeneficiary').textContent = fmt(benUnique);
+      document.getElementById('kNonBen').textContent = fmt(nonBenUnique);
+
+      var benSharePct = Math.round((benUnique / totalVoters) * 100);
+      document.getElementById('benPct').textContent = benSharePct + '%';
+      var arc = document.getElementById('arcBen');
+      if (arc) arc.setAttribute('stroke-dasharray', benSharePct + ' ' + (100 - benSharePct));
+
+      var labels = schemes.map(function (s) { return s.short; });
+      var values = schemes.map(function (s) { return s.count; });
+
+      var ctx = document.getElementById('schemeBarChart');
+      if (typeof Chart !== 'undefined' && ctx) {
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'લાભાર્થી',
+              data: values,
+              backgroundColor: '#1e5a8a',
+              borderColor: '#174a72',
+              borderWidth: 1,
+              borderRadius: 3,
+              barPercentage: 0.72,
+              categoryPercentage: 0.85
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function (c) {
+                    return ' ' + fmt(c.raw);
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: {
+                  font: { size: 11, weight: '700' },
+                  color: '#5c6470',
+                  maxRotation: 45,
+                  minRotation: 0
+                }
+              },
+              y: {
+                beginAtZero: true,
+                border: { display: false },
+                grid: { color: 'rgba(0,0,0,.06)' },
+                ticks: {
+                  font: { size: 10 },
+                  color: '#5c6470',
+                  maxTicksLimit: 6,
+                  callback: function (v) {
+                    if (v >= 1000) return (v / 1000).toFixed(v % 1000 === 0 ? 0 : 1) + 'k';
+                    return v;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      var maxC = Math.max.apply(null, values);
+      var list = document.getElementById('schemeList');
+      schemes.forEach(function (s) {
+        var pctOfMax = Math.round((s.count / maxC) * 100);
+        var row = document.createElement('div');
+        row.className = 'scheme-row';
+        row.innerHTML =
+          '<div class="scheme-row-inner">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">' +
+              '<div class="name">' + s.name + '</div>' +
+              '<div class="count">' + fmt(s.count) + '</div>' +
+            '</div>' +
+            '<div class="row-bar"><span style="width:' + pctOfMax + '%"></span></div>' +
+          '</div>';
+        list.appendChild(row);
+      });
+
+      document.querySelectorAll('[data-report]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

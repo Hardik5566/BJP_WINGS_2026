@@ -1,0 +1,178 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Azure;
+using Azure.AI.OpenAI;
+using OpenAI;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Text;
+
+public partial class AI_Voters_AI : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+    // Web.config માંથી કનેક્શન સ્ટ્રીંગ અને એપ આઈડી
+    string sqlConn = System.Configuration.ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+    int currentAppId = 1;
+
+    protected void btnAsk_Click(object sender, EventArgs e)
+    {
+        // WebForms માં Async કામ કરવા માટે RegisterAsyncTask જરૂરી છે
+        Page.RegisterAsyncTask(new PageAsyncTask(ProcessSmartRequest));
+    }
+
+    private async Task ProcessSmartRequest()
+    {
+        string userQuestion = txtQuestion.Text.Trim();
+        if (string.IsNullOrEmpty(userQuestion)) return;
+
+        // UI Updates
+        litUserQuery.Text = userQuestion;
+        phResult.Visible = true; // રિઝલ્ટ એરિયા બતાવો
+        divWelcome.Visible = false; // વેલકમ મેસેજ છુપાવો
+
+        string selectedTables = await GetRelevantTablesFromAI(userQuestion);
+        string finalSql = await GetFinalSqlFromAI(userQuestion, selectedTables);
+
+        lblSqlDebug.Text = "-- Generated SQL --\n" + finalSql;
+
+        ExecuteAndBind(finalSql);
+
+        txtQuestion.Text = ""; // ઇનપુટ બોક્સ ખાલી કરો
+    }
+
+    private async Task<string> GetRelevantTablesFromAI(string question)
+    {
+        // Metadata માંથી ટેબલ લિસ્ટ અને તેનો હેતુ લો
+        string tableMetadata = "";
+        DataTable dtMap = GetDataTable("SELECT TableName, TablePurpose FROM AI_Table_Map");
+        foreach (DataRow row in dtMap.Rows)
+        {
+            tableMetadata += $"- {row["TableName"]}: {row["TablePurpose"]}\n";
+        }
+
+        string systemPrompt = $@"You are a database router. Return ONLY the names of the tables needed for the question, separated by commas.
+        Tables available:
+        {tableMetadata}";
+
+        return await CallAzureOpenAI(systemPrompt, question);
+    }
+
+    private async Task<string> GetFinalSqlFromAI(string question, string tables)
+    {
+        // ટેબલ મુજબની કન્ડિશન (KeyColumns) ડેટાબેઝમાંથી લો
+        string schemaContext = "";
+        string sqlMetadata = $"SELECT TableName, TablePurpose, KeyColumns FROM AI_Table_Map WHERE TableName IN (SELECT value FROM STRING_SPLIT('{tables}', ','))";
+
+        DataTable dt = GetDataTable(sqlMetadata);
+        foreach (DataRow row in dt.Rows)
+        {
+            schemaContext += $"\n### Table: {row["TableName"]}\nPurpose: {row["TablePurpose"]}\nAllowed Columns/Logic: {row["KeyColumns"]}\n";
+        }
+
+        string systemPrompt = $@"You are a SQL Expert. Generate SQL using ONLY the allowed columns below.
+        
+        [DATABASE CONTEXT]
+        {schemaContext}
+        
+     [GLOBAL RULES - MANDATORY]
+1. SOFT DELETE: 
+   - For all tables EXCEPT 'tbl_voting_record', add 'status <> 0' in the WHERE clause.
+   - DO NOT use 'status' column in 'tbl_voting_record'.
+2. APP ISOLATION: Always filter by app_id = {currentAppId}.
+3. COLUMN PRIVACY: NEVER use 'SELECT *'. List explicit columns but ALWAYS EXCLUDE 'device_id', 'id', 'MapID', and auto-increment keys.
+4. ROLES: Use user_type = 'A' for Admin, 'SA' for Sub-Admin. NEVER use 'role' column.
+5. SEARCH LOGIC: 
+   - For Gujarati/Unicode names, search both f_name (Unicode N'') and eng_f_name (English) using OR.
+   - If multiple tables are provided (like tbl_user and tbl_voting_record), use UNION ALL to search in both.
+6. SYNTAX: Always place 'WITH (NOLOCK)' immediately after the table name.
+7. STATUS FILTER: 
+   - IF table instructions say '[STRICT: NO status column]', PROHIBITED from using status.
+   - ONLY use 'AND status <> 0' if explicitly instructed '[STRICT: HAS status column]'.
+
+[MOBILE SEARCH & IDENTITY RULE - CRITICAL]
+- If a 10-digit number is searched, you MUST use UNION ALL to check both tables.
+- You MUST add a custom column 'Category' to identify the person.
+- Example Logic:
+  SELECT name AS Person_Name, user_type AS Role_or_Gender, mobile_no AS Contact, 'Worker/Admin' AS Category, booth_no 
+  FROM tbl_user WITH (NOLOCK) WHERE mobile_no = '9998092970' AND app_id = {currentAppId} AND status <> 0
+  UNION ALL
+  SELECT (f_name + ' ' + f_surname) AS Person_Name, sex AS Role_or_Gender, contact_no AS Contact, 'Voter' AS Category, part_no AS booth_no 
+  FROM tbl_voting_record WITH (NOLOCK) WHERE contact_no = '9998092970' AND app_id = {currentAppId}
+
+[SPECIAL SEARCH RULES - DO NOT SKIP]
+
+- FAMILY COUNT: For family searches in 'tbl_voting_record', use the 'family_id' column with a sub-query as per the table training instructions.
+- LIST vs COUNT: 
+   - If user asks 'LIST', 'SHOW', or 'DETAILS', return multiple rows with voter columns.
+   - If user asks 'TOTAL' or 'HOW MANY', use SELECT COUNT(*).
+   - NEVER return only a count if a 'list' is requested.
+
+Return ONLY raw SQL string.";
+
+        string rawSql = await CallAzureOpenAI(systemPrompt, question);
+
+        // Clean markdown if AI sends it
+        return rawSql.Replace("```sql", "").Replace("```", "").Trim();
+    }
+
+    private async Task<string> CallAzureOpenAI(string systemMsg, string userMsg)
+    {
+        string endpoint = System.Configuration.ConfigurationManager.AppSettings["AzureOpenAIEndpoint"];
+        string apiKey = System.Configuration.ConfigurationManager.AppSettings["AzureOpenAIKey"];
+        string deployment = System.Configuration.ConfigurationManager.AppSettings["AzureDeployment"];
+        string url = $"{endpoint.TrimEnd('/')}/openai/deployments/{deployment}/chat/completions?api-version=2024-05-01-preview";
+
+        using (HttpClient client = new HttpClient())
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var body = new
+            {
+                messages = new[] {
+                    new { role = "system", content = systemMsg },
+                    new { role = "user", content = userMsg }
+                },
+                temperature = 0 // Strictness માટે 0 જરૂરી છે
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(url, content);
+            string responseString = await response.Content.ReadAsStringAsync();
+
+            dynamic data = JsonConvert.DeserializeObject(responseString);
+            return data.choices[0].message.content.ToString();
+        }
+    }
+
+    private void ExecuteAndBind(string sql)
+    {
+        using (SqlConnection conn = new SqlConnection(sqlConn))
+        {
+            SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            gvResults.DataSource = dt;
+            gvResults.DataBind();
+        }
+    }
+
+    private DataTable GetDataTable(string sql)
+    {
+        DataTable dt = new DataTable();
+        using (SqlConnection conn = new SqlConnection(sqlConn))
+        {
+            SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+            da.Fill(dt);
+        }
+        return dt;
+    }
+}

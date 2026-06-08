@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Live Voting — BJP WINGS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati:wght@400;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --gold:#b8860b;
+      --gold-dark:#8b6914;
+      --green:#1e7a3a;
+      --blue:#1e5a8a;
+      --orange:#c45c1a;
+      --bg:#eef1f6;
+      --surface:#ffffff;
+      --text:#1a1f2e;
+      --muted:#5c6370;
+      --border:#d0d6e0;
+      --shadow:0 4px 16px rgba(26,31,46,.09);
+      --voted:#1e7a3a;
+      --remain:#c45c1a;
+      --total:#1e5a8a;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      max-width:430px;
+      margin:0 auto;
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Source Sans 3',system-ui,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      padding-bottom:24px;
+    }
+    a{color:inherit;text-decoration:none}
+
+    .topbar{
+      background:#1a2332;
+      color:#fff;
+      padding:14px 16px 16px;
+      border-bottom:3px solid var(--gold);
+    }
+    .topbar-row{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .topbar img{width:44px;height:auto}
+    .topbar h1{
+      font-size:17px;
+      font-weight:700;
+      letter-spacing:.02em;
+    }
+    .topbar .tag{
+      font-size:10px;
+      font-weight:600;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      opacity:.72;
+      margin-top:3px;
+    }
+
+    .wrap{padding:12px 14px 0}
+
+    /* Live time panel */
+    .time-panel{
+      background:var(--surface);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      padding:14px;
+      margin-bottom:12px;
+    }
+    .time-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .time-block{
+      border:1px solid var(--border);
+      padding:12px;
+      background:#f8fafc;
+    }
+    .time-block .lbl{
+      font-size:9px;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    .time-block .val{
+      margin-top:6px;
+      font-size:22px;
+      font-weight:700;
+      font-variant-numeric:tabular-nums;
+      letter-spacing:.02em;
+      color:var(--text);
+    }
+    .time-block .val.sm{font-size:15px;line-height:1.35}
+    .time-block.highlight{
+      border-color:var(--gold);
+      background:#fffdf8;
+    }
+    .time-block .sub{
+      margin-top:6px;
+      font-size:11px;
+      color:var(--muted);
+      font-family:'Noto Sans Gujarati',sans-serif;
+    }
+
+    /* First portion: single outer card only */
+    .time-card{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+    }
+    .time-card .live{
+      font-size:34px;
+      font-weight:900;
+      font-variant-numeric:tabular-nums;
+      letter-spacing:.02em;
+      color:var(--text);
+      line-height:1.05;
+      text-align:center;
+    }
+    .time-card .mini{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      padding-top:10px;
+      border-top:1px solid var(--border);
+      font-family:'Noto Sans Gujarati',sans-serif;
+    }
+    .time-card .mini .tag{
+      font-size:12px;
+      font-weight:800;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .time-card .mini .cd{
+      font-size:16px;
+      font-weight:900;
+      font-variant-numeric:tabular-nums;
+      color:#a80f0f; /* red */
+      letter-spacing:.01em;
+      white-space:nowrap;
+    }
+
+    /* Section */
+    .sec{
+      margin-bottom:12px;
+    }
+    .sec-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:8px;
+      padding:0 2px;
+    }
+    .sec-k{
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--gold-dark);
+    }
+    .sec-t{
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:15px;
+      font-weight:700;
+      color:var(--text);
+    }
+    .live-dot{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--green);
+    }
+    .live-dot::before{
+      content:'';
+      width:8px;height:8px;
+      background:var(--green);
+      border-radius:50%;
+      animation:pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{opacity:1;transform:scale(1)}
+      50%{opacity:.55;transform:scale(.92)}
+    }
+
+    .card{
+      background:var(--surface);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      padding:14px;
+    }
+
+    /* Vertical bar chart (hourly) */
+    .vchart{
+      display:flex;
+      align-items:flex-end;
+      justify-content:flex-start;
+      gap:5px;
+      height:150px;
+      padding:8px 6px 0;
+      border:1px solid var(--border);
+      background:#f8fafc;
+      margin-top:0;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+    .vbar-wrap{
+      flex:0 0 auto;
+      width:40px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-end;
+      height:100%;
+    }
+    .vbar{
+      width:100%;
+      max-width:40px;
+      background:var(--blue);
+      border:1px solid #174a72;
+      min-height:4px;
+      transition:height .4s ease;
+    }
+    .vbar.alt{background:var(--green);border-color:#16632d}
+    .vlabel{
+      margin-top:6px;
+      font-size:8px;
+      font-weight:700;
+      color:var(--muted);
+      text-align:center;
+      line-height:1.15;
+      white-space:nowrap;
+      letter-spacing:-0.02em;
+    }
+    .hourly-head{
+      margin-top:16px;
+      margin-bottom:6px;
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--gold-dark);
+    }
+
+    /* KPI trio + graphic */
+    .kpi-row{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin-top:12px;
+    }
+    .kpi{
+      text-align:center;
+      padding:12px 6px;
+      border:1px solid var(--border);
+      background:#ffffff;
+      box-shadow:0 6px 14px rgba(26,31,46,.10);
+      position:relative;
+      overflow:hidden;
+    }
+    .kpi::before{
+      content:'';
+      position:absolute;
+      left:0; top:0; right:0;
+      height:4px;
+      background:var(--border);
+    }
+    .kpi .n{
+      font-size:20px;
+      font-weight:700;
+      font-variant-numeric:tabular-nums;
+      line-height:1.1;
+    }
+    .kpi .l{
+      margin-top:6px;
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:0;
+      text-transform:none;
+      color:var(--text);
+    }
+    .kpi.total::before{background:var(--total)}
+    .kpi.voted::before{background:var(--voted)}
+    .kpi.remain::before{background:var(--remain)}
+    .kpi.total{background:rgba(30,90,138,.06); border-color:rgba(30,90,138,.25)}
+    .kpi.voted{background:rgba(30,122,58,.06); border-color:rgba(30,122,58,.25)}
+    .kpi.remain{background:rgba(196,92,26,.08); border-color:rgba(196,92,26,.30)}
+    .kpi.total .n{color:var(--total); font-weight:900}
+    .kpi.voted .n{color:var(--voted); font-weight:900}
+    .kpi.remain .n{color:var(--remain); font-weight:900}
+
+    .stack-bar{
+      margin-top:14px;
+      height:28px;
+      display:flex;
+      border:1px solid var(--border);
+      overflow:hidden;
+    }
+    .stack-bar span{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:10px;
+      font-weight:700;
+      color:#fff;
+      min-width:2px;
+    }
+    .stack-bar .s-t{background:var(--total)}
+    .stack-bar .s-v{background:var(--voted)}
+    .stack-bar .s-r{background:var(--remain)}
+
+    .donut-wrap{
+      display:flex;
+      justify-content:center;
+      margin-top:14px;
+      position:relative;
+    }
+    .donut-svg{
+      width:160px;
+      height:160px;
+      transform:rotate(-90deg);
+    }
+    .donut-svg .track{stroke:#e4e9ef}
+    .donut-svg .arc-v{stroke:var(--voted)}
+    .donut-center{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      text-align:center;
+      pointer-events:none;
+    }
+    .donut-text{
+      text-align:center;
+    }
+    .donut-text .pct{
+      font-size:26px;
+      font-weight:700;
+      color:var(--voted);
+      font-variant-numeric:tabular-nums;
+    }
+    .donut-text .cap{
+      font-size:10px;
+      font-weight:700;
+      color:var(--muted);
+      margin-top:2px;
+    }
+
+    .legend{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:12px;
+      margin-top:12px;
+      font-size:11px;
+    }
+    .legend span{display:flex;align-items:center;gap:6px}
+    .legend i{width:10px;height:10px;border:1px solid rgba(0,0,0,.15)}
+    .legend .i-t{background:var(--total)}
+    .legend .i-v{background:var(--voted)}
+    .legend .i-r{background:var(--remain)}
+
+    /* Phonebook module (match reference) */
+    .pb-box{
+      border:1px solid var(--border);
+      background:var(--surface);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .pb-head{
+      background:#1f2f57;
+      color:#fff;
+      padding:12px 12px;
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:16px;
+      font-weight:800;
+      line-height:1.2;
+      border-bottom:1px solid rgba(255,255,255,.18);
+    }
+    .pb-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      padding:12px;
+      background:#ffffff;
+    }
+    .pb-cell{
+      border:1px solid var(--border);
+      background:#fff;
+      box-shadow:0 4px 10px rgba(26,31,46,.10);
+      overflow:hidden;
+      text-align:center;
+    }
+    .pb-cell .top{
+      padding:10px 6px;
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:16px;
+      font-weight:800;
+      color:#fff;
+    }
+    .pb-cell.total .top{background:#0b74d6}
+    .pb-cell.voted .top{background:#166c2a}
+    .pb-cell.remain .top{background:#a80f0f}
+    .pb-cell .num{
+      padding:14px 6px 16px;
+      font-size:24px;
+      font-weight:900;
+      font-variant-numeric:tabular-nums;
+      color:var(--text);
+    }
+    .pb-cell.total .num{color:#0b74d6}
+    .pb-cell.voted .num{color:#166c2a}
+    .pb-cell.remain .num{color:#a80f0f}
+
+    /* Reporting */
+    .report-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .report-item{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:14px;
+      border:1px solid var(--border);
+      background:var(--surface);
+      transition:background .15s;
+    }
+    .report-item:active{background:#f4f6f9}
+    .report-icon{
+      width:44px;height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid var(--border);
+      background:#fff;
+      flex-shrink:0;
+      color:var(--gold-dark);
+    }
+    .report-icon svg{width:22px;height:22px}
+    .report-icon svg path{fill:currentColor}
+    .report-body{flex:1;min-width:0}
+    .report-body .en{font-size:14px;font-weight:700}
+    .report-body .gu{
+      margin-top:3px;
+      font-family:'Noto Sans Gujarati',sans-serif;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .report-arrow{color:var(--muted);font-size:18px;font-weight:700}
+
+    .foot-note{
+      margin-top:16px;
+      padding:12px;
+      font-size:11px;
+      color:var(--muted);
+      text-align:center;
+      line-height:1.45;
+      font-family:'Noto Sans Gujarati',sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <!--<header class="topbar">
+    <div class="topbar-row">
+      <img src="OtherPage/bjp_only_logo.png" alt="" width="44" height="44" />
+      <div>
+        <h1>Live Voting Dashboard</h1>
+        <div class="tag">Real-time · Mobile</div>
+      </div>
+    </div>
+  </header>-->
+
+  <div class="wrap">
+    <!-- Current time + remain time (single card) -->
+    <section class="time-panel" aria-label="સમય">
+      <div class="time-card">
+        <div class="live" id="liveClock">--:--:--</div>
+        <div class="mini" aria-label="બાકી સમય">
+          <div class="tag">બાકી સમય</div>
+          <div class="cd" id="countdown">--:--:--</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overall live voting -->
+    <section class="sec">
+      <div class="sec-head">
+        <div>
+          <div class="sec-k">Overview</div>
+          <div class="sec-t">લાઇવ મતદાન ઝોન</div>
+        </div>
+        <span class="live-dot">Live</span>
+      </div>
+      <div class="card">
+        <div class="donut-wrap" style="margin-top:0;">
+          <svg class="donut-svg" viewBox="0 0 36 36" aria-hidden="true">
+            <circle class="track" cx="18" cy="18" fill="none" r="15.9155" stroke-width="3"/>
+            <circle class="arc-v" id="arcVoted" cx="18" cy="18" fill="none" r="15.9155" stroke-width="3"
+              stroke-dasharray="0 100" stroke-linecap="butt" pathLength="100"/>
+          </svg>
+          <div class="donut-center">
+            <div class="donut-text">
+              <div class="pct" id="donutPct">66%</div>
+              <div class="cap">વોટિંગ</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi total">
+            <div class="n" id="kTotal">12,450</div>
+            <div class="l">ટોટલ</div>
+          </div>
+          <div class="kpi voted">
+            <div class="n" id="kVoted">8,204</div>
+            <div class="l">થયેલ</div>
+          </div>
+          <div class="kpi remain">
+            <div class="n" id="kRemain">4,246</div>
+            <div class="l">બાકી</div>
+          </div>
+        </div>
+
+        <!--<div class="stack-bar" id="stackBar" title="મતદાર વિતરણ">
+          <span class="s-t" id="segT" style="width:100%">100%</span>
+        </div>-->
+        <!--<div class="legend">
+          <span><i class="i-t"></i> Total base</span>
+          <span><i class="i-v"></i> Voted</span>
+          <span><i class="i-r"></i> Remaining</span>
+        </div>-->
+
+        <div class="hourly-head">Hourly report · કલાક પ્રમાણે</div>
+        <div class="vchart" id="vchart" role="img" aria-label="કલાક પ્રમાણે મત ગ્રાફ"></div>
+      </div>
+    </section>
+
+    <!-- Phonebook sub-module -->
+    <section class="sec">
+      <div class="pb-box" aria-label="મારા ફોનબુક મુજબ લાઇવ મતદાન">
+        <div class="pb-head">મારી ફોનબુક નું લાઇવ મતદાન</div>
+        <div class="pb-grid">
+          <div class="pb-cell total">
+            <div class="top">ટોટલ</div>
+            <div class="num" id="pbTotal">0</div>
+          </div>
+          <div class="pb-cell voted">
+            <div class="top">થયેલ</div>
+            <div class="num" id="pbVote">0</div>
+          </div>
+          <div class="pb-cell remain">
+            <div class="top">બાકી</div>
+            <div class="num" id="pbRem">0</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reporting -->
+    <section class="sec">
+      <div class="sec-head">
+        <div>
+          <div class="sec-k">Reporting</div>
+          <div class="sec-t">રિપોર્ટિંગ</div>
+        </div>
+      </div>
+      <div class="report-list">
+        <a class="report-item" href="#" data-report="booth">
+          <div class="report-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 3L2 9v12h7v-7h6v7h7V9L12 3zm0 2.18l6 4v2.64l-6-4-6 4V9.82l6-4z"/></svg>
+          </div>
+          <div class="report-body">
+            <div class="en">Booth wise live voting</div>
+            <div class="gu">બુથ પ્રમાણે લાઇવ મતદાન</div>
+          </div>
+          <span class="report-arrow">›</span>
+        </a>
+        <a class="report-item" href="#" data-report="phonebook">
+          <div class="report-icon">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h4v2H6v-2zm0 4h8v2H6v-2zm0-8h12v2H6V6z"/></svg>
+          </div>
+          <div class="report-body">
+            <div class="en">Phonebook wise live voting</div>
+            <div class="gu">ફોનબુક પ્રમાણે લાઇવ મતદાન</div>
+          </div>
+          <span class="report-arrow">›</span>
+        </a>
+        <a class="report-item" href="#" data-report="polling">
+          <div class="report-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+          </div>
+          <div class="report-body">
+            <div class="en">Polling location wise live voting</div>
+            <div class="gu">પોલિંગ સ્થળ પ્રમાણે લાઇવ મતદાન</div>
+          </div>
+          <span class="report-arrow">›</span>
+        </a>
+      </div>
+    </section>
+
+  
+  </div>
+
+  <script>
+    (function () {
+      var CLOSE_H = 18;
+      var CLOSE_M = 0;
+
+      function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+      function tick() {
+        var now = new Date();
+        var h24 = now.getHours();
+        var m = now.getMinutes();
+        var s = now.getSeconds();
+
+        var ampm = h24 >= 12 ? 'PM' : 'AM';
+        var h = h24 % 12;
+        if (h === 0) h = 12;
+        document.getElementById('liveClock').textContent =
+          pad(h) + ':' + pad(m) + ':' + pad(s) + ' ' + ampm;
+
+        var close = new Date(now);
+        close.setHours(CLOSE_H, CLOSE_M, 0, 0);
+        if (close <= now) {
+          close.setDate(close.getDate() + 1);
+        }
+        var diff = Math.floor((close - now) / 1000);
+        if (diff < 0) diff = 0;
+        var ch = Math.floor(diff / 3600);
+        var cm = Math.floor((diff % 3600) / 60);
+        var cs = diff % 60;
+        var cdTxt = '';
+        if (ch > 0) cdTxt += ch + ' કલાક ';
+        cdTxt += cm + ' મિનિટ';
+        document.getElementById('countdown').textContent = cdTxt;
+      }
+
+      tick();
+      setInterval(tick, 1000);
+
+      /* Hourly bars: labels 08-09, 09-10, … — replace values from API */
+      var hourly = [12, 28, 45, 62, 55, 48, 70, 88];
+      var slotStartHour = 8;
+      var max = Math.max.apply(null, hourly);
+      var chart = document.getElementById('vchart');
+      hourly.forEach(function (v, i) {
+        var h1 = slotStartHour + i;
+        var h2 = h1 + 1;
+        var slotLabel = pad(h1) + '-' + pad(h2);
+        var wrap = document.createElement('div');
+        wrap.className = 'vbar-wrap';
+        var bar = document.createElement('div');
+        bar.className = 'vbar' + (i % 2 === 1 ? ' alt' : '');
+        bar.style.height = Math.max(4, Math.round((v / max) * 100)) + '%';
+        bar.title = slotLabel + ': ' + v + ' votes';
+        var lb = document.createElement('div');
+        lb.className = 'vlabel';
+        lb.textContent = slotLabel;
+        wrap.appendChild(bar);
+        wrap.appendChild(lb);
+        chart.appendChild(wrap);
+      });
+
+      /* KPI & donut — wire to your totals */
+      var total = 12450;
+      var voted = 8204;
+      var remain = total - voted;
+      var pct = Math.round((voted / total) * 100);
+      document.getElementById('kTotal').textContent = total.toLocaleString('en-IN');
+      document.getElementById('kVoted').textContent = voted.toLocaleString('en-IN');
+      document.getElementById('kRemain').textContent = remain.toLocaleString('en-IN');
+      document.getElementById('donutPct').textContent = pct + '%';
+      var av = document.getElementById('arcVoted');
+      if (av) {
+        av.setAttribute('stroke-dasharray', pct + ' ' + (100 - pct));
+      }
+
+      var stack = document.getElementById('stackBar');
+      var wV = (voted / total) * 100;
+      var wR = (remain / total) * 100;
+      stack.innerHTML =
+        '<span class="s-v" style="width:' + wV.toFixed(2) + '%">' + pct + '%</span>' +
+        '<span class="s-r" style="width:' + wR.toFixed(2) + '%"></span>';
+
+      var pbT = 842;
+      var pbV = 556;
+      document.getElementById('pbTotal').textContent = pbT.toLocaleString('en-IN');
+      document.getElementById('pbVote').textContent = pbV.toLocaleString('en-IN');
+      document.getElementById('pbRem').textContent = (pbT - pbV).toLocaleString('en-IN');
+
+      document.querySelectorAll('[data-report]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          var key = el.getAttribute('data-report');
+          console.log('Open report:', key);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

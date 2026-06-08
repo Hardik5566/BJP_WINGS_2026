@@ -1,0 +1,153 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class AI_Voter_AI_Chart : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+    string sqlConn = System.Configuration.ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+    int currentAppId = 1;
+
+    protected void btnAsk_Click(object sender, EventArgs e)
+    {
+        Page.RegisterAsyncTask(new PageAsyncTask(ProcessSmartRequest));
+    }
+
+    private async Task ProcessSmartRequest()
+    {
+        string userQuestion = txtQuestion.Text.Trim();
+        if (string.IsNullOrEmpty(userQuestion)) return;
+
+        litUserQuery.Text = userQuestion;
+        phResult.Visible = true;
+
+        try
+        {
+            // STEP 1: AI generates Protocol: CHART_TYPE | SQL
+            string aiResponse = await GetAiResponse(userQuestion);
+            string[] parts = aiResponse.Split('|');
+
+            string chartType = parts[0].Trim().ToUpper(); // PIE, COLUMN, BAR, or NONE
+            string finalSql = parts[1].Trim();
+
+            lblSqlDebug.Text = "-- Generated SQL --\n" + finalSql;
+
+            // STEP 2: Execute
+            DataTable dt = GetDataTable(finalSql);
+            gvResults.DataSource = dt;
+            gvResults.DataBind();
+
+            // STEP 3: Send data to JavaScript if a chart is needed
+            if (chartType != "NONE" && dt.Rows.Count > 0)
+            {
+                string json = JsonConvert.SerializeObject(dt);
+                string script = $"renderDynamicChart('{json.Replace("'", "\\'")}', '{chartType}');";
+                ScriptManager.RegisterStartupScript(this, GetType(), "chart", script, true);
+            }
+        }
+        catch (Exception ex)
+        {
+            lblError.Text = "Error: " + ex.Message;
+        }
+        txtQuestion.Text = "";
+    }
+
+    private async Task<string> GetAiResponse(string q)
+    {
+        string systemPrompt = $@"You are a strict SQL and Data Visualization Expert. 
+Output ONLY in this format: CHART_TYPE | SQL_QUERY.
+
+[DATABASE SCHEMA]
+View: vw_voter_search_AI
+- ac_no (int): Assembly No
+- part_no (int): Booth Number (BOOTH)
+- slnoinpart (int): Serial No
+- f_name (nvarchar): First Name Gujarati
+- eng_f_name (nvarchar): First Name English
+- f_surname (nvarchar): Surname Gujarati
+- idcard_no (nvarchar): Voter ID
+- sex (nvarchar): Gender (M/F)
+- age (nvarchar): Age (Stored as string)
+- contact_no (nvarchar): Mobile
+- family_id (bigint): Family ID
+- sleep_send (int): 1 = Received Slip, 0 = Not Received
+- polling_location (nvarchar): Voting Place Name (Gujarati)
+- eng_polling_location (nvarchar): Voting Place Name (English)
+- app_id (int): {currentAppId}
+
+[PERMANENT RULES - DO NOT CHANGE]
+1. PROTOCOL: You must start every response with 'CHART_TYPE | ' followed by the SQL.
+2. APP ID: Every query MUST have 'app_id = {currentAppId}'.
+3. SLIP/SLEEP: 'not received sleep' means: (sleep_send = 0 OR sleep_send IS NULL).
+4. SLIP/SLEEP: 'received sleep' means: sleep_send = 1.
+5. NAMES: Search both f_name (N'') and eng_f_name using OR.
+6. AGE: Always use TRY_CAST(NULLIF(age, '-') AS INT) for comparison/math.
+7. SECURITY: Use 'WITH (NOLOCK)' after table name. List explicit columns. NEVER use 'SELECT *'.
+8. LIMIT: Use 'TOP 1000' for list results unless COUNT is requested.
+9. BOOTH: 'part_no' is the booth number.
+
+[GLOBAL CHART RULES]
+1. INTENT: If user asks for 'chart', 'graph', 'ratio', 'distribution', or 'comparison', you MUST provide a CHART_TYPE.
+2. PIE RULE: Use 'PIE' for single-column aggregations where you compare categories (e.g., Male vs Female, Sent vs Not Sent).
+3. COLUMN RULE: Use 'COLUMN' for comparing values across different entities (e.g., Count per Booth, Count per Area).
+4. BAR RULE: Use 'BAR' if comparing more than 10 entities or if names are very long.
+5. DATA STRUCTURE: For PIE/COLUMN, the SQL MUST return exactly two columns: [Label] and [Value].
+6. APP ISOLATION: Always filter by app_id = {currentAppId} and use WITH (NOLOCK).
+7. CASTING: Always use TRY_CAST(NULLIF(age, '-') AS INT) for age.
+8. NAMES: Search Gujarati (N'') and English using OR.
+9. DYNAMIC LIMIT: For charts, do NOT use TOP 1000. Use all relevant data to ensure chart accuracy.
+10. PROTOCOL: Your response MUST start with 'PIE | ', 'COLUMN | ', 'BAR | ', or 'NONE | '.
+
+[STRICT LOGIC EXAMPLES]
+- DUPLICATES: SELECT idcard_no, COUNT(*) FROM vw_voter_search_AI WHERE app_id = {currentAppId} GROUP BY idcard_no HAVING COUNT(*) > 1.
+- FAMILY: WHERE family_id = (SELECT TOP 1 family_id FROM vw_voter_search_AI WHERE idcard_no = 'QUERY_ID' AND app_id = {currentAppId}).
+- AGE RANGES: Use UNION ALL with 'Age Range' labels for 18-22, 23-25 etc.
+- PIVOT BOOTH: For booth-wise slips, use SUM(CASE WHEN sleep_send = 1 THEN 1 ELSE 0 END) AS [Total slip send voter].
+
+[ERROR PREVENTION]
+- NEVER filter by 'age < 18' unless 'under 18' is typed.
+- Do NOT add age filters when searching for sleep/slips.";
+
+        return await CallAzureOpenAI(systemPrompt, q);
+    }
+
+    private async Task<string> CallAzureOpenAI(string sys, string user)
+    {
+        string endpoint = System.Configuration.ConfigurationManager.AppSettings["AzureOpenAIEndpoint"];
+        string apiKey = System.Configuration.ConfigurationManager.AppSettings["AzureOpenAIKey"];
+        string deployment = System.Configuration.ConfigurationManager.AppSettings["AzureDeployment"];
+        string url = $"{endpoint}/openai/deployments/{deployment}/chat/completions?api-version=2024-05-01-preview";
+
+        using (HttpClient client = new HttpClient())
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var body = new { messages = new[] { new { role = "system", content = sys }, new { role = "user", content = user } }, temperature = 0 };
+            var response = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"));
+            dynamic data = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+            return data.choices[0].message.content.ToString().Replace("```sql", "").Replace("```", "").Trim();
+        }
+    }
+
+    private DataTable GetDataTable(string sql)
+    {
+        using (SqlConnection conn = new SqlConnection(sqlConn))
+        {
+            SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            return dt;
+        }
+    }
+}

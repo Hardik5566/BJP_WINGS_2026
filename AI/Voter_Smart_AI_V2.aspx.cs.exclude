@@ -1,0 +1,174 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class AI_Voter_Smart_AI_V2 : System.Web.UI.Page
+{
+   
+   
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+       
+    }
+
+    string sqlConn = System.Configuration.ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+    int currentAppId = 1;
+
+    // Follow-up questions માટે મેમરી સ્ટોરેજ
+    private string ConversationHistory
+    {
+        get { return Session["AI_Conv_History"] as string ?? ""; }
+        set { Session["AI_Conv_History"] = value; }
+    }
+
+    protected void btnAsk_Click(object sender, EventArgs e)
+    {
+        Page.RegisterAsyncTask(new PageAsyncTask(ProcessSmartRequest));
+    }
+
+    private async Task ProcessSmartRequest()
+    {
+        string question = txtQuestion.Text.Trim();
+        if (string.IsNullOrEmpty(question)) return;
+
+        try
+        {
+            lblError.Text = "";
+            AddChatMessage("User", question);
+
+            // STEP 1: Route to Table (Metadata logic)
+            string tables = await GetRelevantTablesFromAI(question);
+
+            // STEP 2: Generate SQL with your 13 Fixed Rules & JSON format
+            string aiResponse = await GetFinalSqlFromAI(question, tables);
+
+            var result = JsonConvert.DeserializeObject<dynamic>(CleanJsonResponse(aiResponse));
+            string sql = result.sql.ToString();
+            string friendlyMsg = result.sentence.ToString();
+
+            if (string.IsNullOrEmpty(sql))
+            {
+                AddChatMessage("AI", friendlyMsg);
+            }
+            else
+            {
+                DataTable dt = GetDataTable(sql);
+                AddChatMessage("AI", friendlyMsg, sql, dt);
+                ConversationHistory += $"\nUser: {question} | AI_SQL: {sql}";
+            }
+        }
+        catch (Exception ex)
+        {
+            lblError.Text = "❌ Error: " + ex.Message;
+        }
+        finally
+        {
+            txtQuestion.Text = "";
+            upChat.Update();
+        }
+    }
+
+    private async Task<string> GetRelevantTablesFromAI(string q)
+    {
+        StringBuilder sb = new StringBuilder();
+        DataTable dtMap = GetDataTable("SELECT TableName, TablePurpose FROM AI_Table_Map WITH (NOLOCK)");
+        foreach (DataRow r in dtMap.Rows) sb.AppendLine($"- {r["TableName"]}: {r["TablePurpose"]}");
+
+        string prompt = $@"Return ONLY comma-separated table names for the question.
+        Tables available:
+        {sb.ToString()}";
+        return await CallAzureOpenAI(prompt, q);
+    }
+
+    private async Task<string> GetFinalSqlFromAI(string q, string tables)
+    {
+        StringBuilder schema = new StringBuilder();
+        DataTable dt = GetDataTable($"SELECT TableName, TablePurpose, KeyColumns FROM AI_Table_Map WHERE TableName IN (SELECT value FROM STRING_SPLIT('{tables}', ','))");
+        foreach (DataRow r in dt.Rows) schema.AppendLine($"### Table: {r["TableName"]}\nPurpose: {r["TablePurpose"]}\nAllowed Columns/Logic: {r["KeyColumns"]}");
+
+        // તમારા ફિક્સ કરેલા રૂલ્સ અહીં જ છે (Mandatory Rules)
+        string systemPrompt = $@"You are a Master SQL Expert. Return ONLY a JSON object: {{ ""sql"": ""your_sql"", ""sentence"": ""friendly_response"" }}
+        
+        [DATABASE CONTEXT]
+        {schema.ToString()}
+        
+        [DATABASE CONTEXT]
+    {schemaContext.ToString()}
+
+    [GLOBAL RULES - MANDATORY]
+    1. GENDER: Use sex = 'M' for Male and sex = 'F' for Female.
+    2. UNICODE: Always use N prefix for Gujarati text (e.g., N'%હાર્દિક%').
+    3. SOFT DELETE: Use 'temp_status = 1' ONLY for 'vw_get_all_user_for_AI'. Strictly NO status for 'vw_voter_search_AI'.
+    4. APP ISOLATION: Always filter by app_id = {currentAppId}.
+    5. PRIVACY: NEVER use 'SELECT *'. Exclude 'device_id', 'id', 'MapID'.
+    6. ROLES: A=Admin, SA=Sub-Admin. NEVER use 'role' column.
+    7. MULTI-BOOTH: For SP/CL/LV users, use LIKE logic for booth_no (e.g., '1|162|94').
+    8. SEARCH LOGIC: If a 10-digit number or name is searched, use UNION ALL between both views with 'Category' column.
+    9. BOOTH COUNT: Use SUM(total_voter) from tbl_booth. NEVER use COUNT(*).
+    10. SYNTAX: Always place 'WITH (NOLOCK)' immediately after the view name.
+    11. FAMILY: Use family_id sub-query for family counts in voter view.
+    12. LIST vs COUNT: Use COUNT(*) for totals, otherwise list explicit columns.
+    13. HISTORY: Answer follow-up questions using context: {ConversationHistory}
+        Return ONLY JSON.";
+
+        return await CallAzureOpenAI(systemPrompt, q);
+    }
+
+    private void AddChatMessage(string role, string content, string sql = "", DataTable dt = null)
+    {
+        Panel pnl = new Panel { CssClass = "message " + (role == "User" ? "user-message" : "ai-message") };
+        pnl.Controls.Add(new LiteralControl($"<strong>{role}:</strong><br/>{content}"));
+
+        if (dt != null)
+        {
+            Panel gvPnl = new Panel { CssClass = "grid-container" };
+            GridView gv = new GridView { CssClass = "gvResults", AutoGenerateColumns = true, GridLines = GridLines.None };
+            gv.DataSource = dt;
+            gv.DataBind();
+            gvPnl.Controls.Add(gv);
+            pnl.Controls.Add(gvPnl);
+            pnl.Controls.Add(new LiteralControl($"<div class='sql-debug'>{sql}</div>"));
+        }
+        phResults.Controls.Add(pnl);
+    }
+
+    private async Task<string> CallAzureOpenAI(string sys, string user)
+    {
+        string endpoint = System.Configuration.ConfigurationManager.AppSettings["AzureOpenAIEndpoint"];
+        string apiKey = System.Configuration.ConfigurationManager.AppSettings["AzureOpenAIKey"];
+        string deployment = System.Configuration.ConfigurationManager.AppSettings["AzureDeployment"];
+        string url = $"{endpoint.TrimEnd('/')}/openai/deployments/{deployment}/chat/completions?api-version=2024-05-01-preview";
+
+        using (HttpClient client = new HttpClient())
+        {
+            client.DefaultRequestHeaders.Add("api-key", apiKey);
+            var body = new { messages = new[] { new { role = "system", content = sys }, new { role = "user", content = user } }, temperature = 0 };
+            var response = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"));
+            dynamic data = JsonConvert.DeserializeObject(await response.Content.ReadAsStringAsync());
+            return data.choices[0].message.content.ToString();
+        }
+    }
+
+    private DataTable GetDataTable(string sql)
+    {
+        DataTable dt = new DataTable();
+        using (SqlConnection conn = new SqlConnection(sqlConn))
+        {
+            new SqlDataAdapter(sql.Replace("```sql", "").Replace("```", ""), conn).Fill(dt);
+        }
+        return dt;
+    }
+
+    private string CleanJsonResponse(string s) => s.Replace("```json", "").Replace("```", "").Trim();
+
+}

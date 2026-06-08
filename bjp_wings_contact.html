@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BJP Wings - સંપર્ક કરો</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --saffron: #FF6B00;
+            --saffron-light: #FF8C00;
+            --saffron-glow: rgba(255, 107, 0, 0.18);
+            --green: #138808;
+            --green-light: #1aac0a;
+            --navy: #000080;
+            --navy-dark: #00004d;
+            --white: #FFFFFF;
+            --off-white: #FFF9F4;
+            --gold: #D4A017;
+            --gold-light: #F5C842;
+            --text-dark: #1a0a00;
+            --text-mid: #4a2800;
+            --card-bg: rgba(255,255,255,0.92);
+            --radius: 18px;
+            --shadow: 0 8px 32px rgba(255,107,0,0.13);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--off-white);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── HERO HEADER ── */
+        .hero {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, #1a006b 100%);
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .hero::before {
+                content: '';
+                position: absolute;
+                top: -60px;
+                right: -60px;
+                width: 220px;
+                height: 220px;
+                background: radial-gradient(circle, rgba(255,107,0,0.35) 0%, transparent 70%);
+                border-radius: 50%;
+            }
+
+            .hero::after {
+                content: '';
+                position: absolute;
+                bottom: -40px;
+                left: -40px;
+                width: 160px;
+                height: 160px;
+                background: radial-gradient(circle, rgba(19,136,8,0.25) 0%, transparent 70%);
+                border-radius: 50%;
+            }
+
+        /* Tricolor stripe */
+        .tricolor-bar {
+            display: flex;
+            height: 6px;
+        }
+
+            .tricolor-bar span {
+                flex: 1;
+            }
+
+            .tricolor-bar .t1 {
+                background: var(--saffron);
+            }
+
+            .tricolor-bar .t2 {
+                background: var(--white);
+            }
+
+            .tricolor-bar .t3 {
+                background: var(--green);
+            }
+
+        .hero-body {
+            padding: 32px 20px 28px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .lotus-icon {
+            font-size: 52px;
+            display: block;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 2px 8px rgba(255,107,0,0.6));
+            animation: floatLotus 3s ease-in-out infinite;
+        }
+
+        @keyframes floatLotus {
+            0%,100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .app-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: var(--white);
+            text-shadow: 0 2px 16px rgba(255,107,0,0.5);
+            line-height: 1;
+        }
+
+            .app-name span {
+                color: var(--saffron-light);
+            }
+
+        .tagline {
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .divider-gold {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+            margin: 14px auto 0;
+            border-radius: 2px;
+        }
+
+        /* ── CONTACT INFO CARDS ── */
+        .section-label {
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--saffron);
+            font-weight: 600;
+            text-align: center;
+            margin: 28px 0 14px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0 16px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 18px 12px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1.5px solid rgba(255,107,0,0.12);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .info-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, var(--saffron), var(--gold-light));
+            }
+
+            .info-card:active {
+                transform: scale(0.97);
+            }
+
+            .info-card.green::before {
+                background: linear-gradient(90deg, var(--green), var(--green-light));
+            }
+
+            .info-card.navy::before {
+                background: linear-gradient(90deg, var(--navy), #5555cc);
+            }
+
+            .info-card.gold::before {
+                background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            }
+
+        .info-icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .info-title {
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--saffron);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .info-card.green .info-title {
+            color: var(--green);
+        }
+
+        .info-card.navy .info-title {
+            color: var(--navy);
+        }
+
+        .info-card.gold .info-title {
+            color: var(--gold);
+        }
+
+        .info-value {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dark);
+            word-break: break-all;
+            line-height: 1.4;
+        }
+
+        /* ── GUJARATI QUOTE BANNER ── */
+        .quote-banner {
+            margin: 24px 16px 0;
+            background: linear-gradient(135deg, var(--saffron) 0%, #FF9A00 100%);
+            border-radius: var(--radius);
+            padding: 20px 18px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 24px rgba(255,107,0,0.3);
+        }
+
+            .quote-banner::after {
+                content: '🪷';
+                position: absolute;
+                right: -8px;
+                top: -8px;
+                font-size: 70px;
+                opacity: 0.15;
+                transform: rotate(15deg);
+            }
+
+        .quote-gu {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1.6;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+
+        .quote-sub {
+            font-size: 11px;
+            color: rgba(255,255,255,0.82);
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── CONTACT FORM ── */
+        .form-section {
+            padding: 0 16px;
+            margin-top: 24px;
+        }
+
+        .form-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 4px;
+        }
+
+        .form-subtitle {
+            font-size: 13px;
+            color: var(--text-mid);
+            margin-bottom: 18px;
+        }
+
+        .form-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 22px 18px;
+            box-shadow: var(--shadow);
+            border: 1.5px solid rgba(255,107,0,0.10);
+        }
+
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        .field-label {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--saffron);
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .field-sub {
+            font-size: 10px;
+            color: #888;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .field-input, .field-textarea, .field-select {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1.8px solid rgba(255,107,0,0.2);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            background: #fff;
+            color: var(--text-dark);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            -webkit-appearance: none;
+        }
+
+            .field-input:focus, .field-textarea:focus, .field-select:focus {
+                border-color: var(--saffron);
+                box-shadow: 0 0 0 3px var(--saffron-glow);
+            }
+
+        .field-textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        .field-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23FF6B00' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--saffron) 0%, #FF9A00 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255,107,0,0.4);
+            transition: transform 0.15s, box-shadow 0.15s;
+            margin-top: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .btn-submit:active {
+                transform: scale(0.97);
+                box-shadow: 0 3px 10px rgba(255,107,0,0.3);
+            }
+
+            .btn-submit .btn-gu {
+                display: block;
+                font-size: 11px;
+                font-weight: 400;
+                opacity: 0.85;
+                margin-top: 2px;
+            }
+
+        /* ── ABOUT SECTION ── */
+        .about-section {
+            margin: 24px 16px 0;
+            background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+            border-radius: var(--radius);
+            padding: 22px 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .about-section::before {
+                content: 'BJP';
+                position: absolute;
+                right: -10px;
+                bottom: -20px;
+                font-family: 'Playfair Display', serif;
+                font-size: 90px;
+                font-weight: 900;
+                color: rgba(255,255,255,0.04);
+                line-height: 1;
+                pointer-events: none;
+            }
+
+        .about-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--saffron-light);
+            margin-bottom: 10px;
+        }
+
+        .about-text {
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.75;
+        }
+
+            .about-text strong {
+                color: var(--gold-light);
+            }
+
+        /* ── SOCIAL ROW ── */
+        .social-row {
+            display: flex;
+            gap: 10px;
+            padding: 20px 16px 0;
+            justify-content: center;
+        }
+
+        .social-btn {
+            flex: 1;
+            max-width: 80px;
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 12px 8px;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: var(--shadow);
+            border: 1.5px solid rgba(255,107,0,0.12);
+            transition: transform 0.15s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+            .social-btn:active {
+                transform: scale(0.94);
+            }
+
+            .social-btn .s-icon {
+                font-size: 24px;
+            }
+
+            .social-btn .s-label {
+                font-size: 9px;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                color: var(--text-mid);
+                font-weight: 600;
+            }
+
+        /* ── FOOTER ── */
+        .footer {
+            margin-top: 28px;
+            padding: 20px 16px 32px;
+            text-align: center;
+            border-top: 1px solid rgba(255,107,0,0.12);
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--navy);
+            letter-spacing: 2px;
+        }
+
+            .footer-logo span {
+                color: var(--saffron);
+            }
+
+        .footer-gu {
+            font-size: 12px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        .footer-copy {
+            font-size: 10px;
+            color: #bbb;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── SUCCESS MESSAGE ── */
+        .success-msg {
+            display: none;
+            background: linear-gradient(135deg, var(--green), var(--green-light));
+            color: white;
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── ANIMATIONS ── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-5 {
+            animation-delay: 0.5s;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HERO HEADER -->
+    <div class="hero fade-up">
+        <div class="tricolor-bar"><span class="t1"></span><span class="t2"></span><span class="t3"></span></div>
+        <div class="hero-body">
+            <span class="lotus-icon">
+                <img src="img/bjp_logo_png.png" style="width:75px" />
+            </span>
+            <div class="app-name">BJP <span>WINGS</span></div>
+            <div class="tagline">Bharatiya Janata Party</div>
+            <div class="divider-gold"></div>
+        </div>
+        <div class="tricolor-bar"><span class="t3"></span><span class="t2"></span><span class="t1"></span></div>
+    </div>
+
+    <!-- GUJARATI QUOTE -->
+    <div class="quote-banner fade-up delay-1">
+        <div class="quote-gu">"સબ કા સાથ, સબ કા વિકાસ, સબ કા વિશ્વાસ"</div>
+    </div>
+
+    <!-- CONTACT INFO -->
+    <div class="section-label fade-up delay-2">📞 &nbsp;સંપર્ક માહિતી</div>
+
+    <div class="info-grid fade-up delay-2">
+        <a class="info-card" href="tel:+91 90810 94946">
+            <span class="info-icon">📱</span>
+            <div class="info-title">સંપર્ક નં.</div>
+            <div class="info-value">+91 98765 43210</div>
+        </a>
+        <a class="info-card" href="tel:+91 90810 94946">
+            <span class="info-icon">📱</span>
+            <div class="info-title">સંપર્ક નં.</div>
+            <div class="info-value">+91 90810 94945</div>
+        </a>
+
+        <a class="info-card green" href="mailto:bjpwings@bjp.org">
+            <span class="info-icon">✉️</span>
+            <div class="info-title">ઈ-મેઇલ</div>
+            <div class="info-value">bjpwings@bjp.org</div>
+        </a>
+
+        <a class="info-card navy" href="https://bjpwings.in" target="_blank">
+            <span class="info-icon">🌐</span>
+            <div class="info-title">વેબસાઇટ</div>
+            <div class="info-value">bjpwings.in</div>
+        </a>
+    </div>
+
+    <!-- ABOUT SECTION -->
+    <div class="about-section fade-up delay-3">
+        <div class="about-title">🪷 BJP Wings વિશે</div>
+        <div class="about-text">
+            <strong>BJP Wings</strong> એ ભારતીય જનતા પાર્ટીનો એક ડિજિટલ પ્લેટફોર્મ છે. અમારો હેતુ <strong>યુવા, મહિલા અને કાર્યકર્તાઓ</strong>ને એક સૂત્રમાં જોડવાનો છે.<br><br>
+            🇮🇳 &nbsp;<strong>રાષ્ટ્ર પ્રથમ</strong> – અમારી વિચારધારા<br>
+            🌸 &nbsp;<strong>સ્વચ્છ ભારત</strong> – અમારું સ્વપ્ન<br>
+            🏆 &nbsp;<strong>ડિજિટલ ઇન્ડિયા</strong> – અમારો ઉદ્દેશ
+        </div>
+    </div>
+
+    <!-- SOCIAL LINKS -->
+    <div class="social-row fade-up delay-3">
+        <a class="social-btn" href="#">
+            <span class="s-icon">📘</span>
+            <span class="s-label">Facebook</span>
+        </a>
+       
+        <a class="social-btn" href="#">
+            <span class="s-icon">📸</span>
+            <span class="s-label">Instagram</span>
+        </a>
+        <a class="social-btn" href="#">
+            <span class="s-icon">▶️</span>
+            <span class="s-label">YouTube</span>
+        </a>
+        <a class="social-btn" href="#">
+            <span class="s-icon">💬</span>
+            <span class="s-label">WhatsApp</span>
+        </a>
+    </div>
+
+   
+
+    <!-- FOOTER -->
+    <div class="footer fade-up delay-5">
+        <div class="footer-logo">BJP <span>WINGS</span></div>
+        <div class="footer-gu">🪷 &nbsp;ભારત માતા કી જય &nbsp;🇮🇳</div>
+        <div class="footer-copy">© 2026 BJP Wings. All Rights Reserved.<br>Design & Develop by HL Group of Company</div>
+    </div>
+
+    <script>
+        function submitForm() {
+            var inputs = document.querySelectorAll('.field-input, .field-textarea, .field-select');
+            var valid = true;
+            inputs.forEach(function (el) {
+                if (!el.value.trim()) {
+                    el.style.borderColor = '#e53935';
+                    el.style.boxShadow = '0 0 0 3px rgba(229,57,53,0.15)';
+                    valid = false;
+                    setTimeout(function () {
+                        el.style.borderColor = 'rgba(255,107,0,0.2)';
+                        el.style.boxShadow = 'none';
+                    }, 2000);
+                }
+            });
+            if (valid) {
+                document.getElementById('successMsg').style.display = 'block';
+                inputs.forEach(function (el) { el.value = ''; });
+                document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    </script>
+
+</body>
+</html>

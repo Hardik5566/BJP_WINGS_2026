@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#22434e" />
+  <title>Live voting sheet — scan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue-900: #1c3842;
+      --blue-850: #22434e;
+      --blue-800: #2a505c;
+      --bg: #ebeef0;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #22434e;
+      --border: #d5e0e3;
+      --card-outline: #b8cad0;
+      --radius: 18px;
+      --shadow: 0 4px 20px rgba(15, 23, 42, 0.055);
+      --font: "DM Sans", system-ui, sans-serif;
+      --grad-header: linear-gradient(165deg, var(--blue-900) 0%, var(--blue-850) 100%);
+      --marked: #22c55e;
+      --marked-text: #052e16;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: linear-gradient(180deg, var(--bg) 0%, #f4f6fa 100%);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.45;
+      padding: 0 0 max(28px, env(safe-area-inset-bottom));
+      -webkit-font-smoothing: antialiased;
+    }
+    .page-header {
+      padding: calc(16px + env(safe-area-inset-top)) 18px 20px;
+      background: var(--grad-header);
+      color: #fff;
+    }
+    .page-header h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+    .page-header p { margin-top: 6px; font-size: 13px; opacity: 0.9; }
+    .app { max-width: 960px; margin: 0 auto; padding: 14px; }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--card-outline);
+      margin-bottom: 14px;
+    }
+    .row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .btn {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--card-outline);
+      background: #f8fafc;
+      color: var(--text);
+      cursor: pointer;
+      flex: 1;
+      min-width: 140px;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary {
+      background: var(--blue-850);
+      color: #fff;
+      border-color: var(--blue-800);
+    }
+    .btn-danger { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .hidden { display: none !important; }
+    #videoWrap {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #0f172a;
+      aspect-ratio: 4/3;
+      max-height: 56vh;
+    }
+    #videoEl {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hint { font-size: 12px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+    .stage {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #0f172a;
+      touch-action: none;
+    }
+    #board {
+      display: block;
+      width: 100%;
+      height: auto;
+      vertical-align: middle;
+      user-select: none;
+    }
+    .handles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .handle {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      margin: -14px 0 0 -14px;
+      border-radius: 50%;
+      background: #fbbf24;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+      pointer-events: auto;
+      cursor: grab;
+      touch-action: none;
+    }
+    .handle:active { cursor: grabbing; }
+    .poly-line {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .slider-row label { font-size: 12px; font-weight: 600; color: var(--muted); min-width: 110px; }
+    input[type="range"] { flex: 1; }
+    .stats { font-size: 13px; color: var(--muted); margin-top: 8px; }
+    .stats strong { color: var(--text); }
+    .grid-wrap {
+      overflow: auto;
+      max-height: 70vh;
+      border-radius: 12px;
+      border: 1px solid var(--card-outline);
+      background: #fff;
+    }
+    #resultGrid {
+      display: grid;
+      grid-template-columns: repeat(21, minmax(0, 1fr));
+      gap: 1px;
+      padding: 4px;
+      background: var(--border);
+      min-width: 420px;
+    }
+    #resultGrid .cell {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(7px, 1.6vw, 11px);
+      font-weight: 600;
+      background: #fff;
+      color: var(--text);
+    }
+    #resultGrid .cell.marked {
+      background: var(--marked);
+      color: var(--marked-text);
+    }
+    input[type="file"] { display: none; }
+    .sec { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-800); margin-bottom: 10px; }
+    .preview-wrap { margin-bottom: 12px; }
+    #warpPreview {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid var(--card-outline);
+      background: #0f172a;
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <h1>Live voting sheet</h1>
+    <p>Camera or gallery → align corners → scan. <strong>Green</strong> = stamp / blue–purple ink detected. <strong>White</strong> = clean cell (no mark ink). Use the preview to check corners.</p>
+  </header>
+
+  <main class="app">
+    <section class="card" id="stepPick">
+      <div class="sec">Source</div>
+      <div class="row-actions">
+        <button type="button" class="btn btn-primary" id="btnCamera">Live capture</button>
+        <button type="button" class="btn btn-primary" id="btnGallery">Upload from gallery</button>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" />
+      <p class="hint">Drag corners tightly around the <strong>number grid</strong> (inside the thin cell border). Bad corners = wrong cells. After scan, check the <strong>warped preview</strong> below.</p>
+    </section>
+
+    <section class="card hidden" id="stepCamera">
+      <div class="sec">Camera</div>
+      <div id="videoWrap">
+        <video id="videoEl" playsinline autoplay muted></video>
+      </div>
+      <div class="row-actions">
+        <button type="button" class="btn btn-primary" id="btnSnap">Capture photo</button>
+        <button type="button" class="btn btn-danger" id="btnCamCancel">Cancel</button>
+      </div>
+    </section>
+
+    <section class="card hidden" id="stepEdit">
+      <div class="sec">Align grid</div>
+      <p class="hint">Corners: top-left → top-right → bottom-right → bottom-left of the cell area.</p>
+      <div class="stage" id="stage">
+        <canvas id="board"></canvas>
+        <svg class="poly-line" id="polySvg" xmlns="http://www.w3.org/2000/svg">
+          <polygon id="poly" fill="rgba(34, 67, 78, 0.12)" stroke="rgba(255,255,255,0.85)" stroke-width="2" />
+        </svg>
+        <div class="handles" id="handles"></div>
+      </div>
+      <div class="slider-row">
+        <label for="sens">Mark strength</label>
+        <input type="range" id="sens" min="5" max="100" value="62" />
+      </div>
+      <p class="hint" style="margin-top:8px">Higher = more cells turn <strong>green</strong> (weaker marks still count). Lower if too many false greens.</p>
+      <div class="row-actions">
+        <button type="button" class="btn btn-primary" id="btnScan">Scan grid</button>
+        <button type="button" class="btn" id="btnResetCorners">Reset corners</button>
+        <button type="button" class="btn" id="btnNewImage">New image</button>
+      </div>
+      <p class="stats" id="statsLine"></p>
+    </section>
+
+    <section class="card hidden" id="stepResult">
+      <div class="sec">Result (1–735, column-wise)</div>
+      <p class="hint">Each <strong>row</strong> reads like the paper: 1, 36, 71… then 2, 37, 72… <strong>Green</strong> = blue / purple / stamp ink found in that cell. <strong>White</strong> = no mark ink (clean print).</p>
+      <div class="preview-wrap hidden" id="warpPreviewWrap">
+        <div class="sec" style="margin-top:0">Warped grid (check alignment)</div>
+        <canvas id="warpPreview"></canvas>
+      </div>
+      <div class="grid-wrap">
+        <div id="resultGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+(function () {
+  const GRID_COLS = 21;
+  const GRID_ROWS = 35;
+  const TOTAL = GRID_COLS * GRID_ROWS;
+  const CELL = 34;
+  const OUT_W = GRID_COLS * CELL;
+  const OUT_H = GRID_ROWS * CELL;
+  const MAX_IMG_SIDE = 2000;
+
+  const $ = (id) => document.getElementById(id);
+  const stepPick = $("stepPick");
+  const stepCamera = $("stepCamera");
+  const stepEdit = $("stepEdit");
+  const stepResult = $("stepResult");
+  const videoEl = $("videoEl");
+  const board = $("board");
+  const ctx = board.getContext("2d", { willReadFrequently: true });
+  const handlesEl = $("handles");
+  const poly = $("poly");
+  const fileInput = $("fileInput");
+  const sensEl = $("sens");
+  const statsLine = $("statsLine");
+  const resultGrid = $("resultGrid");
+  const warpPreviewWrap = $("warpPreviewWrap");
+  const warpPreview = $("warpPreview");
+
+  let stream = null;
+  let corners = [];
+  let imgW = 0, imgH = 0;
+  let dragIdx = -1;
+
+  function show(el, on) { el.classList.toggle("hidden", !on); }
+
+  function stopCamera() {
+    if (stream) {
+      stream.getTracks().forEach((t) => t.stop());
+      stream = null;
+    }
+    videoEl.srcObject = null;
+  }
+
+  $("btnCamera").addEventListener("click", async () => {
+    stopCamera();
+    show(stepPick, false);
+    show(stepCamera, true);
+    show(stepEdit, false);
+    show(stepResult, false);
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+        audio: false,
+      });
+      videoEl.srcObject = stream;
+    } catch (e) {
+      alert("Camera not available: " + (e && e.message ? e.message : e) + "\nUse “Upload from gallery” or HTTPS.");
+      show(stepPick, true);
+      show(stepCamera, false);
+    }
+  });
+
+  $("btnCamCancel").addEventListener("click", () => {
+    stopCamera();
+    show(stepPick, true);
+    show(stepCamera, false);
+  });
+
+  $("btnGallery").addEventListener("click", () => fileInput.click());
+
+  fileInput.addEventListener("change", () => {
+    const f = fileInput.files && fileInput.files[0];
+    if (!f) return;
+    const url = URL.createObjectURL(f);
+    const im = new Image();
+    im.onload = () => {
+      URL.revokeObjectURL(url);
+      openEditorFromImage(im);
+    };
+    im.onerror = () => {
+      URL.revokeObjectURL(url);
+      alert("Could not read image.");
+    };
+    im.src = url;
+    fileInput.value = "";
+  });
+
+  $("btnSnap").addEventListener("click", () => {
+    if (!videoEl.videoWidth) return;
+    const c = document.createElement("canvas");
+    c.width = videoEl.videoWidth;
+    c.height = videoEl.videoHeight;
+    c.getContext("2d").drawImage(videoEl, 0, 0);
+    const im = new Image();
+    im.onload = () => {
+      stopCamera();
+      show(stepCamera, false);
+      openEditorFromImage(im);
+    };
+    im.src = c.toDataURL("image/jpeg", 0.92);
+  });
+
+  function scaleToMax(nw, nh) {
+    const m = Math.max(nw, nh);
+    if (m <= MAX_IMG_SIDE) return { w: nw, h: nh };
+    const s = MAX_IMG_SIDE / m;
+    return { w: Math.round(nw * s), h: Math.round(nh * s) };
+  }
+
+  function openEditorFromImage(image) {
+    const { w, h } = scaleToMax(image.naturalWidth, image.naturalHeight);
+    imgW = w;
+    imgH = h;
+    board.width = w;
+    board.height = h;
+    ctx.drawImage(image, 0, 0, w, h);
+    const pad = Math.round(Math.min(w, h) * 0.06);
+    corners = [
+      { x: pad, y: pad },
+      { x: w - pad, y: pad },
+      { x: w - pad, y: h - pad },
+      { x: pad, y: h - pad },
+    ];
+    show(stepPick, false);
+    show(stepCamera, false);
+    show(stepEdit, true);
+    show(stepResult, false);
+    requestAnimationFrame(() => {
+      layoutStage();
+      renderHandles();
+    });
+  }
+
+  function layoutStage() {
+    const polySvg = $("polySvg");
+    polySvg.setAttribute("viewBox", "0 0 " + imgW + " " + imgH);
+    polySvg.setAttribute("preserveAspectRatio", "none");
+    polySvg.style.width = "100%";
+    polySvg.style.height = "100%";
+    updatePoly();
+  }
+
+  function updatePoly() {
+    const pts = corners.map((p) => p.x + "," + p.y).join(" ");
+    poly.setAttribute("points", pts);
+  }
+
+  function renderHandles() {
+    handlesEl.innerHTML = "";
+    corners.forEach((p, i) => {
+      const el = document.createElement("div");
+      el.className = "handle";
+      el.dataset.i = String(i);
+      el.style.left = (p.x / imgW) * 100 + "%";
+      el.style.top = (p.y / imgH) * 100 + "%";
+      el.addEventListener("pointerdown", onHandleDown);
+      handlesEl.appendChild(el);
+    });
+    updatePoly();
+  }
+
+  function onHandleDown(e) {
+    e.preventDefault();
+    const el = e.currentTarget;
+    dragIdx = +el.dataset.i;
+    el.setPointerCapture(e.pointerId);
+    el.addEventListener("pointermove", onHandleMove);
+    el.addEventListener("pointerup", onHandleUp);
+    el.addEventListener("pointercancel", onHandleUp);
+  }
+
+  function onHandleMove(e) {
+    if (dragIdx < 0) return;
+    const st = document.getElementById("stage").getBoundingClientRect();
+    let x = ((e.clientX - st.left) / st.width) * imgW;
+    let y = ((e.clientY - st.top) / st.height) * imgH;
+    x = Math.max(0, Math.min(imgW, x));
+    y = Math.max(0, Math.min(imgH, y));
+    corners[dragIdx] = { x, y };
+    const h = handlesEl.children[dragIdx];
+    h.style.left = (x / imgW) * 100 + "%";
+    h.style.top = (y / imgH) * 100 + "%";
+    updatePoly();
+  }
+
+  function onHandleUp(e) {
+    const el = e.currentTarget;
+    el.releasePointerCapture(e.pointerId);
+    el.removeEventListener("pointermove", onHandleMove);
+    el.removeEventListener("pointerup", onHandleUp);
+    el.removeEventListener("pointercancel", onHandleUp);
+    dragIdx = -1;
+  }
+
+  $("btnResetCorners").addEventListener("click", () => {
+    const pad = Math.round(Math.min(imgW, imgH) * 0.06);
+    corners = [
+      { x: pad, y: pad },
+      { x: imgW - pad, y: pad },
+      { x: imgW - pad, y: imgH - pad },
+      { x: pad, y: imgH - pad },
+    ];
+    renderHandles();
+  });
+
+  $("btnNewImage").addEventListener("click", () => {
+    show(stepPick, true);
+    show(stepEdit, false);
+    show(stepResult, false);
+    statsLine.textContent = "";
+    if (warpPreviewWrap) warpPreviewWrap.classList.add("hidden");
+  });
+
+  window.addEventListener("resize", () => {
+    if (!stepEdit.classList.contains("hidden")) layoutStage();
+  });
+
+  function solveHomography8(src, dst) {
+    const M = [];
+    for (let i = 0; i < 4; i++) {
+      const sx = src[i].x, sy = src[i].y;
+      const dx = dst[i].x, dy = dst[i].y;
+      M.push([sx, sy, 1, 0, 0, 0, -dx * sx, -dx * sy, dx]);
+      M.push([0, 0, 0, sx, sy, 1, -dy * sx, -dy * sy, dy]);
+    }
+    const n = 8;
+    for (let col = 0; col < n; col++) {
+      let piv = col;
+      for (let r = col; r < n; r++) {
+        if (Math.abs(M[r][col]) > Math.abs(M[piv][col])) piv = r;
+      }
+      if (Math.abs(M[piv][col]) < 1e-10) throw new Error("Corners are degenerate; adjust them.");
+      const tmp = M[col];
+      M[col] = M[piv];
+      M[piv] = tmp;
+      const div = M[col][col];
+      for (let c = col; c <= n; c++) M[col][c] /= div;
+      for (let r = 0; r < n; r++) {
+        if (r === col) continue;
+        const f = M[r][col];
+        if (Math.abs(f) < 1e-15) continue;
+        for (let c = col; c <= n; c++) M[r][c] -= f * M[col][c];
+      }
+    }
+    const h = M.map((row) => row[n]);
+    return [h[0], h[1], h[2], h[3], h[4], h[5], h[6], h[7], 1];
+  }
+
+  function mat3inv(H) {
+    const a = H[0], b = H[1], c = H[2];
+    const d = H[3], e = H[4], f = H[5];
+    const g = H[6], h = H[7], i = H[8];
+    const A = e * i - f * h;
+    const B = -(d * i - f * g);
+    const C = d * h - e * g;
+    const D = -(b * i - c * h);
+    const E = a * i - c * g;
+    const F = -(a * h - b * g);
+    const G = b * f - c * e;
+    const H2 = -(a * f - c * d);
+    const I = a * e - b * d;
+    const det = a * A + b * B + c * C;
+    if (Math.abs(det) < 1e-12) throw new Error("Singular transform.");
+    const invDet = 1 / det;
+    return [A * invDet, D * invDet, G * invDet, B * invDet, E * invDet, H2 * invDet, C * invDet, F * invDet, I * invDet];
+  }
+
+  function applyH(H, x, y) {
+    const X = H[0] * x + H[1] * y + H[2];
+    const Y = H[3] * x + H[4] * y + H[5];
+    const Z = H[6] * x + H[7] * y + H[8];
+    return { x: X / Z, y: Y / Z };
+  }
+
+  function bilinear(data, w, h, x, y) {
+    if (x < 0 || y < 0 || x >= w - 1 || y >= h - 1) return [255, 255, 255, 255];
+    const x0 = Math.floor(x), y0 = Math.floor(y);
+    const x1 = x0 + 1, y1 = y0 + 1;
+    const fx = x - x0, fy = y - y0;
+    const i = (xi, yi) => ((yi * w + xi) << 2);
+    const w00 = (1 - fx) * (1 - fy), w10 = fx * (1 - fy), w01 = (1 - fx) * fy, w11 = fx * fy;
+    const o00 = i(x0, y0), o10 = i(x1, y0), o01 = i(x0, y1), o11 = i(x1, y1);
+    const r = data[o00] * w00 + data[o10] * w10 + data[o01] * w01 + data[o11] * w11;
+    const g = data[o00 + 1] * w00 + data[o10 + 1] * w10 + data[o01 + 1] * w01 + data[o11 + 1] * w11;
+    const b = data[o00 + 2] * w00 + data[o10 + 2] * w10 + data[o01 + 2] * w01 + data[o11 + 2] * w11;
+    const a = data[o00 + 3] * w00 + data[o10 + 3] * w10 + data[o01 + 3] * w01 + data[o11 + 3] * w11;
+    return [r, g, b, a];
+  }
+
+  function luminance255(r, g, b) {
+    return 0.299 * r + 0.587 * g + 0.114 * b;
+  }
+
+  function rgbToHsv(r, g, b) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const d = max - min;
+    let Hh = 0;
+    if (d > 1e-5) {
+      if (max === r) Hh = (((g - b) / d) % 6) / 6;
+      else if (max === g) Hh = ((b - r) / d + 2) / 6;
+      else Hh = ((r - g) / d + 4) / 6;
+      if (Hh < 0) Hh += 1;
+    }
+    const S = max > 1e-5 ? d / max : 0;
+    const V = max;
+    return [Hh * 360, S, V];
+  }
+
+  /**
+   * Voting-stamp ink: blue / navy / purple / violet blot (often dark).
+   * Black printed digits: R≈G≈B, low chroma relative to luminance — reject as "neutral ink".
+   */
+  function isNeutralBlackPrint(r, g, b) {
+    const L = luminance255(r, g, b);
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const chroma = max - min;
+    if (L > 155) return false;
+    if (chroma > 52) return false;
+    const avg = (r + g + b) / 3;
+    const spread = Math.max(Math.abs(r - avg), Math.abs(g - avg), Math.abs(b - avg));
+    if (L < 135 && chroma < 42 && spread < 38) return true;
+    if (L < 95 && chroma < 58) return true;
+    return false;
+  }
+
+  /** Returns 0..1 soft weight so small stamps still accumulate signal. */
+  function markInkWeight(r, g, b) {
+    const L = luminance255(r, g, b);
+    if (L > 244) return 0;
+    if (isNeutralBlackPrint(r, g, b)) return 0;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const chroma = max - min;
+    const [Hh, S, V] = rgbToHsv(r, g, b);
+    const exB = b - 0.5 * (r + g);
+    const exR = r - 0.5 * (g + b);
+
+    let w = 0;
+
+    if (chroma < 10) return 0;
+
+    if (exB > 5 && chroma >= 11 && L < 228 && L > 22) {
+      w = Math.max(w, 0.55 + Math.min(0.45, (exB - 5) / 55 + (chroma - 11) / 120));
+    }
+    if (b > g + 6 && b > r - 18 && chroma >= 12 && L < 222 && L > 24) {
+      w = Math.max(w, 0.5 + Math.min(0.5, (b - g) / 90 + chroma / 140));
+    }
+    if ((Hh >= 175 && Hh <= 310 && S > 0.022) && L < 232 && L > 26 && chroma >= 11) {
+      w = Math.max(w, 0.45 + Math.min(0.55, S * 1.1 + chroma / 100));
+    }
+    if (r > 32 && b > 34 && g < Math.min(r, b) * 0.96 && chroma > 13 && L < 228 && L > 28) {
+      w = Math.max(w, 0.42 + Math.min(0.58, chroma / 85 + exR / 120));
+    }
+    if (chroma > 18 && L > 38 && L < 200 && Hh >= 200 && Hh <= 285 && S > 0.03) {
+      w = Math.max(w, 0.4 + Math.min(0.6, (chroma - 18) / 70));
+    }
+
+    if (w > 0 && L > 218) w *= 0.55;
+    return Math.min(1, w);
+  }
+
+  function warpInverse(srcData, sw, sh, Hinv, ow, oh) {
+    const out = new ImageData(ow, oh);
+    const d = out.data;
+    for (let oy = 0; oy < oh; oy++) {
+      for (let ox = 0; ox < ow; ox++) {
+        const p = applyH(Hinv, ox + 0.5, oy + 0.5);
+        const [r, g, b, a] = bilinear(srcData, sw, sh, p.x, p.y);
+        const j = (oy * ow + ox) << 2;
+        d[j] = r;
+        d[j + 1] = g;
+        d[j + 2] = b;
+        d[j + 3] = a;
+      }
+    }
+    return out;
+  }
+
+  /** Per cell: weighted stamp signal + simple layout stats (for optional veto). */
+  function scoreCellPixels(data, ow, ox0, oy0, cw, ch) {
+    const edge = Math.max(5, Math.round(cw * 0.16));
+    let total = 0;
+    let markW = 0;
+    let markHit = 0;
+    let paper = 0;
+    let ink = 0;
+    let lumSum = 0;
+    let lumSqSum = 0;
+    for (let y = edge; y < ch - edge; y++) {
+      for (let x = edge; x < cw - edge; x++) {
+        const xi = ox0 + x;
+        const yi = oy0 + y;
+        const j = (yi * ow + xi) << 2;
+        const r = data[j],
+          g = data[j + 1],
+          b = data[j + 2];
+        total++;
+        const w = markInkWeight(r, g, b);
+        markW += w;
+        if (w >= 0.42) markHit++;
+        const Ln = luminance255(r, g, b) / 255;
+        lumSum += Ln;
+        lumSqSum += Ln * Ln;
+        if (Ln > 0.68) paper++;
+        if (Ln < 0.48 && Ln > 0.05) ink++;
+      }
+    }
+    if (total < 1) {
+      return { markMean: 1, markRatio: 1, paperRatio: 0, inkRatio: 0, lumVar: 0, meanLum: 0 };
+    }
+    const meanL = lumSum / total;
+    const lumVar = Math.max(0, lumSqSum / total - meanL * meanL);
+    return {
+      markMean: markW / total,
+      markRatio: markHit / total,
+      paperRatio: paper / total,
+      inkRatio: ink / total,
+      meanLum: meanL,
+      lumVar: lumVar,
+    };
+  }
+
+  /**
+   * Green = marked. sens high → easier green (lower threshold).
+   * Uses mean soft weight + hit ratio so faint blue/purple stamps register.
+   */
+  function classifyMarkedGreen(s, sens) {
+    const t = Math.min(1, Math.max(0, sens / 100));
+    const thMean = 0.028 - t * 0.019;
+    const thHit = 0.0036 - t * 0.0029;
+    if (s.markMean >= thMean) return true;
+    if (s.markRatio >= thHit) return true;
+    if (s.markMean >= thMean * 0.78 && s.markRatio >= thHit * 0.65 && s.paperRatio > 0.16) return true;
+    return false;
+  }
+
+  function drawWarpPreview(imgData) {
+    if (!warpPreview || !warpPreviewWrap) return;
+    const oc = document.createElement("canvas");
+    oc.width = OUT_W;
+    oc.height = OUT_H;
+    oc.getContext("2d").putImageData(imgData, 0, 0);
+    const maxW = Math.min(720, Math.max(280, window.innerWidth - 36));
+    const sc = maxW / OUT_W;
+    const pw = Math.round(OUT_W * sc);
+    const ph = Math.round(OUT_H * sc);
+    warpPreview.width = pw;
+    warpPreview.height = ph;
+    const pctx = warpPreview.getContext("2d");
+    pctx.imageSmoothingEnabled = true;
+    pctx.imageSmoothingQuality = "high";
+    pctx.drawImage(oc, 0, 0, pw, ph);
+    warpPreviewWrap.classList.remove("hidden");
+  }
+
+  $("btnScan").addEventListener("click", () => {
+    const src = ctx.getImageData(0, 0, imgW, imgH);
+    const dstRect = [
+      { x: 0, y: 0 },
+      { x: OUT_W - 1, y: 0 },
+      { x: OUT_W - 1, y: OUT_H - 1 },
+      { x: 0, y: OUT_H - 1 },
+    ];
+    let H;
+    try {
+      H = solveHomography8(corners, dstRect);
+    } catch (err) {
+      alert(err.message || String(err));
+      return;
+    }
+    const Hinv = mat3inv(H);
+    let warped;
+    try {
+      warped = warpInverse(src.data, imgW, imgH, Hinv, OUT_W, OUT_H);
+    } catch (err) {
+      alert(err.message || String(err));
+      return;
+    }
+    const sens = +sensEl.value;
+    const marked = new Array(TOTAL);
+    let markedCount = 0;
+    let sumMarkMean = 0;
+    for (let col = 0; col < GRID_COLS; col++) {
+      for (let row = 0; row < GRID_ROWS; row++) {
+        const ox0 = col * CELL;
+        const oy0 = row * CELL;
+        const idx = col * GRID_ROWS + row;
+        const s = scoreCellPixels(warped.data, OUT_W, ox0, oy0, CELL, CELL);
+        sumMarkMean += s.markMean;
+        const m = classifyMarkedGreen(s, sens);
+        marked[idx] = m;
+        if (m) markedCount++;
+      }
+    }
+    const whiteCount = TOTAL - markedCount;
+    const avgMu = sumMarkMean / TOTAL;
+    statsLine.innerHTML =
+      "Marked (green): <strong>" +
+      markedCount +
+      "</strong> · Unmarked (white): <strong>" +
+      whiteCount +
+      "</strong> · Mark strength " +
+      sens +
+      " · Avg stamp signal/cell <strong>" +
+      (avgMu * 100).toFixed(2) +
+      "%</strong> (if ~0%, corners or photo; raise strength)";
+
+    drawWarpPreview(warped);
+
+    resultGrid.innerHTML = "";
+    for (let row = 0; row < GRID_ROWS; row++) {
+      for (let col = 0; col < GRID_COLS; col++) {
+        const idx = col * GRID_ROWS + row;
+        const n = idx + 1;
+        const div = document.createElement("div");
+        div.className = "cell" + (marked[idx] ? " marked" : "");
+        div.textContent = String(n);
+        resultGrid.appendChild(div);
+      }
+    }
+    show(stepResult, true);
+  });
+
+  sensEl.addEventListener("input", () => {
+    if (!stepResult.classList.contains("hidden")) $("btnScan").click();
+  });
+})();
+  </script>
+</body>
+</html>

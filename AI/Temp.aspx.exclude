@@ -1,0 +1,233 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Temp.aspx.cs" Inherits="AI_Temp" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+   <title>🇮🇳 BJP Wings - Complete AI System</title>
+   <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Arial Unicode MS', Arial, sans-serif; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: #ff9933; color: white; padding: 25px; text-align: center; }
+        .header h1 { font-size: 36px; }
+        .main-content { padding: 30px; }
+        
+        .question-box { 
+            width: 100%; padding: 20px; font-size: 18px; border: 2px solid #e0e0e0; 
+            border-radius: 10px; margin-bottom: 20px; resize: vertical; 
+        }
+        
+        .btn { 
+            padding: 12px 30px; font-size: 16px; border: none; border-radius: 8px; 
+            cursor: pointer; margin-right: 10px; font-weight: bold;
+        }
+        .btn-primary { background: #ff9933; color: white; }
+        .btn-primary:hover { background: #e68a00; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        
+        .stats-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+            gap: 15px; margin-bottom: 30px; 
+        }
+        .stat-card { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; padding: 20px; border-radius: 10px; text-align: center; 
+        }
+        .stat-value { font-size: 32px; font-weight: bold; }
+        
+        .suggestion-chips { 
+            display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0; 
+        }
+        .chip { 
+            background: #e9ecef; padding: 8px 16px; border-radius: 20px; 
+            cursor: pointer; font-size: 14px; border: none;
+        }
+        .chip:hover { background: #ff9933; color: white; }
+        
+        .loading { 
+            text-align: center; padding: 40px; 
+            background: rgba(255,255,255,0.9); border-radius: 10px;
+        }
+        .spinner { 
+            border: 5px solid #f3f3f3; border-top: 5px solid #ff9933; 
+            border-radius: 50%; width: 50px; height: 50px; 
+            animation: spin 1s linear infinite; margin: 0 auto 20px; 
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .result-section { margin-top: 30px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab { 
+            padding: 10px 25px; cursor: pointer; border-radius: 5px;
+            background: #f0f0f0; font-weight: bold;
+        }
+        .tab.active { background: #ff9933; color: white; }
+        
+        .answer-box { 
+            background: #f0f8ff; padding: 25px; border-radius: 10px; 
+            border-left: 5px solid #ff9933; font-size: 18px; line-height: 1.6;
+        }
+        .sql-box { 
+            background: #2d2d2d; color: #f8f8f2; padding: 20px; 
+            border-radius: 10px; font-family: monospace; overflow-x: auto; 
+        }
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th { background: #ff9933; color: white; padding: 12px; }
+        .data-table td { padding: 10px; border-bottom: 1px solid #ddd; }
+        .error { background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+        
+        <div class="container">
+            <div class="header">
+                <h1>🇮🇳 BJP Wings - Azure AI System</h1>
+                <p>તમારા ડેટાબેઝ વિશે કંઈપણ પૂછો | Ask anything in Gujarati/Hindi/English</p>
+            </div>
+            
+            <div class="main-content">
+                <!-- Statistics Section -->
+                <asp:UpdatePanel ID="upStats" runat="server" UpdateMode="Conditional">
+                    <ContentTemplate>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value"><asp:Label ID="lblVoters" runat="server">0</asp:Label></div>
+                                <div>કુલ મતદારો</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value"><asp:Label ID="lblSupporters" runat="server">0</asp:Label></div>
+                                <div>સપોર્ટર</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value"><asp:Label ID="lblOpposers" runat="server">0</asp:Label></div>
+                                <div>વિરોધી</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value"><asp:Label ID="lblBooths" runat="server">0</asp:Label></div>
+                                <div>બૂથ</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value"><asp:Label ID="lblWorkers" runat="server">0</asp:Label></div>
+                                <div>કાર્યકર્તા</div>
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+                
+                <!-- Question Input -->
+                <asp:TextBox ID="txtQuestion" runat="server" 
+                    TextMode="MultiLine" 
+                    Rows="3" 
+                    CssClass="question-box"
+                    placeholder="તમારો પ્રશ્ન લખો... (ગુજરાતી/હિન્દી/અંગ્રેજી)
+
+ઉદાહરણ:
+• બૂથ નંબર 2 ના સપોર્ટર બતાવો
+• 30 વર્ષથી ઓછી મહિલા મતદારો
+• Show voters from family_id = 100
+• कितने युवा समर्थक हैं?" />
+                
+                <asp:Button ID="btnAsk" runat="server" 
+                    Text="🔍 AI ને પૂછો" 
+                    CssClass="btn btn-primary" 
+                    OnClick="btnAsk_Click" />
+                    
+                <asp:Button ID="btnClear" runat="server" 
+                    Text="🔄 સાફ કરો" 
+                    CssClass="btn btn-secondary" 
+                    OnClick="btnClear_Click" />
+                    
+                <asp:Button ID="btnRefreshStats" runat="server" 
+                    Text="📊 આંકડા તાજા કરો" 
+                    CssClass="btn btn-success" 
+                    OnClick="btnRefreshStats_Click" />
+                
+                <!-- Suggestion Chips - FIXED: Added OnClick event -->
+                <div class="suggestion-chips">
+                    <asp:Repeater ID="rptSuggestions" runat="server">
+                        <ItemTemplate>
+                            <%--<asp:LinkButton ID="btnSuggestion" runat="server" 
+                                Text='<%# Container.DataItem %>' 
+                                CssClass="chip"
+                                OnClick="Suggestion_Click"  <!-- ✅ This event is now in C# code -->
+                                CommandArgument='<%# Container.DataItem %>'>
+                            </asp:LinkButton>--%>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                </div>
+                
+                <!-- Loading Indicator -->
+                <asp:UpdateProgress ID="upProgress" runat="server" AssociatedUpdatePanelID="upResult">
+                    <ProgressTemplate>
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>🤖 Azure AI વિચારી રહ્યું છે... કૃપા કરીને રાહ જુઓ</p>
+                        </div>
+                    </ProgressTemplate>
+                </asp:UpdateProgress>
+                
+                <!-- Results Section -->
+                <asp:UpdatePanel ID="upResult" runat="server" UpdateMode="Conditional">
+                    <ContentTemplate>
+                        <asp:Label ID="lblError" runat="server" CssClass="error" Visible="false"></asp:Label>
+                        
+                        <div runat="server" id="divResults" visible="false" class="result-section">
+                            <!-- Tabs -->
+                            <div class="tabs">
+                                <div class="tab active" onclick="showTab('answer')">🤖 જવાબ</div>
+                                <div class="tab" onclick="showTab('sql')">📝 SQL ક્વેરી</div>
+                                <div class="tab" onclick="showTab('data')">📊 ડેટા</div>
+                            </div>
+                            
+                            <!-- Answer Tab -->
+                            <div id="tabAnswer" style="display:block;">
+                                <div class="answer-box">
+                                    <asp:Label ID="lblAnswer" runat="server"></asp:Label>
+                                </div>
+                            </div>
+                            
+                            <!-- SQL Tab -->
+                            <div id="tabSQL" style="display:none;">
+                                <div class="sql-box">
+                                    <asp:Label ID="lblSQL" runat="server"></asp:Label>
+                                </div>
+                            </div>
+                            
+                            <!-- Data Tab -->
+                            <div id="tabData" style="display:none;">
+                                <asp:GridView ID="gvResult" runat="server" 
+                                    CssClass="data-table"
+                                    AutoGenerateColumns="true"
+                                    AllowPaging="true"
+                                    PageSize="20"
+                                    OnPageIndexChanging="gvResult_PageIndexChanging" />
+                                <p style="margin-top:10px;">
+                                    <asp:Label ID="lblRowCount" runat="server"></asp:Label>
+                                </p>
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+        </div>
+    </form>
+    
+    <script>
+        function showTab(tab) {
+            document.getElementById('tabAnswer').style.display = tab === 'answer' ? 'block' : 'none';
+            document.getElementById('tabSQL').style.display = tab === 'sql' ? 'block' : 'none';
+            document.getElementById('tabData').style.display = tab === 'data' ? 'block' : 'none';
+
+            // Update tab active state
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            if (tab === 'answer') document.querySelectorAll('.tab')[0].classList.add('active');
+            if (tab === 'sql') document.querySelectorAll('.tab')[1].classList.add('active');
+            if (tab === 'data') document.querySelectorAll('.tab')[2].classList.add('active');
+        }
+    </script>
+</body>
+</html>

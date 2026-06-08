@@ -1,0 +1,1306 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="app.aspx.cs" Inherits="app" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BJP Wings - ELECTION STRATEGIC PLANNING</title>
+    <meta name="description" content="BJP Wings: બૂથ મેનેજમેન્ટ, વોટર સર્વે અને ડિજિટલ ચૂંટણી પ્રચાર માટે મોબાઈલ એપ્લિકેશન.">
+
+<meta name="keywords" content="ચૂંટણી વ્યવસ્થાપન, વોટર સર્વે, બૂથ મેનેજમેન્ટ, BJP Wings, વ્યૂહાત્મક આયોજન, HL Group">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://maharashtra.bjpwings.com/app">
+<meta property="og:title" content="BJP Wings - ચૂંટણી વ્યૂહાત્મક આયોજન">
+<meta property="og:description" content="બૂથ મેનેજમેન્ટ, વોટર સર્વે અને ડિજિટલ પ્રચાર એપ. તમારી ચૂંટણીમાં જીત સુનિશ્ચિત કરવા માટે આજે જ ડાઉનલોડ કરો.">
+<meta property="og:image" content="https://maharashtra.bjpwings.com/img/bjp_logo_png.png">
+<meta property="og:site_name" content="BJP Wings">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BJP Wings - ચૂંટણી વ્યૂહાત્મક આયોજન">
+<meta name="twitter:description" content="કેડર મેનેજમેન્ટ અને વોટર સ્લિપ વિતરણ માટે સૌથી વિશ્વસનીય પ્લેટફોર્મ.">
+
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #22263a;
+            --accent: #4f9eff;
+            --accent2: #7c5cff;
+            --green: #01c39a;
+            --text: #e8eaf6;
+            --muted: #8a92b2;
+            --border: rgba(255,255,255,0.08);
+            --card-shadow: 0 8px 32px rgba(0,0,0,0.45);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+            body::before {
+                content: '';
+                position: fixed;
+                top: -200px;
+                left: -200px;
+                width: 700px;
+                height: 700px;
+                background: radial-gradient(circle, rgba(79,158,255,0.12), transparent 70%);
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            body::after {
+                content: '';
+                position: fixed;
+                bottom: -200px;
+                right: -100px;
+                width: 600px;
+                height: 600px;
+                background: radial-gradient(circle, rgba(124,92,255,0.10), transparent 70%);
+                pointer-events: none;
+                z-index: 0;
+            }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15,17,23,0.88);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .topbar-logo {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 45%, #B38728 55%, #FBF5B7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .topbar-nav {
+            display: flex;
+            gap: 28px;
+        }
+
+            .topbar-nav a {
+                color: var(--muted);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 500;
+                transition: color .2s;
+            }
+
+                .topbar-nav a:hover {
+                    color: var(--text);
+                }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative;
+            z-index: 1;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 52px 24px 36px;
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .app-icon-wrap {
+            flex-shrink: 0;
+            width: 108px;
+            height: 108px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 45%, #B38728 55%, #FBF5B7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 52px;
+            box-shadow: 0 8px 40px rgba(79,158,255,0.35);
+            animation: iconFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%,100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .hero-info {
+            flex: 1;
+            min-width: 240px;
+        }
+
+            .hero-info h1 {
+                font-family: 'Google Sans', sans-serif;
+                font-size: 30px;
+                font-weight: 700;
+                line-height: 1.2;
+                margin-bottom: 6px;
+            }
+
+        .hero-developer {
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .hero-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .tag {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        /* ── STATS ROW ── */
+        .stats-row {
+            display: flex;
+            gap: 0;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 22px;
+            background: var(--surface);
+        }
+
+        .stat-item {
+            flex: 1;
+            padding: 14px 10px;
+            text-align: center;
+            border-right: 1px solid var(--border);
+            transition: background .2s;
+        }
+
+            .stat-item:last-child {
+                border-right: none;
+            }
+
+            .stat-item:hover {
+                background: var(--surface2);
+            }
+
+        .stat-val {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .stars {
+            color: #ffd54f;
+            font-size: 13px;
+        }
+
+        /* ── ASP DOWNLOAD BUTTON ── */
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #fff !important;
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 24px rgba(79,158,255,0.4);
+            transition: transform .18s, box-shadow .18s, filter .18s;
+            position: relative;
+            overflow: hidden;
+            outline: none;
+        }
+
+            .btn-download:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 32px rgba(79,158,255,0.55);
+                filter: brightness(1.1);
+                color: #fff;
+                text-decoration: none;
+            }
+
+            .btn-download:active {
+                transform: scale(0.97);
+            }
+
+            .btn-download svg {
+                width: 20px;
+                height: 20px;
+                flex-shrink: 0;
+            }
+
+        /* Fix ASP.NET Button default styles */
+        input[type="submit"].btn-download,
+        input[type="button"].btn-download {
+            appearance: none;
+            -webkit-appearance: none;
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 13px 22px;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background .18s, border-color .18s;
+            margin-left: 12px;
+        }
+
+            .btn-secondary:hover {
+                background: var(--surface2);
+                border-color: var(--accent);
+                color: var(--text);
+            }
+
+        .apk-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .apk-info span {
+                color: var(--green);
+                font-weight: 500;
+            }
+
+        /* ── PROGRESS BAR ── */
+        .progress-wrap {
+            display: none;
+            width: 100%;
+            max-width: 300px;
+            margin: 14px 0 0;
+        }
+
+        .progress-track {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            border-radius: 2px;
+            transition: width .1s linear;
+        }
+
+        .progress-label {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: left;
+            margin-top: 6px;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            max-width: 960px;
+            margin: 0 auto;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── SECTIONS ── */
+        .section {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+
+        /* ── SCREENSHOTS ── */
+        .screenshots-scroll {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: none;
+        }
+
+            .screenshots-scroll::-webkit-scrollbar {
+                display: none;
+            }
+
+        .screenshot-frame {
+            flex-shrink: 0;
+            width: 160px;
+            height: 280px;
+            border-radius: 18px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: transform .25s, box-shadow .25s;
+            cursor: pointer;
+        }
+
+            .screenshot-frame:hover {
+                transform: scale(1.04) translateY(-4px);
+                box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+            }
+
+        .ss-header {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            gap: 8px;
+        }
+
+        .ss-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+        }
+
+        .ss-bar {
+            flex: 1;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.12);
+        }
+
+        .ss-content {
+            /*padding: 10px;*/
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ss-block {
+            height: 10px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .ss-img-block {
+            height: 100px;
+            border-radius: 10px;
+        }
+
+        .ss-row {
+            display: flex;
+            gap: 6px;
+        }
+
+            .ss-row .ss-block {
+                flex: 1;
+            }
+
+        .ss-card {
+            height: 60px;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ss-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .ss-lines {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+            .ss-lines span {
+                height: 7px;
+                border-radius: 3px;
+                background: rgba(255,255,255,0.08);
+                display: block;
+            }
+
+        .ss1 {
+            background: linear-gradient(160deg, #0d1b3e, #1a2a5e);
+        }
+
+        .ss2 {
+            background: linear-gradient(160deg, #1a0d2e, #2e1a4a);
+        }
+
+        .ss3 {
+            background: linear-gradient(160deg, #0d2e1a, #1a4a2e);
+        }
+
+        .ss4 {
+            background: linear-gradient(160deg, #2e1a0d, #4a2e1a);
+        }
+
+        .ss5 {
+            background: linear-gradient(160deg, #1a1a0d, #2e2e1a);
+        }
+
+        /* ── DESCRIPTION ── */
+        .description-text {
+            font-size: 14px;
+            line-height: 1.75;
+            color: #bcc5e8;
+            max-width: 680px;
+        }
+
+            .description-text p {
+                margin-bottom: 12px;
+            }
+
+        .read-more-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 500;
+            padding: 0;
+            margin-top: 4px;
+        }
+
+            .read-more-btn:hover {
+                text-decoration: underline;
+            }
+
+        /* ── FEATURES ── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            transition: transform .2s, box-shadow .2s, border-color .2s;
+        }
+
+            .feature-card:hover {
+                transform: translateY(-3px);
+                box-shadow: var(--card-shadow);
+                border-color: rgba(79,158,255,0.3);
+            }
+
+        .feature-icon {
+            font-size: 26px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .feature-title {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .feature-desc {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        /* ── RATINGS ── */
+        .ratings-layout {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .rating-big {
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .rating-number {
+            font-family: 'Google Sans', sans-serif;
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .rating-stars {
+            font-size: 22px;
+            color: #ffd54f;
+            margin: 8px 0 4px;
+        }
+
+        .rating-count {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .rating-bars {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .bar-label {
+            font-size: 12px;
+            color: var(--muted);
+            width: 14px;
+            text-align: right;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 6px;
+            background: var(--surface2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            transition: width 1s ease;
+        }
+
+        .bar-count {
+            font-size: 11px;
+            color: var(--muted);
+            width: 30px;
+        }
+
+        /* ── REVIEWS ── */
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 14px;
+            margin-top: 20px;
+        }
+
+        .review-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            transition: transform .2s;
+        }
+
+            .review-card:hover {
+                transform: translateY(-2px);
+            }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .review-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .review-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .review-date {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .review-stars {
+            color: #ffd54f;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .review-text {
+            font-size: 13px;
+            color: #bcc5e8;
+            line-height: 1.6;
+        }
+
+        /* ── INFO TABLE ── */
+        .info-table {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .info-row {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            transition: background .15s;
+        }
+
+            .info-row:last-child {
+                border-bottom: none;
+            }
+
+            .info-row:hover {
+                background: var(--surface2);
+            }
+
+        .info-key {
+            width: 140px;
+            flex-shrink: 0;
+            padding: 14px 18px;
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 500;
+            border-right: 1px solid var(--border);
+        }
+
+        .info-val {
+            padding: 14px 18px;
+            font-size: 13px;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .badge-safe {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(1,195,154,0.12);
+            color: var(--green);
+            border: 1px solid rgba(1,195,154,0.3);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* ── CTA ── */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(79,158,255,0.1), rgba(124,92,255,0.1));
+            border: 1px solid rgba(79,158,255,0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin: 32px auto;
+            max-width: 960px;
+            position: relative;
+            z-index: 1;
+        }
+
+            .cta-section h2 {
+                font-family: 'Google Sans', sans-serif;
+                font-size: 24px;
+                font-weight: 700;
+                margin-bottom: 8px;
+            }
+
+            .cta-section p {
+                color: var(--muted);
+                font-size: 14px;
+                margin-bottom: 24px;
+            }
+
+        /* ── TOAST ── */
+        #toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 22px;
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 9999;
+            transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            white-space: nowrap;
+        }
+
+            #toast.show {
+                transform: translateX(-50%) translateY(0);
+            }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 24px;
+            font-size: 12px;
+            color: var(--muted);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-up {
+            opacity: 0;
+            animation: fadeUp .6s ease forwards;
+        }
+
+        .delay-1 {
+            animation-delay: .1s;
+        }
+
+        .delay-2 {
+            animation-delay: .2s;
+        }
+
+        .delay-3 {
+            animation-delay: .3s;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 600px) {
+            .hero {
+                padding: 32px 16px 24px;
+                gap: 20px;
+            }
+
+            .app-icon-wrap {
+                width: 65px;
+                height: 65px;
+                font-size: 40px;
+                border-radius: 18px;
+            }
+
+            .hero-info h1 {
+                font-size: 22px;
+            }
+
+            .topbar-nav {
+                display: none;
+            }
+
+            .cta-section {
+                padding: 28px 20px;
+                margin: 20px 16px;
+            }
+
+            .section {
+                padding: 24px 16px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .info-key {
+                width: 110px;
+            }
+
+            .btn-secondary {
+                display: none;
+            }
+
+            .rating-number {
+                font-size: 48px;
+            }
+        }
+
+        /* Fix ASP.NET form default margin */
+        form {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+
+        <!-- TOPBAR -->
+        <nav class="topbar">
+            <span class="topbar-logo">ELECTION STRATEGIC PLANNING</span>
+            <div class="topbar-nav">
+                <a href="#screenshots">Screenshots</a>
+                <a href="#features">Features</a>
+                <%--<a href="#reviews">Reviews</a>--%>
+                <a href="#info">Info</a>
+            </div>
+        </nav>
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="app-icon-wrap fade-up">
+                <img src="img/bjp_logo_png.png" style="width: 50px" />
+            </div>
+            
+            <div class="hero-info fade-up delay-1">
+                <div style="margin-bottom: 10px;">
+                <span style="background: rgba(255,153,51,0.2); color: #ff9933; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; border: 1px solid rgba(255,153,51,0.4);">🚩 ગુજરાત મહાનગર પાલિકા ચૂંટણી
+            </span>
+            </div>
+                <h1>BJP WINGS</h1>
+                <div class="hero-developer">HL Group of Company</div>
+                <div class="hero-tags">
+                    <span class="tag">Election</span>
+                    <span class="tag">BJP</span>
+                    <span class="tag">v1.0.0</span>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-val stars">★ 5.0</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-val">36 MB</div>
+                        <div class="stat-label">APK Size</div>
+                    </div>
+
+                </div>
+
+                <%-- ✅ ASP.NET Download Button — wire your C# code to btnDownload_Click --%>
+                <asp:Button
+                    ID="btnDownload"
+                    runat="server"
+                    Text="⬇ Download APK"
+                    CssClass="btn-download fade-up delay-2"
+                    OnClick="btnDownload_Click"
+                    OnClientClick="showDownloadMsg();" />
+
+                <asp:Button
+                    ID="btnShare"
+                    runat="server"
+                    Text="⤴ Share"
+                    CssClass="btn-secondary fade-up delay-2"
+                    OnClientClick="showToast('🔗 Link copied!'); navigator.clipboard?.writeText(location.href); return false;" />
+
+                <div class="apk-info fade-up delay-3">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 8v4l3 3" />
+                    </svg>
+                    updated: March 2025 &nbsp;·&nbsp;
+     
+                    &nbsp;·&nbsp; Android 5.0+
+   
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-wrap" id="progressWrap">
+                    <div class="progress-track">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-label" id="progressLabel">Preparing download...</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- SCREENSHOTS -->
+        <section class="section fade-up" id="screenshots">
+            <div class="section-title">Screenshots</div>
+            <div class="screenshots-scroll">
+                <div class="screenshot-frame ss1">
+                    <div class="ss-content">
+                        <img src="img/s1.jpeg" />
+                    </div>
+                </div>
+                <div class="screenshot-frame ss2">
+                    <div class="ss-content">
+                        <img src="img/s2.jpeg" />
+                    </div>
+                </div>
+                <div class="screenshot-frame ss3">
+                    <div class="ss-content">
+                        <img src="img/s3.jpeg" />
+                    </div>
+                </div>
+                <div class="screenshot-frame ss4">
+                    <div class="ss-content">
+                        <img src="img/s4.jpeg" />
+                    </div>
+                </div>
+                <div class="screenshot-frame ss5">
+                    <div class="ss-content">
+                        <img src="img/s5.jpeg" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="section fade-up" id="desc">
+            <div class="section-title">એપ વિશે (About BJP WINGS)</div>
+            <div class="description-text">
+                <p>
+                    <b>BJP WINGS</b> એ <b>HL Group of Company</b> દ્વારા વિકસાવવામાં આવેલી એક અત્યાધુનિક ઇલેક્શન મેનેજમેન્ટ એપ્લિકેશન છે. આધુનિક ટેકનોલોજી અને અત્યંત ઝડપી ઇન્ટરફેસ સાથે સજ્જ આ એપ, એડમિનથી લઈને ગ્રાઉન્ડ લેવલના કાર્યકર્તાઓ સુધીના દરેક માટે એક સેતુ સમાન છે. ભલે તે મતદાર યાદીનું વિશ્લેષણ હોય કે બૂથ લેવલનું મેનેજમેન્ટ, <b>BJP WINGS</b> ચૂંટણી પ્રક્રિયાને વધુ પારદર્શક અને પરિણામલક્ષી બનાવે છે.
+                </p>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="section fade-up" id="features">
+            <div class="section-title">મુખ્ય ફીચર્સ (Key Features)</div>
+            <div class="features-grid">
+
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <div class="feature-title">કેડર મેનેજમેન્ટ</div>
+                    <div class="feature-desc">એડમિન, શક્તિ કેન્દ્ર અને બૂથ પ્રમુખનું મજબૂત માળખું અને દરેક કાર્યકર્તાને જવાબદારીની સોંપણી.</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-title">એડવાન્સ વોટર સર્ચ</div>
+                    <div class="feature-desc">નામ, અટક, બૂથ, ઉંમર કે એડ્રેસ જેવા સ્માર્ટ ફિલ્ટર્સ દ્વારા કોઈપણ મતદારને સેકન્ડોમાં શોધો.</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-title">વોટર સર્વે</div>
+                    <div class="feature-desc">ગ્રાઉન્ડ લેવલ પર મતદારોનો મિજાજ જાણી પોઝિટિવ અને નેગેટિવ લિસ્ટ તૈયાર કરવાની અત્યાધુનિક સુવિધા.</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📲</div>
+                    <div class="feature-title">ડિજિટલ વોટર સ્લિપ</div>
+                    <div class="feature-desc">પરિવારના તમામ સભ્યોની વોટર સ્લિપ સીધી તેમના WhatsApp પર મોકલી સંપર્ક પ્રક્રિયા ઝડપી બનાવો.</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📞</div>
+                    <div class="feature-title">સ્માર્ટ ફોનબુક</div>
+                    <div class="feature-desc">ઓળખીતા લોકોના લિસ્ટ દ્વારા પર્સનલ કનેક્ટ વધારી દરેક વોટ કન્ફર્મ કરવાની અને મેનેજ કરવાની સુવિધા.</div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">લાઈવ રિપોર્ટિંગ</div>
+                    <div class="feature-desc">દરેક કાર્યકર્તાની કામગીરીનું એડમિન ડેશબોર્ડ પર લાઈવ એનાલિસિસ, રિપોર્ટિંગ અને આંકડાકીય વિશ્લેષણ.</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FEATURES -->
+
+        <div class="divider"></div>
+
+        <%-- <!-- RATINGS -->
+        <section class="section fade-up" id="reviews">
+            <div class="section-title">Ratings & Reviews</div>
+            <div class="ratings-layout">
+                <div class="rating-big">
+                    <div class="rating-number">5.0</div>
+                    <div class="rating-stars">★★★★★</div>
+                    <div class="rating-count">2,341 ratings</div>
+                </div>
+                <div class="rating-bars">
+                    <div class="bar-row">
+                        <span class="bar-label">5</span><div class="bar-track">
+                            <div class="bar-fill" style="width: 92%"></div>
+                        </div>
+                        <span class="bar-count">2,154</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">4</span><div class="bar-track">
+                            <div class="bar-fill" style="width: 6%"></div>
+                        </div>
+                        <span class="bar-count">140</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">3</span><div class="bar-track">
+                            <div class="bar-fill" style="width: 1%"></div>
+                        </div>
+                        <span class="bar-count">30</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">2</span><div class="bar-track">
+                            <div class="bar-fill" style="width: 1%"></div>
+                        </div>
+                        <span class="bar-count">12</span>
+                    </div>
+                    <div class="bar-row">
+                        <span class="bar-label">1</span><div class="bar-track">
+                            <div class="bar-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="bar-count">5</span>
+                    </div>
+                </div>
+            </div>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar" style="background: linear-gradient(135deg,#4f9eff,#7c5cff)">R</div>
+                        <div>
+                            <div class="review-name">Ravi Sharma</div>
+                            <div class="review-date">March 2025</div>
+                        </div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-text">Absolutely brilliant app! Clean interface, blazing fast performance. Exactly what I needed. Highly recommended!</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar" style="background: linear-gradient(135deg,#01c39a,#4f9eff)">P</div>
+                        <div>
+                            <div class="review-name">Priya Patel</div>
+                            <div class="review-date">February 2025</div>
+                        </div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-text">This app has completely changed how we manage election work. Zero ads and super fast. Love it!</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar" style="background: linear-gradient(135deg,#ff6b6b,#ffd54f)">A</div>
+                        <div>
+                            <div class="review-name">Amit Joshi</div>
+                            <div class="review-date">January 2025</div>
+                        </div>
+                    </div>
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-text">Really good app overall. Very satisfied with the performance and design. Great work by HL Group!</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>--%>
+
+        <!-- APP INFO -->
+        <section class="section fade-up" id="info">
+            <div class="section-title">App Information</div>
+            <div class="info-table">
+                <div class="info-row">
+                    <div class="info-key">Version</div>
+                    <div class="info-val">1.0.0</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">File Size</div>
+                    <div class="info-val">24 MB</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">Requires</div>
+                    <div class="info-val">Android 5.0 and up</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">Category</div>
+                    <div class="info-val">Election / Politics</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">Developer</div>
+                    <div class="info-val">HL Group of Company</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">Updated</div>
+                    <div class="info-val">March 28, 2025</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">Downloads</div>
+                    <div class="info-val">10,000+</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-key">Election Area</div>
+                    <div class="info-val">Gujarat Municipal Corporation</div>
+                </div>
+                
+                <div class="info-row">
+                    <div class="info-key">Safety</div>
+                    <div class="info-val"><span class="badge-safe">✓ Verified</span></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="cta-section fade-up">
+            <h2>Ready to get started?</h2>
+            <p>Download the APK and install it on your Android device in seconds.</p>
+
+            <%-- ✅ Second ASP Download Button in CTA --%>
+            <asp:Button
+                ID="Button1"
+                runat="server"
+                Text="⬇ Download APK"
+                CssClass="btn-download fade-up delay-2"
+                OnClick="btnDownload_Click"
+                OnClientClick="showDownloadMsg();" />
+
+            <div style="margin-top: 14px; font-size: 12px; color: var(--muted)">
+                ⚠️ Enable "Install from unknown sources" in Android settings before installing.
+ 
+            </div>
+        </div>
+
+        <footer>
+            <div style="margin-bottom: 8px">
+                <a href="#" style="color: var(--muted); text-decoration: none; margin: 0 12px; font-size: 12px">Privacy Policy</a>
+                <a href="#" style="color: var(--muted); text-decoration: none; margin: 0 12px; font-size: 12px">Contact</a>
+                <a href="#" style="color: var(--muted); text-decoration: none; margin: 0 12px; font-size: 12px">Support</a>
+            </div>
+            © 2025 HL Group of Company · All rights reserved
+        </footer>
+
+    </form>
+
+    <!-- TOAST -->
+    <div id="toast">📋 Copied!</div>
+
+    <script>
+        // Progress bar (simulated — runs while server sends file)
+        function startProgressBar() {
+            const wrap = document.getElementById('progressWrap');
+            const fill = document.getElementById('progressFill');
+            const label = document.getElementById('progressLabel');
+            wrap.style.display = 'block';
+            fill.style.width = '0%';
+            let pct = 0;
+            const iv = setInterval(() => {
+                pct += Math.random() * 12;
+            if (pct >= 95) { pct = 95; clearInterval(iv); }
+            fill.style.width = Math.min(pct, 95) + '%';
+            label.textContent = 'Downloading... ' + Math.round(Math.min(pct, 95)) + '%';
+        }, 200);
+        // Complete after 3s
+        setTimeout(() => {
+            clearInterval(iv);
+        fill.style.width = '100%';
+        fill.style.background = '#01c39a';
+        label.textContent = '✓ Download complete!';
+        showToast('✅ BJPWINGS.apk saved!');
+        setTimeout(() => {
+            wrap.style.display = 'none';
+        fill.style.width = '0%';
+        fill.style.background = '';
+        }, 4000);
+        }, 3000);
+        }
+
+        function toggleDesc() {
+            const full = document.getElementById('desc-full');
+            const btn = document.getElementById('readMoreBtn');
+            if (full.style.display === 'none') { full.style.display = 'block'; btn.textContent = 'Show less ▴'; }
+            else { full.style.display = 'none'; btn.textContent = 'Read more ▾'; }
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2800);
+        }
+
+        // Fade-up on scroll
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.style.animationPlayState = 'running'; obs.unobserve(e.target); } });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => {
+            el.style.animationPlayState = 'paused';
+        obs.observe(el);
+        });
+
+        function showDownloadMsg() {
+            // This shows your existing toast notification
+            showToast('📂 Please check the APK file in your Downloads folder');
+        }
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+BJP Wings - Election AI Schema Guide (v1)
+============================================
+Use ONLY these views. Never query tbl_* tables directly.
+
+ALLOWED VIEWS
+-------------
+ai_voter              - Voters + slip/sleep_send (0/1), age_int, booth_no, names, family_id
+ai_user               - Staff list, role_name, booth_list, last_login, days_since_login
+ai_user_booth_flat    - One row per user per booth (BP/BC/VC + SP/K multi-booth)
+ai_voter_survey       - Voter + latest survey (voter_status P/N/D/C)
+ai_user_activity_log  - tbl_log + user + voter booth (slip/prachar activity)
+ai_booth_dashboard    - Pre-aggregated per booth: totals, slip, survey counts
+ai_vc_voter_range     - Voter Captain serial range voters only
+
+GLOBAL RULES
+------------
+1. Output ONLY raw T-SQL. No markdown. No explanation.
+2. SELECT only. Never INSERT/UPDATE/DELETE/DROP/EXEC.
+3. Every query MUST filter: app_id = @app_id
+4. List queries: SELECT TOP 1000 ...
+5. Use WITH (NOLOCK) on views.
+6. Booth number column is booth_no (not part_no) in ai_* views.
+7. Slip/sleep: ai_voter.sleep_send (1=sent, 0=not). Never use sleep_send for survey.
+8. Survey status: ai_voter_survey.voter_status ('P','N','D','C') or voter_status_label.
+9. Age filters: use age_int on ai_voter.
+10. Staff roles: user_type BP, SP, K, BC, VC, CL, etc. role_name has Gujarati label.
+
+JOIN HINTS (only when needed)
+-----------------------------
+ai_voter_survey already has survey joined to voter.
+ai_user_booth_flat: filter user_id or booth_no for staff-booth questions.
+ai_user_activity_log: filter user_id, prachar_type IN ('SLEEP','SMS SLEEP','PRINT','WEB','W-SLEEP') for slips.
+
+EXAMPLE QUESTIONS -> SQL PATTERNS
+---------------------------------
+Q: booth 5 ma ketla voter?
+SELECT booth_no, total_voters FROM ai_booth_dashboard WITH (NOLOCK) WHERE app_id = @app_id AND booth_no = 5;
+
+Q: booth 5 slip nathi mali ketla?
+SELECT slip_not_sent_count FROM ai_booth_dashboard WITH (NOLOCK) WHERE app_id = @app_id AND booth_no = 5;
+
+Q: Hardik nam na voter
+SELECT TOP 1000 booth_no, voter_sr_no, voter_name_gu, voter_name_en, idcard_no, age, gender FROM ai_voter WITH (NOLOCK) WHERE app_id = @app_id AND (voter_name_gu LIKE N'%Hardik%' OR voter_name_en LIKE N'%Hardik%' OR f_name LIKE N'%Hardik%' OR eng_f_name LIKE N'%Hardik%');
+
+Q: booth 3 positive negative
+SELECT voter_status_label, COUNT(*) AS total FROM ai_voter_survey WITH (NOLOCK) WHERE app_id = @app_id AND booth_no = 3 AND voter_status IS NOT NULL GROUP BY voter_status_label;
+
+Q: booth 5 BP kon che?
+SELECT TOP 100 name, mobile_no, role_name, primary_booth_no FROM ai_user WITH (NOLOCK) WHERE app_id = @app_id AND user_type = 'BP' AND primary_booth_no = 5;
+
+Q: user_id 12 aje ketli slip
+SELECT COUNT(*) AS slip_count FROM ai_user_activity_log WITH (NOLOCK) WHERE app_id = @app_id AND user_id = 12 AND prachar_type IN ('SLEEP','SMS SLEEP','PRINT','WEB','W-SLEEP') AND activity_date = CAST(GETDATE() AS DATE);

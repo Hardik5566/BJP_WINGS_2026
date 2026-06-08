@@ -1,0 +1,518 @@
+<%@ Page Language="C#" AutoEventWireup="true" %>
+<!DOCTYPE html>
+<html lang="hi">
+<head runat="server">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Thermal Print Sample — Web Bluetooth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root { --bg: #e8e8e8; --line: #ddd; --slip-w: 300px; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            max-width: 430px; margin: 0 auto; min-height: 100vh;
+            background: var(--bg); font-family: "Noto Sans Devanagari", sans-serif;
+            padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+        }
+        .app-bar {
+            padding: 14px 18px; padding-top: max(14px, env(safe-area-inset-top));
+            background: #fff; border-bottom: 1px solid var(--line);
+        }
+        .app-bar h1 { font-size: 0.95rem; font-weight: 700; }
+        .app-bar p { font-size: 0.72rem; color: #666; margin-top: 4px; }
+        .section { padding: 14px 18px 0; }
+        .card {
+            background: #fff; border-radius: 14px; padding: 14px;
+            border: 1px solid var(--line); margin-bottom: 14px;
+        }
+        .bt-status {
+            display: flex; align-items: center; gap: 10px;
+            padding-bottom: 12px; margin-bottom: 12px;
+            border-bottom: 1px solid var(--line);
+            font-size: 0.85rem; font-weight: 600;
+        }
+        .bt-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #ef4444; flex-shrink: 0;
+        }
+        .bt-dot.on { background: #22c55e; }
+        .bt-status small { margin-left: auto; font-size: 0.72rem; color: #888; font-weight: 500; }
+        .bt-dropdown {
+            width: 100%; padding: 13px 38px 13px 12px;
+            border: 1.5px solid var(--line); border-radius: 10px;
+            font-size: 0.86rem; font-weight: 600; font-family: inherit;
+            appearance: none;
+            background: #fafafa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+        }
+        .hint {
+            margin-top: 10px; font-size: 0.68rem; color: #888; line-height: 1.4;
+        }
+        .thermal-stage {
+            background: #d4d4d4; border-radius: 14px;
+            padding: 18px 12px 24px; display: flex; justify-content: center;
+        }
+        .thermal-paper {
+            width: 100%; max-width: var(--slip-w);
+            background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.1);
+        }
+        .slip { padding: 10px; color: #000; font-size: 11px; line-height: 1.45; }
+        .slip-head {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 6px; margin-bottom: 6px;
+        }
+        .slip-logo { width: 34px; height: 34px; object-fit: contain; }
+        .slip-party { flex: 1; text-align: center; font-size: 14px; font-weight: 700; }
+        .slip-dash-box {
+            border: 2px dashed #000; padding: 8px; text-align: center;
+            margin: 8px 0 10px;
+        }
+        .slip-dash-box .corp { font-size: 11px; font-weight: 600; }
+        .slip-dash-box .panel { font-size: 13px; font-weight: 700; margin-top: 3px; }
+        .slip-meta-box {
+            display: flex; border: 1px solid #000; margin-bottom: 10px;
+        }
+        .slip-meta-item {
+            flex: 1; text-align: center; padding: 7px 4px;
+            border-right: 1px solid #000;
+        }
+        .slip-meta-item:last-child { border-right: none; }
+        .slip-meta-lbl { display: block; font-size: 8px; font-weight: 700; margin-bottom: 3px; }
+        .slip-meta-val { display: block; font-size: 11px; font-weight: 700; }
+        .slip-line { margin-bottom: 6px; font-size: 10.5px; }
+        .slip-line.name { font-size: 11.5px; font-weight: 700; }
+        .slip-line .lbl { font-weight: 600; }
+        .slip-loc { margin-top: 6px; font-size: 10px; line-height: 1.45; }
+        .slip-loc .lbl { font-weight: 700; display: block; margin-bottom: 2px; }
+        .cand-row {
+            display: flex; border: 1px solid #000; margin-bottom: 6px; min-height: 36px;
+        }
+        .cand-num {
+            width: 28px; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; border-right: 1px solid #000; padding: 6px;
+        }
+        .cand-name {
+            flex: 1; display: flex; align-items: center; padding: 6px 8px;
+            font-size: 9px; font-weight: 600; border-right: 1px solid #000;
+        }
+        .cand-logo {
+            width: 36px; display: flex; align-items: center; justify-content: center; padding: 6px;
+        }
+        .cand-logo img { width: 22px; height: 22px; }
+        .slip-cands { margin: 10px 0; }
+        .slip-msg { text-align: center; font-size: 8px; font-weight: 600; margin: 8px 0; }
+        .slip-thanks { text-align: center; font-size: 14px; font-weight: 700; }
+        .action-bar {
+            position: fixed; left: 50%; transform: translateX(-50%); bottom: 0;
+            width: 100%; max-width: 430px; padding: 12px 18px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            background: #fff; border-top: 1px solid var(--line);
+        }
+        .btn-print {
+            width: 100%; padding: 14px; border: none; border-radius: 12px;
+            font-weight: 700; font-size: 0.92rem; background: #000; color: #fff;
+            font-family: inherit; cursor: pointer;
+        }
+        .btn-print:disabled { opacity: 0.4; cursor: not-allowed; }
+        .toast {
+            position: fixed; left: 50%; transform: translateX(-50%) translateY(12px);
+            bottom: 88px; width: calc(100% - 36px); max-width: 360px;
+            padding: 10px 14px; background: #111; color: #fff;
+            border-radius: 10px; font-size: 0.8rem; opacity: 0;
+            transition: 0.25s; z-index: 50; pointer-events: none;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <header class="app-bar">
+            <h1>Thermal Print Sample</h1>
+            <p>Web Bluetooth · ESC/POS · 58mm</p>
+        </header>
+
+        <div class="section">
+            <div class="card">
+                <div class="bt-status">
+                    <span class="bt-dot" id="btDot"></span>
+                    <span id="btStatusText">Not connected</span>
+                    <small id="btStatusSub"></small>
+                </div>
+                <select class="bt-dropdown" id="deviceSelect">
+                    <option value="">Select Bluetooth Device</option>
+                </select>
+                <p class="hint">1) Connect · 2) Tap <b>Test ASCII</b> first · 3) Then <b>Print Image</b>. Use Chrome Android + HTTPS.</p>
+                <select class="print-mode" id="printWidth" style="margin-top:10px;">
+                    <option value="384">Paper width 384 dots (58mm)</option>
+                    <option value="576">Paper width 576 dots (58mm wide)</option>
+                </select>
+            </div>
+
+            <div class="thermal-stage">
+                <div class="thermal-paper">
+                    <div class="slip" id="slipPreview">
+                        <div class="slip-head">
+                            <img src="img/bjp_only_logo.png" alt="" class="slip-logo" />
+                            <div class="slip-party" id="pParty">भारतीय जनता पार्टी</div>
+                            <img src="img/bjp_only_logo.png" alt="" class="slip-logo" />
+                        </div>
+                        <div class="slip-dash-box">
+                            <div class="corp" id="pCorp">राजकोट महानगरपालिका</div>
+                            <div class="panel" id="pAssembly">69 - Nagpur East</div>
+                        </div>
+                        <div class="slip-meta-box">
+                            <div class="slip-meta-item">
+                                <span class="slip-meta-lbl">भाग</span>
+                                <span class="slip-meta-val" id="pBhag">28</span>
+                            </div>
+                            <div class="slip-meta-item">
+                                <span class="slip-meta-lbl">विभाग</span>
+                                <span class="slip-meta-val" id="pVibhag">4</span>
+                            </div>
+                            <div class="slip-meta-item">
+                                <span class="slip-meta-lbl">क्रमांक</span>
+                                <span class="slip-meta-val" id="pKram">1048</span>
+                            </div>
+                        </div>
+                        <p class="slip-line name"><span class="lbl">नाम :</span> <span id="pName">हार्दिक चौरसिया</span></p>
+                        <p class="slip-line"><span class="lbl">पिता/पति :</span> <span id="pFamily">सुरेश चौरसिया</span></p>
+                        <p class="slip-line"><span class="lbl">जाति/आयु :</span> <span id="pSexAge">पुरुष / 22</span></p>
+                        <p class="slip-line"><span class="lbl">वोटर आईडी :</span> <span id="pIdcard">ZMH8909723</span></p>
+                        <div class="slip-loc">
+                            <span class="lbl">मतदान स्थल :</span>
+                            <span id="pLoc">म्यુનિસિપલ સ્કૂલ નં. 12, ગાંધી રોડ, વાર્ડ 3, રાજકોટ</span>
+                        </div>
+                        <div class="slip-cands" id="pCands">
+                            <div class="cand-row" data-cand="1"><div class="cand-num">1</div><div class="cand-name">उम्मीदवार का नाम</div><div class="cand-logo"><img src="img/bjp_only_logo.png" alt="" /></div></div>
+                            <div class="cand-row" data-cand="2"><div class="cand-num">2</div><div class="cand-name">उम्मीदवार का नाम</div><div class="cand-logo"><img src="img/bjp_only_logo.png" alt="" /></div></div>
+                            <div class="cand-row" data-cand="3"><div class="cand-num">3</div><div class="cand-name">उम्मीदवार का नाम</div><div class="cand-logo"><img src="img/bjp_only_logo.png" alt="" /></div></div>
+                            <div class="cand-row" data-cand="4"><div class="cand-num">4</div><div class="cand-name">उम्मीदवार का नाम</div><div class="cand-logo"><img src="img/bjp_only_logo.png" alt="" /></div></div>
+                        </div>
+                        <p class="slip-msg" id="pMsg">कृपया अपना कीमती वोट देकर विजय बनायें</p>
+                        <div class="slip-thanks" id="pThanks">धन्यवाद</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="action-bar">
+            <div class="btn-row">
+                <button type="button" class="btn-test" id="btnTestAscii" disabled>Test ASCII</button>
+                <button type="button" class="btn-print" id="btnPrint" disabled>Print Image</button>
+            </div>
+        </footer>
+
+        <div class="toast" id="toast"></div>
+    </form>
+
+    <script>
+        (function () {
+            const STORAGE_KEY = 'bjp_thermal_printers';
+            const SCAN = '__scan__';
+            const ESC = 0x1B, GS = 0x1D;
+
+            let bleDevice = null, bleChar = null, devices = [], selectedId = null;
+
+            const $ = id => document.getElementById(id);
+
+            function toast(msg) {
+                const t = $('toast');
+                t.textContent = msg;
+                t.classList.add('show');
+                clearTimeout(toast._t);
+                toast._t = setTimeout(() => t.classList.remove('show'), 2800);
+            }
+
+            function txt(id) {
+                const el = $(id);
+                return el ? (el.textContent || '').trim() : '';
+            }
+
+            function setUi(connected, name) {
+                $('btDot').classList.toggle('on', connected);
+                $('btStatusText').textContent = connected ? 'Connected' : 'Not connected';
+                $('btStatusSub').textContent = connected ? (name || '') : '';
+                const on = !!connected;
+                $('btnPrint').disabled = !on;
+                $('btnTestAscii').disabled = !on;
+            }
+
+            const BLE_WRITE_UUIDS = [
+                '0000ffe1-0000-1000-8000-00805f9b34fb',
+                '0000fff2-0000-1000-8000-00805f9b34fb',
+                '49535343-8841-43f4-a8d4-ecbe34729bb3',
+                '49535343-fe7d-4ae5-8fa9-9fafd205e455',
+                'e7810a71-73ae-499d-8c15-faa9aef0c3f2'
+            ];
+
+            function loadDevices() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (raw) devices = JSON.parse(raw);
+                } catch (_) { devices = []; }
+            }
+
+            function saveDevices() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(devices));
+            }
+
+            function renderDropdown() {
+                const sel = $('deviceSelect');
+                const prev = sel.value;
+                sel.innerHTML = '<option value="">Select Bluetooth Device</option>';
+                devices.forEach(d => {
+                    const o = document.createElement('option');
+                    o.value = d.id;
+                    o.textContent = d.name;
+                    sel.appendChild(o);
+                });
+                const scan = document.createElement('option');
+                scan.value = SCAN;
+                scan.textContent = '+ Scan & connect printer';
+                sel.appendChild(scan);
+                if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
+                else if (selectedId) sel.value = selectedId;
+            }
+
+            async function findWriteChar(server) {
+                let fallback = null;
+                for (const svc of await server.getPrimaryServices()) {
+                    for (const ch of await svc.getCharacteristics()) {
+                        if (!ch.properties.write && !ch.properties.writeWithoutResponse) continue;
+                        const uid = ch.uuid.toLowerCase();
+                        if (BLE_WRITE_UUIDS.some(u => uid === u)) return ch;
+                        if (!fallback) fallback = ch;
+                    }
+                }
+                return fallback;
+            }
+
+            async function connect(device) {
+                if (bleDevice && bleDevice.gatt.connected && bleDevice.id !== device.id) {
+                    bleDevice.gatt.disconnect();
+                }
+                bleDevice = device;
+                device.addEventListener('gattserverdisconnected', onDisc);
+                const server = await device.gatt.connect();
+                bleChar = await findWriteChar(server);
+                if (!bleChar) throw new Error('No writable characteristic on this device.');
+                selectedId = device.id;
+                const name = device.name || 'Printer';
+                if (!devices.some(d => d.id === device.id)) {
+                    devices.unshift({ id: device.id, name });
+                    saveDevices();
+                }
+                renderDropdown();
+                $('deviceSelect').value = device.id;
+                setUi(true, name);
+                toast('Connected: ' + name);
+            }
+
+            const sel = $('deviceSelect');
+
+            async function scanConnect() {
+                if (!navigator.bluetooth) {
+                    toast('Web Bluetooth not available. Use Chrome on Android over HTTPS.');
+                    return;
+                }
+                try {
+                    const device = await navigator.bluetooth.requestDevice({
+                        acceptAllDevices: true,
+                        optionalServices: [
+                            '000018f0-0000-1000-8000-00805f9b34fb',
+                            'e7810a71-73ae-499d-8c15-faa9aef0c3f2',
+                            '49535343-fe7d-4ae5-8fa9-9fafd205e455',
+                            '0000ff00-0000-1000-8000-00805f9b34fb',
+                            '0000ffe0-0000-1000-8000-00805f9b34fb'
+                        ]
+                    });
+                    await connect(device);
+                } catch (e) {
+                    if (e.name !== 'NotFoundError') toast(e.message || 'Connection failed');
+                }
+            }
+
+            async function onSelectChange() {
+                const val = sel.value;
+                if (!val) {
+                    selectedId = null;
+                    if (bleDevice && bleDevice.gatt.connected) bleDevice.gatt.disconnect();
+                    setUi(false);
+                    return;
+                }
+                if (val === SCAN) {
+                    await scanConnect();
+                    if (selectedId) sel.value = selectedId;
+                    else sel.value = '';
+                    return;
+                }
+                selectedId = val;
+                if (bleDevice && bleDevice.id === val && bleDevice.gatt.connected) {
+                    setUi(true, bleDevice.name);
+                    return;
+                }
+                await scanConnect();
+            }
+
+            function onDisc() {
+                bleChar = null;
+                setUi(false);
+                if (sel.value !== SCAN) sel.value = '';
+                toast('Printer disconnected');
+            }
+
+            function cat(arr) {
+                const n = arr.reduce((a, b) => a + b.length, 0);
+                const o = new Uint8Array(n);
+                let i = 0;
+                arr.forEach(b => { o.set(b, i); i += b.length; });
+                return o;
+            }
+
+            function getPrintWidth() {
+                return parseInt($('printWidth').value, 10) || 384;
+            }
+
+            /* Small chunks + delay — Mobile Printer BLE needs slow raw bytes */
+            async function writeRaw(buf) {
+                const chunk = 20;
+                for (let i = 0; i < buf.length; i += chunk) {
+                    const slice = buf.subarray(i, Math.min(i + chunk, buf.length));
+                    try {
+                        if (bleChar.properties.writeWithoutResponse) {
+                            await bleChar.writeValueWithoutResponse(slice);
+                        } else if (bleChar.properties.write) {
+                            await bleChar.writeValue(slice);
+                        }
+                    } catch (e) {
+                        await bleChar.writeValue(slice);
+                    }
+                    await new Promise(r => setTimeout(r, 25));
+                }
+            }
+
+            async function testAsciiPrint() {
+                const lines = [
+                    '================================',
+                    'BJP WINGS - TEST PRINT',
+                    'If you read this, Bluetooth OK',
+                    '--------------------------------',
+                    'Booth: 5  Sr: 1048',
+                    'Voter ID: ZMH8909723',
+                    '--------------------------------',
+                    'Now use Print Image for Hindi slip',
+                    '================================'
+                ];
+                const enc = new TextEncoder();
+                const parts = [new Uint8Array([ESC, 0x40])];
+                lines.forEach(l => parts.push(enc.encode(l + '\n')));
+                parts.push(new Uint8Array([0x1B, 0x4A, 60, 0x0A, 0x0A, 0x0A]));
+                await writeRaw(cat(parts));
+            }
+
+            async function captureSlipBitmap() {
+                const w = getPrintWidth();
+                const el = $('slipPreview');
+                const shot = await html2canvas(el, {
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false
+                });
+                const h = Math.ceil(shot.height * (w / shot.width));
+                const c = document.createElement('canvas');
+                c.width = w;
+                c.height = h;
+                const ctx = c.getContext('2d');
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, w, h);
+                ctx.drawImage(shot, 0, 0, w, h);
+                return c;
+            }
+
+            function packRaster(canvas) {
+                const w = canvas.width;
+                const h = canvas.height;
+                const px = canvas.getContext('2d').getImageData(0, 0, w, h).data;
+                const rowBytes = Math.ceil(w / 8);
+                const data = new Uint8Array(rowBytes * h);
+                for (let y = 0; y < h; y++) {
+                    for (let x = 0; x < w; x++) {
+                        const i = (y * w + x) * 4;
+                        const lum = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
+                        if (lum < 175) {
+                            data[y * rowBytes + (x >> 3)] |= (0x80 >> (x % 8));
+                        }
+                    }
+                }
+                return { rowBytes, height: h, data };
+            }
+
+            /* GS v 0 — header then raster only (fixes symbol garbage) */
+            async function printCanvasGsv0(canvas) {
+                const { rowBytes, height, data } = packRaster(canvas);
+                await writeRaw(new Uint8Array([ESC, 0x40, ESC, 0x61, 0x01]));
+                const head = new Uint8Array([
+                    GS, 0x76, 0x30, 0x00,
+                    rowBytes & 0xff, (rowBytes >> 8) & 0xff,
+                    height & 0xff, (height >> 8) & 0xff
+                ]);
+                await writeRaw(head);
+                const step = 512;
+                for (let i = 0; i < data.length; i += step) {
+                    await writeRaw(data.subarray(i, Math.min(i + step, data.length)));
+                }
+                await writeRaw(new Uint8Array([ESC, 0x61, 0x00, ESC, 0x4A, 100, 0x0A, 0x0A, 0x0A]));
+            }
+
+            async function doTestAscii() {
+                if (!bleChar) return toast('Connect printer first');
+                $('btnTestAscii').disabled = true;
+                $('btnPrint').disabled = true;
+                try {
+                    toast('ASCII test...');
+                    await testAsciiPrint();
+                    toast('Test sent — check paper');
+                } catch (e) {
+                    toast('Failed: ' + (e.message || e));
+                } finally {
+                    $('btnTestAscii').disabled = !bleChar;
+                    $('btnPrint').disabled = !bleChar;
+                }
+            }
+
+            async function doPrint() {
+                if (!bleChar) return toast('Connect printer first');
+                if (typeof html2canvas === 'undefined') return toast('html2canvas missing');
+                $('btnPrint').disabled = true;
+                $('btnTestAscii').disabled = true;
+                try {
+                    toast('Capture slip...');
+                    const canvas = await captureSlipBitmap();
+                    toast('Print image...');
+                    await printCanvasGsv0(canvas);
+                    toast('Done');
+                } catch (e) {
+                    toast('Failed: ' + (e.message || e));
+                } finally {
+                    $('btnTestAscii').disabled = !bleChar;
+                    $('btnPrint').disabled = !bleChar;
+                }
+            }
+
+            $('deviceSelect').onchange = onSelectChange;
+            $('btnPrint').onclick = doPrint;
+            $('btnTestAscii').onclick = doTestAscii;
+
+            loadDevices();
+            renderDropdown();
+            setUi(false);
+
+            if (!navigator.bluetooth) {
+                toast('Web Bluetooth not supported on this browser');
+            }
+        })();
+    </script>
+</body>
+</html>

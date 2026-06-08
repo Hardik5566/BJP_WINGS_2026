@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Mobile Profile — Black & Gold</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Noto+Sans+Gujarati:wght@300;400;600;700&family=Rajdhani:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --gold:#c9a84c;
+      --gold-lt:#edd97e;
+      --saffron:#ff9933;
+      --bg:#070707;
+      --card:#111111;
+      --card2:#151515;
+      --text:#f0ede6;
+      --muted:#9a8e7e;
+      --line:rgba(201,168,76,.22);
+      --shadow:0 18px 55px rgba(0,0,0,.55);
+    }
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      max-width:430px;
+      margin:0 auto;
+      min-height:100vh;
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(255,153,51,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 100%, rgba(201,168,76,0.07) 0%, transparent 55%),
+        var(--bg);
+      color:var(--text);
+      font-family:'Cormorant Garamond',serif;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+    .wrap{padding:18px 14px 30px}
+
+    /* Top brand */
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:8px 4px 2px;
+    }
+    .brand img{width:52px;height:auto;filter:drop-shadow(0 0 12px rgba(255,153,51,.35))}
+    .brand-title{
+      font-family:'Playfair Display',serif;
+      font-weight:900;
+      font-size:24px;
+      line-height:1.05;
+      background:linear-gradient(110deg,var(--gold-lt) 0%,var(--gold) 45%,#fff3c0 65%,var(--gold) 100%);
+      background-size:280% auto;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .brand-sub{
+      margin-top:3px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:10px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    .tricolor{
+      height:2px;border-radius:2px;
+      margin:14px 4px 16px;
+      background:linear-gradient(90deg,#ff9933 33.3%,#fff 33.3% 66.6%,#138808 66.6%);
+      opacity:.45;
+    }
+
+    /* Section headings */
+    .sec-h{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      margin:18px 2px 10px;
+    }
+    .sec-h .kicker{
+      font-family:'Rajdhani',sans-serif;
+      font-size:10px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+    .sec-h .title{
+      font-family:'Playfair Display',serif;
+      font-size:18px;
+      font-weight:700;
+      color:#fff;
+      line-height:1.1;
+      margin-top:3px;
+    }
+
+    /* Card */
+    .card{
+      border:1px solid var(--line);
+      background:linear-gradient(165deg,#171717,#0d0d0d);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card-pad{padding:16px}
+    .divider{height:1px;background:rgba(201,168,76,.14)}
+
+    /* Buttons */
+    .btn-row{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    .btn{
+      border:none;
+      border-radius:14px;
+      padding:14px 12px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      position:relative;
+      overflow:hidden;
+      user-select:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .btn-gold{
+      color:#0a0600;
+      background:linear-gradient(110deg,#b8933e 0%,#e8c97a 35%,#f5dc8a 50%,#e8c97a 65%,#b8933e 100%);
+      box-shadow:0 10px 30px rgba(201,168,76,.28), inset 0 1px 0 rgba(255,255,255,.15);
+    }
+    .btn-ghost{
+      color:var(--text);
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(201,168,76,.30);
+      box-shadow:0 10px 28px rgba(0,0,0,.35);
+    }
+    .btn:active{transform:scale(.985);opacity:.92}
+    .btn svg{width:18px;height:18px;flex-shrink:0}
+
+    /* Stars */
+    .stars{
+      display:flex;
+      justify-content:center;
+      gap:6px;
+      margin:12px 0 8px;
+    }
+    .stars span{
+      font-size:28px;
+      color:#ffd700;
+      filter:drop-shadow(0 0 10px rgba(255,215,0,.35));
+      line-height:1;
+      display:inline-block;
+      animation: starDrop .65s cubic-bezier(.22,1,.36,1) both, starGlow 2.6s ease-in-out infinite;
+    }
+    .stars span:nth-child(1){animation-delay:.18s, .8s}
+    .stars span:nth-child(2){animation-delay:.28s, 1.0s}
+    .stars span:nth-child(3){animation-delay:.38s, 1.2s}
+    .stars span:nth-child(4){animation-delay:.48s, 1.4s}
+    .stars span:nth-child(5){animation-delay:.58s, 1.6s}
+    .stars-cap{
+      text-align:center;
+      font-family:'Rajdhani',sans-serif;
+      font-size:10px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+    @keyframes starDrop{
+      0%{opacity:0;transform:translateY(-14px) scale(.75) rotate(-8deg)}
+      70%{transform:translateY(2px) scale(1.15) rotate(3deg)}
+      100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
+    }
+    @keyframes starGlow{
+      0%,100%{filter:drop-shadow(0 0 7px rgba(255,215,0,.28))}
+      50%{filter:drop-shadow(0 0 14px rgba(255,215,0,.72)) drop-shadow(0 0 26px rgba(255,153,51,.28)); transform:scale(1.06)}
+    }
+
+    /* Owner full photo card */
+    .owner-full{
+      position:relative;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(201,168,76,.22);
+      background:#000;
+      box-shadow:var(--shadow);
+    }
+    .owner-full .img{
+      width:100%;
+      height:360px;
+      max-height:58vh;
+      object-fit:cover;
+      object-position:top center;
+      display:block;
+      filter:saturate(1.02) contrast(1.03);
+    }
+    .owner-full::after{
+      content:'';
+      position:absolute;inset:0;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(255,153,51,.16), transparent 45%),
+        radial-gradient(ellipse at 70% 80%, rgba(201,168,76,.13), transparent 55%),
+        linear-gradient(0deg, rgba(0,0,0,.78) 0%, rgba(0,0,0,.18) 55%, rgba(0,0,0,.05) 100%);
+      pointer-events:none;
+    }
+    .owner-cap{
+      position:absolute;
+      left:14px; right:14px; bottom:14px;
+      z-index:2;
+      padding:12px 12px;
+      border-radius:16px;
+      background:rgba(0,0,0,.44);
+      border:1px solid rgba(201,168,76,.22);
+      backdrop-filter: blur(8px);
+    }
+    .owner-name{
+      font-family:'Playfair Display',serif;
+      font-size:20px;
+      font-weight:900;
+      color:#fff;
+      line-height:1.1;
+    }
+    .owner-role{
+      margin-top:6px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:11px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--gold-lt);
+    }
+
+    /* Counters */
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:10px;
+    }
+    .stat{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(201,168,76,.18);
+      border-radius:14px;
+      padding:12px 12px;
+      min-height:70px;
+      text-align:center;
+    }
+    .stat .big{
+      font-family:'Playfair Display',serif;
+      font-size:22px;
+      font-weight:900;
+      color:var(--gold-lt);
+      line-height:1.05;
+    }
+    .stat .lbl{
+      margin-top:4px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:10px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    /* YouTube */
+    .yt{
+      width:100%;
+      aspect-ratio:16/9;
+      border:1px solid rgba(201,168,76,.22);
+      border-radius:14px;
+      overflow:hidden;
+      background:#000;
+    }
+    .yt iframe{width:100%;height:100%;border:0;display:block}
+
+    /* Reels view */
+    .reels-wrap{
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      background:#0b0b0b;
+      box-shadow:var(--shadow);
+    }
+    .reels{
+      height:72vh;
+      max-height:620px;
+      overflow-y:auto;
+      scroll-snap-type:y mandatory;
+      -webkit-overflow-scrolling:touch;
+      background:#000;
+    }
+    .reel{
+      position:relative;
+      height:72vh;
+      max-height:620px;
+      scroll-snap-align:start;
+      background:#000;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .reel:last-child{border-bottom:none}
+    .reel-frame{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(255,153,51,.12), transparent 55%),
+        radial-gradient(ellipse at 70% 80%, rgba(201,168,76,.10), transparent 55%),
+        linear-gradient(180deg,#090909,#000);
+    }
+    .reel-embed{
+      width:100%;
+      height:100%;
+      max-width:360px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(201,168,76,.22);
+      background:#000;
+      aspect-ratio:9/16;
+    }
+    .reel-embed iframe{width:100%;height:100%;border:0;display:block}
+    .reel-ui{
+      position:absolute;
+      left:12px; right:12px; bottom:12px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:10px;
+      pointer-events:none;
+    }
+    .reel-title{
+      font-family:'Rajdhani',sans-serif;
+      font-size:11px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:rgba(240,237,230,.9);
+    }
+    .reel-sub{
+      margin-top:6px;
+      font-family:'Cormorant Garamond',serif;
+      font-size:15px;
+      line-height:1.35;
+      color:#fff;
+    }
+    .reel-actions{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      align-items:center;
+      flex-shrink:0;
+    }
+    .pill{
+      width:44px;height:44px;
+      border-radius:14px;
+      background:rgba(0,0,0,.42);
+      border:1px solid rgba(201,168,76,.22);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      backdrop-filter: blur(6px);
+    }
+    .pill svg{width:20px;height:20px}
+    .pill-count{
+      margin-top:-6px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:10px;
+      letter-spacing:.08em;
+      color:rgba(240,237,230,.82);
+    }
+
+    /* Gallery */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    }
+    .ph{
+      aspect-ratio:1/1;
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid rgba(201,168,76,.18);
+      background:#0e0e0e;
+      cursor:pointer;
+    }
+    .ph img{width:100%;height:100%;object-fit:cover;display:block}
+
+    /* Lightbox */
+    .lb{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.88);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:999;
+    }
+    .lb.show{display:flex}
+    .lb-card{
+      width:100%;
+      max-width:430px;
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(201,168,76,.28);
+      background:#000;
+      box-shadow:0 24px 70px rgba(0,0,0,.7);
+      position:relative;
+    }
+    .lb-card img{width:100%;height:auto;display:block}
+    .lb-close{
+      position:absolute;
+      top:10px; right:10px;
+      width:42px; height:42px;
+      border-radius:14px;
+      border:1px solid rgba(201,168,76,.30);
+      background:rgba(0,0,0,.45);
+      color:#fff;
+      font-family:'Rajdhani',sans-serif;
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      cursor:pointer;
+      backdrop-filter: blur(8px);
+    }
+
+    /* Contact */
+    .contact-btns{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .btn-wa{
+      background:linear-gradient(110deg, rgba(19,136,8,.95) 0%, rgba(20,170,12,.95) 100%);
+      color:#061000;
+      box-shadow:0 10px 30px rgba(20,170,12,.18), inset 0 1px 0 rgba(255,255,255,.18);
+    }
+    .btn-dark{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(201,168,76,.30);
+      box-shadow:0 10px 28px rgba(0,0,0,.35);
+    }
+
+    /* Footer */
+    footer{
+      margin-top:22px;
+      padding:16px 10px 32px;
+      border-top:1px solid var(--line);
+      text-align:center;
+      font-family:'Rajdhani',sans-serif;
+      font-size:10.5px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+    footer span{color:var(--gold)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <img src="bjp_only_logo.png" alt="Logo" />
+      <div>
+        <div class="brand-title">BJP WINGS</div>
+        <div class="brand-sub">The Election Strategic Planning</div>
+      </div>
+    </div>
+    <div class="tricolor"></div>
+
+    <!-- 1) Review -->
+    <div class="card">
+      <div class="card-pad">
+        <div class="sec-h" style="margin:0 0 8px;">
+          <div>
+            <div class="title">Google Review</div>
+          </div>
+        </div>
+
+        <div class="stars">
+          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+        </div>
+        <div class="stars-cap">Give your 5-star review</div>
+
+        <div class="btn-row">
+          <a class="btn btn-gold" href="https://search.google.com/local/writereview?placeid=ChIJdwSBPx7JWTkR5CHjcS2lk_M" target="_top" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Give Your Review
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2) Owner profile (full photo + name + designation only) -->
+    <div class="sec-h">
+     
+    </div>
+    <div class="owner-full">
+      <img class="img" src="hirensir/newhl.jpeg" alt="Owner Photo" />
+      <div class="owner-cap">
+        <div class="owner-name">Dr. Hiren Ghelani</div>
+        <div class="owner-role">The Political Advisor</div>
+      </div>
+    </div>
+
+    <!-- 3) Counters -->
+    <div class="sec-h">
+      <div>
+        <div class="title">Highlights</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-pad">
+        <div class="stats" id="statsCounters">
+          <div class="stat">
+            <div class="big"><span class="counter" data-target="6">0</span>+</div>
+            <div class="lbl">State</div>
+          </div>
+          <div class="stat">
+            <div class="big"><span class="counter" data-target="35">0</span>+</div>
+            <div class="lbl">Elections</div>
+          </div>
+          <div class="stat">
+            <div class="big"><span class="counter" data-target="99875657">0</span>+</div>
+            <div class="lbl">Karyakarta</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- YouTube iframe -->
+    <div class="sec-h">
+      <div>
+        <div class="title">Watch Political Profile</div>
+      </div>
+    </div>
+    <div class="card">
+      <div>
+        <div class="yt">
+          <iframe
+            src="https://www.youtube.com/embed/dmqkwyXh8oE?rel=0"
+            title="YouTube video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Owner message -->
+    <div class="sec-h">
+    
+    </div>
+    <div class="card">
+      <div style="font-family:'Noto Sans Gujarati',sans-serif;">
+        <div style="border-left:3px solid var(--gold); padding:12px 12px 12px 14px; background:rgba(201,168,76,.06); border-radius:14px; border:1px solid rgba(201,168,76,.18);">
+          <div style="font-family:'Rajdhani',sans-serif; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:8px;">Thank you</div>
+          <div style="font-size:14px; line-height:1.9; color:rgba(240,237,230,.90);">
+            "BJP Wings નો સતત અને સફળ ઉપયોગ કરવા બદલ આપ સૌનો ખૂબ ખૂબ આભાર
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4) Reels (YouTube Shorts live preview) -->
+    <div class="sec-h">
+      <div>
+        <div class="title">Reels</div>
+      </div>
+    </div>
+    <div class="reels-wrap">
+      <div class="reels" aria-label="Reels list">
+        <div class="reel">
+          <div class="reel-frame"><div class="reel-embed"><iframe src="https://www.youtube.com/embed/wTpFr5HSpwg?rel=0&playsinline=1&enablejsapi=1" title="DF" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>
+          <div class="reel-ui"><div><div class="reel-title">Live Preview</div><div class="reel-sub">DF</div></div></div>
+        </div>
+        <div class="reel">
+          <div class="reel-frame"><div class="reel-embed"><iframe src="https://www.youtube.com/embed/hh1KRd3GOXA?rel=0&playsinline=1&enablejsapi=1" title="MH Campaign" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>
+          <div class="reel-ui"><div><div class="reel-title">Live Preview</div><div class="reel-sub">MH Campaign</div></div></div>
+        </div>
+        <div class="reel">
+          <div class="reel-frame"><div class="reel-embed"><iframe src="https://www.youtube.com/embed/Dj39OA1Od8c?rel=0&playsinline=1&enablejsapi=1" title="Rupala Sabha" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>
+          <div class="reel-ui"><div><div class="reel-title">Live Preview</div><div class="reel-sub">Rupala Sabha</div></div></div>
+        </div>
+        <div class="reel">
+          <div class="reel-frame"><div class="reel-embed"><iframe src="https://www.youtube.com/embed/0Ys_bCyT0Ng?rel=0&playsinline=1&enablejsapi=1" title="Amravati" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>
+          <div class="reel-ui"><div><div class="reel-title">Live Preview</div><div class="reel-sub">Amravati</div></div></div>
+        </div>
+        <div class="reel">
+          <div class="reel-frame"><div class="reel-embed"><iframe src="https://www.youtube.com/embed/-HuGabeuvFM?rel=0&playsinline=1&enablejsapi=1" title="Kutch" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>
+          <div class="reel-ui"><div><div class="reel-title">Live Preview</div><div class="reel-sub">Kutch</div></div></div>
+        </div>
+        <div class="reel">
+          <div class="reel-frame"><div class="reel-embed"><iframe src="https://www.youtube.com/embed/1GTsokqdwK0?rel=0&playsinline=1&enablejsapi=1" title="Rupala Prsnl Meet" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>
+          <div class="reel-ui"><div><div class="reel-title">Live Preview</div><div class="reel-sub">Rupala Prsnl Meet</div></div></div>
+        </div>
+        <div class="reel">
+          <div class="reel-frame"><div class="reel-embed"><iframe src="https://www.youtube.com/embed/umBJPtE_150?rel=0&playsinline=1&enablejsapi=1" title="MH Bawankule" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>
+          <div class="reel-ui"><div><div class="reel-title">Live Preview</div><div class="reel-sub">MH Bawankule</div></div></div>
+        </div>
+        <div class="reel">
+          <div class="reel-frame"><div class="reel-embed"><iframe src="https://www.youtube.com/embed/twSk1qWPvRU?rel=0&playsinline=1&enablejsapi=1" title="Shinde" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>
+          <div class="reel-ui"><div><div class="reel-title">Live Preview</div><div class="reel-sub">Shinde</div></div></div>
+        </div>
+        <div class="reel">
+          <div class="reel-frame"><div class="reel-embed"><iframe src="https://www.youtube.com/embed/UZFzJJRvRBg?rel=0&playsinline=1&enablejsapi=1" title="Piyush Goyal" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>
+          <div class="reel-ui"><div><div class="reel-title">Live Preview</div><div class="reel-sub">Piyush Goyal</div></div></div>
+        </div>
+        <div class="reel">
+          <div class="reel-frame"><div class="reel-embed"><iframe src="https://www.youtube.com/embed/-LRXYQ4IvLo?rel=0&playsinline=1&enablejsapi=1" title="Aus" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>
+          <div class="reel-ui"><div><div class="reel-title">Live Preview</div><div class="reel-sub">Aus</div></div></div>
+        </div>
+        <div class="reel">
+          <div class="reel-frame"><div class="reel-embed"><iframe src="https://www.youtube.com/embed/npTjzae6r6U?rel=0&playsinline=1&enablejsapi=1" title="DF Prsnl" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>
+          <div class="reel-ui"><div><div class="reel-title">Live Preview</div><div class="reel-sub">DF Prsnl</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5) Photo Gallery -->
+    <div class="sec-h">
+      <div>
+        <div class="kicker">Gallery Section</div>
+        <div class="title">Photos</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-pad">
+        <div class="grid">
+          <div class="ph" data-full="hirensir/N4.jpeg"><img src="hirensir/N4.jpeg" alt="Photo 1"></div>
+          <div class="ph" data-full="hirensir/N5.jpeg"><img src="hirensir/N5.jpeg" alt="Photo 2"></div>
+          <div class="ph" data-full="hirensir/N6.jpeg"><img src="hirensir/N6.jpeg" alt="Photo 3"></div>
+          <div class="ph" data-full="hirensir/N7.jpeg"><img src="hirensir/N7.jpeg" alt="Photo 4"></div>
+          <div class="ph" data-full="hirensir/N8.jpeg"><img src="hirensir/N8.jpeg" alt="Photo 5"></div>
+          <div class="ph" data-full="hirensir/N9.jpeg"><img src="hirensir/N9.jpeg" alt="Photo 6"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="sec-h">
+      <div>
+        <div class="kicker">Contact</div>
+        <div class="title">Contact</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-pad">
+        <div class="contact-btns">
+          <a class="btn btn-dark" href="tel:9998082970">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.07 21 3 13.93 3 5a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.24 1.01l-2.2 2.2z" fill="currentColor"/>
+            </svg>
+            Call
+          </a>
+          <a class="btn btn-wa" href="https://wa.me/919998082970" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M20.52 3.48A11.91 11.91 0 0 0 12.06 0C5.5 0 .16 5.34.16 11.9c0 2.1.55 4.14 1.6 5.95L0 24l6.31-1.65a11.88 11.88 0 0 0 5.75 1.47h.01c6.56 0 11.9-5.34 11.9-11.9 0-3.18-1.24-6.16-3.45-8.44zm-8.46 18.3h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.74.98.99-3.65-.23-.38a9.85 9.85 0  1 1 8.39 4.64zm5.76-7.85c-.31-.16-1.86-.92-2.15-1.03-.29-.1-.5-.16-.71.16-.21.31-.82 1.03-1.01 1.24-.18.21-.37.24-.68.08-.31-.16-1.31-.48-2.5-1.54-.92-.82-1.54-1.83-1.72-2.14-.18-.31-.02-.48.14-.64.14-.14.31-.37.47-.55.16-.18.21-.31.31-.52.1-.21.05-.39-.03-.55-.08-.16-.71-1.71-.97-2.34-.26-.63-.53-.54-.71-.55h-.6c-.21 0-.55.08-.84.39-.29.31-1.1 1.08-1.1 2.63 0 1.55 1.13 3.05 1.29 3.26.16.21 2.22 3.39 5.38 4.75.75.32 1.33.51 1.79.65.75.24 1.43.21 1.97.13.6-.09 1.86-.76 2.12-1.49.26-.73.26-1.35.18-1.49-.08-.13-.29-.21-.6-.37z" fill="rgba(0,0,0,.9)"/>
+            </svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div>© 2026 <span>BJP WINGS</span> · All Rights Reserved</div>
+      <div style="margin-top:6px;">Founded by <span>Dr. Hiren Ghelani</span></div>
+    </footer>
+  </div>
+
+  <div class="lb" id="lb">
+    <div class="lb-card" role="dialog" aria-modal="true">
+      <button class="lb-close" id="lbClose" type="button">Close</button>
+      <img id="lbImg" alt="Preview" src="" />
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const container = document.getElementById('statsCounters');
+      if (!container) return;
+      const counters = Array.from(container.querySelectorAll('.counter'));
+      let started = false;
+
+      function formatIN(n) {
+        return n.toLocaleString('en-IN');
+      }
+
+      function animate() {
+        if (started) return;
+        started = true;
+        counters.forEach((el) => {
+          const target = Number(el.getAttribute('data-target') || '0');
+          const duration = target >= 1000000 ? 1800 : 900;
+          const start = performance.now();
+
+          function tick(now) {
+            const t = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - t, 3);
+            const val = Math.floor(target * eased);
+            el.textContent = formatIN(val);
+            if (t < 1) requestAnimationFrame(tick);
+            else el.textContent = formatIN(target);
+          }
+
+          requestAnimationFrame(tick);
+        });
+      }
+
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) animate();
+        });
+      }, { threshold: 0.35 });
+      obs.observe(container);
+    })();
+
+    (function () {
+      const lb = document.getElementById('lb');
+      const lbImg = document.getElementById('lbImg');
+      const lbClose = document.getElementById('lbClose');
+      const tiles = document.querySelectorAll('.ph[data-full]');
+      if (!lb || !lbImg || !lbClose || !tiles.length) return;
+
+      function open(src) {
+        lbImg.src = src;
+        lb.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      }
+      function close() {
+        lb.classList.remove('show');
+        lbImg.src = '';
+        document.body.style.overflow = '';
+      }
+
+      tiles.forEach((t) => t.addEventListener('click', () => open(t.getAttribute('data-full'))));
+      lbClose.addEventListener('click', close);
+      lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+      window.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    })();
+
+    // Reels: pause previous reel when scrolling to next
+    (function () {
+      const reels = document.querySelectorAll('.reel');
+      if (!reels.length) return;
+
+      function pauseFrame(iframe) {
+        if (!iframe || !iframe.contentWindow) return;
+        try {
+          iframe.contentWindow.postMessage(JSON.stringify({
+            event: 'command',
+            func: 'pauseVideo',
+            args: []
+          }), '*');
+        } catch (e) {}
+      }
+
+      function pauseAllExcept(active) {
+        reels.forEach((r) => {
+          if (r === active) return;
+          const iframe = r.querySelector('iframe');
+          pauseFrame(iframe);
+        });
+      }
+
+      const obs = new IntersectionObserver((entries) => {
+        // pick the most visible reel
+        let best = null;
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          if (!best || e.intersectionRatio > best.intersectionRatio) best = e;
+        }
+        if (best && best.intersectionRatio >= 0.6) {
+          pauseAllExcept(best.target);
+        }
+      }, { threshold: [0.35, 0.6, 0.85] });
+
+      reels.forEach((r) => obs.observe(r));
+    })();
+  </script>
+</body>
+</html>
+

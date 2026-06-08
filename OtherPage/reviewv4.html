@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>BJP INNINGS</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Noto+Sans+Gujarati:wght@300;400;600;700&family=Rajdhani:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --gold:     #c9a84c;
+  --gold-lt:  #edd97e;
+  --saffron:  #FF9933;
+  --bg:       #070707;
+  --card:     #111111;
+  --card2:    #191919;
+  --text:     #f0ede6;
+  --muted:    #9a8e7e;
+  --line:     rgba(201,168,76,0.20);
+  --green:    #138808;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 20% 0%,   rgba(255,153,51,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(201,168,76,0.07) 0%, transparent 50%),
+    var(--bg);
+  color: var(--text);
+  font-family: 'Cormorant Garamond', serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── KEYFRAMES ── */
+@keyframes fadeUp   { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes shimmer  { 0%{background-position:-250% center} 100%{background-position:250% center} }
+@keyframes flowBorder { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@keyframes starDrop {
+  0%  { opacity:0; transform:translateY(-18px) scale(0.5) rotate(-10deg); }
+  65% { transform:translateY(3px) scale(1.2) rotate(3deg); }
+  85% { transform:translateY(-1px) scale(0.96); }
+  100%{ opacity:1; transform:translateY(0) scale(1) rotate(0); }
+}
+@keyframes starGlow {
+  0%,100%{ filter:drop-shadow(0 0 2px rgba(255,215,0,0.3)); }
+  50%    { filter:drop-shadow(0 0 12px rgba(255,215,0,.95)) drop-shadow(0 0 24px rgba(255,140,0,.5)); transform:scale(1.1); }
+}
+@keyframes topbarMove {
+  0%  { background-position:0% 0%; }
+  100%{ background-position:200% 0%; }
+}
+@keyframes logoSpin {
+  0%  { transform: rotate(0deg); }
+  100%{ transform: rotate(360deg); }
+}
+
+/* ════════════════════
+   HEADER
+════════════════════ */
+.header {
+  padding: 26px 18px 0;
+  animation: fadeUp .55s ease both;
+}
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* logo */
+.logo-box {
+  width: 58px; height: 58px;
+  flex-shrink: 0;
+  border-radius: 15px;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 35% 30%, #252520, #0e0e0e);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(201,168,76,0.15);
+}
+.logo-box::before {
+  content:'';
+  position:absolute; inset:0;
+  border-radius:15px;
+  padding:1.5px;
+  background: linear-gradient(135deg, var(--gold), var(--saffron) 50%, var(--gold));
+  background-size:300% 300%;
+  animation: flowBorder 4s ease infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite:exclude;
+}
+.logo-lotus {
+  font-size: 28px;
+  position: relative; z-index:1;
+  filter: drop-shadow(0 0 10px rgba(255,153,51,.7));
+}
+
+.hd-text { flex:1; }
+.hd-eyebrow {
+  font-family:'Rajdhani',sans-serif;
+  font-size:9px; letter-spacing:.28em;
+  text-transform:uppercase; color:var(--saffron);
+  margin-bottom:3px;
+}
+.hd-title {
+  font-family:'Playfair Display',serif;
+  font-size:28px; font-weight:900; line-height:1;
+  background: linear-gradient(110deg, var(--gold-lt) 0%, var(--gold) 40%, #fff3c0 60%, var(--gold) 80%, var(--gold-lt) 100%);
+  background-size:300% auto;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  animation: shimmer 4s linear infinite;
+}
+.hd-sub {
+  font-family:'Rajdhani',sans-serif;
+  font-size:10px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--muted);
+  margin-top:4px;
+}
+
+/* tricolor */
+.tricolor {
+  margin:20px 18px 22px;
+  height:2px; border-radius:2px;
+  background: linear-gradient(90deg, #FF9933 33.3%, #fff 33.3% 66.6%, #138808 66.6%);
+  opacity:.5;
+  animation: fadeUp .55s .08s ease both;
+}
+
+/* ════════════════════
+   SPLIT CARD
+   left = full photo | right = message
+════════════════════ */
+.split-card {
+  margin: 0 16px 18px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--card);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 0 rgba(201,168,76,0);
+  display: flex;               /* ← side by side */
+  min-height: 260px;
+  animation: fadeUp .6s .12s ease both;
+  position: relative;
+}
+
+/* animated gold top line */
+.split-card::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:2px; z-index:10;
+  background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--saffron) 60%, var(--gold), transparent);
+  background-size:200% auto;
+  animation: topbarMove 3s linear infinite;
+}
+
+/* ── LEFT: FULL PHOTO ── */
+.col-photo {
+  width:55%;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 40% 30%, rgba(255,153,51,.15), transparent 60%),
+    radial-gradient(ellipse at 60% 80%, rgba(201,168,76,.1), transparent 60%),
+    linear-gradient(170deg, #1e1408 0%, #0d0d0d 60%, #050505 100%);
+}
+
+/* the actual photo — swap placeholder with real <img> */
+.col-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+/* placeholder shown when no image */
+.photo-ph {
+  position: absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:10px;
+}
+.photo-ph-icon {
+  font-size:56px;
+  filter: drop-shadow(0 0 20px rgba(255,153,51,.55));
+}
+.photo-ph-tag {
+  font-family:'Rajdhani',sans-serif;
+  font-size:9px; letter-spacing:.25em;
+  text-transform:uppercase; color:var(--gold);
+  text-align:center; padding:0 8px;
+}
+
+/* subtle right-edge fade so photo bleeds into message col */
+.col-photo::after {
+  content:'';
+  position:absolute; top:0; right:0; bottom:0; width:28px;
+  background: linear-gradient(to right, transparent, var(--card));
+  pointer-events:none;
+}
+
+/* gold corner marks on photo */
+.corner-tl, .corner-br {
+  position:absolute; width:20px; height:20px; z-index:2; pointer-events:none;
+}
+.corner-tl {
+  top:10px; left:10px;
+  border-top:1.5px solid rgba(201,168,76,.5);
+  border-left:1.5px solid rgba(201,168,76,.5);
+  border-radius:3px 0 0 0;
+}
+.corner-br {
+  bottom:10px; right:10px;
+  border-bottom:1.5px solid rgba(201,168,76,.5);
+  border-right:1.5px solid rgba(201,168,76,.5);
+  border-radius:0 0 3px 0;
+}
+
+/* ── RIGHT: MESSAGE ── */
+.col-msg {
+  flex: 1;
+  padding: 22px 18px 22px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* big decorative quote mark behind */
+.col-msg::before {
+  content:'"';
+  position:absolute; top:-4px; right:10px;
+  font-family:'Playfair Display',serif;
+  font-size:120px; line-height:1;
+  color:var(--gold); opacity:.05;
+  pointer-events:none;
+}
+
+.msg-top {}
+
+.msg-tag {
+  font-family:'Rajdhani',sans-serif;
+  font-size:8.5px; letter-spacing:.3em;
+  text-transform:uppercase; color:var(--saffron);
+  margin-bottom:10px;
+}
+
+.msg-headline {
+  font-family:'Playfair Display',serif;
+  font-size:19px; font-weight:700; font-style:italic;
+  color:var(--gold-lt);
+  line-height:1.2;
+  margin-bottom:12px;
+}
+
+.msg-body {
+  font-family:'Noto Sans Gujarati',sans-serif;
+  font-size:13px; font-weight:400;
+  line-height:1.8;
+  color:rgba(240,237,230,.85);
+}
+
+/* signature */
+.msg-sig {
+  margin-top:16px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+
+.sig-line {
+  display:flex; align-items:center; gap:7px;
+  margin-bottom:5px;
+}
+.sig-dot {
+  width:5px; height:5px; border-radius:50%;
+  background:var(--gold); flex-shrink:0;
+}
+.sig-name {
+  font-family:'Playfair Display',serif;
+  font-size:13px; font-weight:700;
+  color:var(--gold-lt); line-height:1.2;
+}
+.sig-role {
+  font-family:'Rajdhani',sans-serif;
+  font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted); margin-left:12px;
+  margin-top:2px;
+}
+
+/* ════════════════════
+   GOOGLE REVIEW CARD
+════════════════════ */
+.review-card {
+  margin: 0 16px 28px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: linear-gradient(160deg, #161616, #0f0f0f);
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  animation: fadeUp .6s .22s ease both;
+}
+
+.rc-topbar {
+  height:1.5px;
+  background: linear-gradient(90deg, transparent, var(--gold) 25%, var(--saffron) 55%, var(--gold) 80%, transparent);
+  background-size:200% auto;
+  animation: topbarMove 3s linear infinite;
+}
+
+.rc-inner {
+  padding: 20px 20px 24px;
+}
+
+.rc-head {
+  display:flex; align-items:center; gap:12px;
+  margin-bottom:22px;
+}
+.g-pill {
+  width:40px; height:40px; border-radius:50%;
+  background:#fff;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 2px 12px rgba(0,0,0,.5);
+}
+.g-pill svg { width:22px; height:22px; }
+
+.rc-eyebrow {
+  font-family:'Rajdhani',sans-serif;
+  font-size:9px; letter-spacing:.28em;
+  text-transform:uppercase; color:var(--gold);
+}
+.rc-title {
+  font-family:'Playfair Display',serif;
+  font-size:23px; font-weight:700; color:#fff;
+  line-height:1.1;
+}
+
+/* stars */
+.stars-row {
+  display:flex; justify-content:center; gap:8px;
+  margin-bottom:8px;
+}
+.s {
+  font-size:40px; color:#FFD700;
+  display:inline-block; line-height:1;
+  animation: starDrop .55s cubic-bezier(.22,1,.36,1) both,
+             starGlow 2.6s ease-in-out infinite;
+}
+.s:nth-child(1){animation-delay:.32s,1.1s}
+.s:nth-child(2){animation-delay:.46s,1.35s}
+.s:nth-child(3){animation-delay:.60s,1.6s}
+.s:nth-child(4){animation-delay:.74s,1.85s}
+.s:nth-child(5){animation-delay:.88s,2.1s}
+
+.stars-caption {
+  font-family:'Rajdhani',sans-serif;
+  font-size:11px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--muted);
+  text-align:center; margin-bottom:20px;
+}
+
+/* button */
+.btn-review {
+  display:flex; align-items:center; justify-content:center; gap:11px;
+  width:100%;
+  padding: 16px 24px;
+  border:none; border-radius:13px;
+  background: linear-gradient(110deg, #b8933e 0%, #e8c97a 35%, #f5dc8a 50%, #e8c97a 65%, #b8933e 100%);
+  background-size:250% auto;
+  color:#0a0600;
+  font-family:'Rajdhani',sans-serif;
+  font-size:14.5px; font-weight:700;
+  letter-spacing:.2em; text-transform:uppercase;
+  cursor:pointer; text-decoration:none;
+  box-shadow: 0 8px 30px rgba(201,168,76,.35), inset 0 1px 0 rgba(255,255,255,.18);
+  transition: background-position .5s, transform .15s, box-shadow .3s;
+  position:relative; overflow:hidden;
+}
+.btn-review::after {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.14) 0%,transparent 55%);
+  pointer-events:none;
+}
+.btn-review:hover {
+  background-position:right center;
+  transform:translateY(-2px);
+  box-shadow:0 14px 40px rgba(201,168,76,.5);
+}
+.btn-review:active { transform:scale(0.98); opacity:.9; }
+.btn-review svg { width:22px; height:22px; flex-shrink:0; }
+
+/* ════════════════════
+   FOOTER
+════════════════════ */
+footer {
+  text-align:center;
+  padding:16px 16px 36px;
+  border-top:1px solid var(--line);
+  font-family:'Rajdhani',sans-serif;
+  font-size:10.5px; letter-spacing:.14em;
+  color:var(--muted); text-transform:uppercase;
+}
+footer span { color:var(--gold); }
+
+</style>
+</head>
+<body>
+
+<!-- ══════ HEADER ══════ -->
+<div class="header">
+  <div class="header-row">
+    <div>
+        <img src="bjp_only_logo.png" style="width:55px" />
+    </div>
+    <div class="hd-text">
+      <!--<div class="hd-eyebrow">Political Wing · Strategic Unit</div>-->
+      <div class="hd-title">BJP WINGS</div>
+      <div class="hd-sub">The Election Strategic Planning</div>
+    </div>
+  </div>
+</div>
+<div class="tricolor"></div>
+
+<!-- ══════ SPLIT CARD — LEFT PHOTO | RIGHT MESSAGE ══════ -->
+<div class="split-card">
+
+  <!-- LEFT: Full photo -->
+  <div class="col-photo">
+    <!--
+    ════════════════════════════════════════
+    TO USE REAL PHOTO:
+    Remove the .photo-ph block entirely
+    and uncomment this line:
+    <img src="YOUR_PHOTO_URL" alt="Dr. Hiren Ghelani">
+    ════════════════════════════════════════
+    -->
+    <div class="photo-ph">
+        <img src="hirensir/newhl.jpeg" />
+    </div>
+    <div class="corner-tl"></div>
+    <div class="corner-br"></div>
+  </div>
+
+  <!-- RIGHT: Message -->
+  <div class="col-msg">
+    <div class="msg-top">
+      <div class="msg-tag">Message</div>
+      <div class="msg-headline">"ધન્યવાદ !"</div>
+      <div class="msg-body">
+        આપના સહકાર અને<br>
+        વિસવાસ માટે હાર્દિક<br>
+        આભાર
+      </div>
+    </div>
+
+    <div class="msg-sig">
+      <div class="sig-line">
+        <span class="sig-dot"></span>
+        <span class="sig-name">Dr. Hiren Ghelani</span>
+      </div>
+      <div class="sig-role">The Political Advisor</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════ GOOGLE REVIEW ══════ -->
+<div class="review-card">
+  <div class="rc-topbar"></div>
+  <div class="rc-inner">
+
+    <div class="rc-head">
+      <div class="g-pill">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+      </div>
+      <div>
+        <div class="rc-eyebrow">Rate Your Experience</div>
+        <div class="rc-title">Google Review</div>
+      </div>
+    </div>
+
+    <div class="stars-row">
+      <span class="s">★</span>
+      <span class="s">★</span>
+      <span class="s">★</span>
+      <span class="s">★</span>
+      <span class="s">★</span>
+    </div>
+    <div class="stars-caption">Share your 5‑star experience</div>
+
+    <a class="btn-review" href="https://search.google.com/local/writereview?placeid=ChIJdwSBPx7JWTkR5CHjcS2lk_M" target="_top" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Give Google Review
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 <span>BJP INNINGS</span> · All Rights Reserved</p>
+  <p style="margin-top:5px;">Founded by <span>Dr. Hiren Ghelani</span></p>
+</footer>
+
+</body>
+</html>
