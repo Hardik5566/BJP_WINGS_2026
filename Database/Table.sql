@@ -614,3 +614,23 @@ CREATE TABLE tbl_scheme_beneficiary (
     status       BIT         NOT NULL DEFAULT 1
 );
 
+
+create table tbl_bulk_prachar_enquiry
+(
+	prachar_id int identity(1,1),
+	prachar_type varchar(100),
+	ac_no int,
+	app_id int,
+	total_voter bigint,
+	total_mobile_no bigint,
+	cost_per_voter float,
+	total_cost bigint,
+	prachar_status varchar(100),
+	payment_status varchar(100),
+	create_by int,
+	create_date datetime,
+	modify_by int,
+	modify_date datetime,
+	delete_by int,
+	delete_date datetime
+)

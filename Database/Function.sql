@@ -214,3 +214,30 @@ BEGIN
     END
     RETURN @c
 END;
+
+--------------------------------------
+------ Prachar Type ----------
+--------------------------------------
+create FUNCTION dbo.GetPracharName
+(
+    @type VARCHAR(50)
+)
+RETURNS VARCHAR(100)
+AS
+BEGIN
+    RETURN (
+        CASE LOWER(@type)
+            WHEN 'sleep' THEN 'Bulk Sleep Send Cost'
+            WHEN 'slipprint' THEN 'Bulk Slip Print Cost'
+            WHEN 'photo' THEN 'Bulk Photo Send Cost'
+            WHEN 'video' THEN 'Bulk Video Send Cost'
+            WHEN 'call' THEN 'Bulk Call Cost'
+            WHEN 'roadholding' THEN 'Road Holding Cost'
+            WHEN 'socialmedia' THEN 'Social Media Prachar Cost'
+            WHEN 'vehiclebanner' THEN 'Vehicle Banner Cost'
+            WHEN 'pamphlet' THEN 'Pamphlet Distribution Cost'
+            ELSE @type
+        END
+    );
+END
+GO

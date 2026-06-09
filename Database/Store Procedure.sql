@@ -15246,3 +15246,185 @@ BEGIN
         TRY_CAST(v.[slnoinpart] AS INT);         -- પછી સીરીયલ નંબર (SlNoInPart) મુજબ ગોઠવાશે
 END; 
 GO
+
+
+alter PROC get_vidhansabha_and_total_voter_sp
+(
+    @app_id INT
+)
+AS
+BEGIN
+    SELECT 
+        v.app_id,
+        a.vidhansabha_no,
+        a.vidhansabha_name,
+        COUNT(1) AS total_voter,
+        SUM(CASE WHEN LEN(v.contact_no) > 8 THEN 1 ELSE 0 END) AS total_number
+    FROM tbl_voting_record AS v
+    JOIN tbl_app AS a
+        ON v.app_id = a.app_id
+    WHERE a.app_id = @app_id
+    GROUP BY 
+        v.app_id,
+        a.vidhansabha_no,
+        a.vidhansabha_name;
+END
+
+
+CREATE PROC ins_bulk_prachar_enquiry_sp
+(
+    @prachar_type      VARCHAR(100),
+    @ac_no             INT,
+    @app_id            INT,
+    @total_voter       BIGINT,
+    @total_mobile_no   BIGINT,
+    @cost_per_voter    float,
+    @total_cost        BIGINT,
+    @prachar_status    VARCHAR(100),
+    @payment_status    VARCHAR(100),
+    @create_by         INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO tbl_bulk_prachar_enquiry
+    (
+        prachar_type,
+        ac_no,
+        app_id,
+        total_voter,
+        total_mobile_no,
+        cost_per_voter,
+        total_cost,
+        prachar_status,
+        payment_status,
+		status,
+        create_by,
+        create_date
+    )
+    VALUES
+    (
+        @prachar_type,
+        @ac_no,
+        @app_id,
+        @total_voter,
+        @total_mobile_no,
+        @cost_per_voter,
+        @total_cost,
+        @prachar_status,
+        @payment_status,
+		1,
+        @create_by,
+        dbo.get_date()
+    );
+
+   
+
+    exec sel_bulk_prachar_sp SCOPE_IDENTITY() as prachar_id
+END
+
+
+create proc dis_bulk_prachar_dashboard_sp
+as
+begin
+SELECT
+    COUNT(*) AS total_enquiry,
+	SUM(CASE WHEN prachar_status = 'Pending' THEN 1 ELSE 0 END) AS pending_count,
+    SUM(CASE WHEN prachar_status = 'Finished' THEN 1 ELSE 0 END) AS finished_count,
+    SUM(CASE WHEN prachar_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled_count
+FROM tbl_bulk_prachar_enquiry
+WHERE status = 1;
+end
+
+
+alter proc dis_bulk_prachar_enquiry_sp
+as
+begin
+select 
+	prachar_id,
+	prachar_type,
+	dbo.GetPracharName(prachar_type) as prachar,
+	--ac_no,
+	a.vidhansabha_no,
+	a.vidhansabha_name,
+	b.app_id,
+	b.total_voter,
+	total_mobile_no,
+	cost_per_voter,
+	total_cost,
+	prachar_status,
+	payment_status,
+	b.create_by,	
+	u.name as enquiry_by,
+	b.create_date as enquiry_date
+
+from 
+	tbl_bulk_prachar_enquiry as b
+join tbl_user as u
+on b.create_by = u.user_id
+and u.status=1
+join tbl_app as a
+on a.app_id = b.app_id
+and a.status=1
+end
+
+go
+
+create proc upd_bulk_prachar_status_sp
+    @prachar_id int,
+    @prachar_status varchar(100),
+    @modify_by int
+as
+begin
+    update tbl_bulk_prachar_enquiry
+    set prachar_status = @prachar_status,
+        modify_by = @modify_by,
+        modify_date = getdate()
+    where prachar_id = @prachar_id
+end
+
+go
+
+create proc upd_bulk_prachar_payment_status_sp
+    @prachar_id int,
+    @payment_status varchar(100),
+    @modify_by int
+as
+begin
+    update tbl_bulk_prachar_enquiry
+    set payment_status = @payment_status,
+        modify_by = @modify_by,
+        modify_date = getdate()
+    where prachar_id = @prachar_id
+end
+
+create proc upd_bulk_prachar_status_sp
+(
+@prachar_id int,
+@prachar_status varchar(200),
+@modify_by int
+)
+as
+begin
+update tbl_bulk_prachar_enquiry
+set 
+	prachar_status = @prachar_status,
+	modify_by = @modify_by,
+	modify_date = dbo.get_date()
+where
+	prachar_id = @prachar_id
+end
+
+create proc upd_bulk_prachar_payment_status_sp
+    @prachar_id int,
+    @payment_status varchar(100),
+    @modify_by int
+as
+begin
+    update tbl_bulk_prachar_enquiry
+    set payment_status = @payment_status,
+        modify_by = @modify_by,
+        modify_date = getdate()
+    where prachar_id = @prachar_id
+end

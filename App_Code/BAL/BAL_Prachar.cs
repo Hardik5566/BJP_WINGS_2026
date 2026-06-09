@@ -206,4 +206,72 @@ public class BAL_Prachar
         cmd.Parameters.Add(param.intparam("@user_id", voter_id));
         return command.ExtQueryDS(cmd);
     }
+    public static DataSet get_vidhansabha_and_total_voter(string app_id)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "get_vidhansabha_and_total_voter_sp";
+        parameter param = new parameter();
+        cmd.Parameters.Add(param.intparam("@app_id", app_id));     
+        return command.ExtQueryDS(cmd);
+    }
+
+    public static DataSet ins_bulk_prachar_enquiry(string prachar_type,string ac_no,string app_id,string total_voter,string total_mobile_no,string cost_per_voter,string total_cost,
+    string prachar_status,string payment_status,string create_by)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "ins_bulk_prachar_enquiry_sp";
+
+        parameter param = new parameter();
+
+        cmd.Parameters.Add(param.stringparam("@prachar_type", prachar_type));
+        cmd.Parameters.Add(param.intparam("@ac_no", ac_no));
+        cmd.Parameters.Add(param.intparam("@app_id", app_id));
+        cmd.Parameters.Add(param.bigintparam("@total_voter", total_voter));
+        cmd.Parameters.Add(param.bigintparam("@total_mobile_no", total_mobile_no));
+        cmd.Parameters.Add(param.stringparam("@cost_per_voter", cost_per_voter));
+        cmd.Parameters.Add(param.bigintparam("@total_cost", total_cost));
+        cmd.Parameters.Add(param.stringparam("@prachar_status", prachar_status));
+        cmd.Parameters.Add(param.stringparam("@payment_status", payment_status));
+        cmd.Parameters.Add(param.intparam("@create_by", create_by));
+
+        return command.ExtQueryDS(cmd);
+    }
+    public static DataSet dis_bulk_prachar_dashboard()
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "dis_bulk_prachar_dashboard_sp";       
+        return command.ExtQueryDS(cmd);
+    }
+    public static DataSet dis_bulk_prachar_enquiry()
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "dis_bulk_prachar_enquiry_sp";
+        return command.ExtQueryDS(cmd);
+    }
+    public static DataSet upd_bulk_prachar_status(string prachar_id,string prachar_status,string modify_by)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "upd_bulk_prachar_status_sp";
+
+        parameter param = new parameter();
+
+        cmd.Parameters.Add(param.intparam("@prachar_id", prachar_id));
+        cmd.Parameters.Add(param.stringparam("@prachar_status", prachar_status));
+        cmd.Parameters.Add(param.intparam("@modify_by", modify_by));
+
+        return command.ExtQueryDS(cmd);
+    }
+    public static DataSet upd_bulk_prachar_payment_status(string prachar_id, string payment_status, string modify_by)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "upd_bulk_prachar_payment_status_sp";
+
+        parameter param = new parameter();
+
+        cmd.Parameters.Add(param.intparam("@prachar_id", prachar_id));
+        cmd.Parameters.Add(param.stringparam("@payment_status", payment_status));
+        cmd.Parameters.Add(param.intparam("@modify_by", modify_by));
+
+        return command.ExtQueryDS(cmd);
+    }
 }
